@@ -42,6 +42,37 @@ const signup = async (req, res, next) => {
     }
 };
 
+const confirmEmail = async (req, res, next) => {
+    const { email, verificationCode } = req.body;
+
+    try {
+        validateEmail(email);
+
+        const existingUser = await User.findOne({ email: email });
+
+        if (!existingUser) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        if (existingUser.isVerified) {
+            return res.status(400).json({ message: 'Email is already verified.' });
+        }
+
+        if (existingUser.verificationCode !== verificationCode) {
+            return res.status(401).json({ message: 'Invalid verification code.' });
+        }
+
+        existingUser.isVerified = true;
+
+        await existingUser.save();
+
+        res.json({ message: 'Email confirmed successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message || 'Failed to confirm email, please try again later.' });
+    }
+};
+
 
 
 exports.signup = signup;
+exports.confirmEmail = confirmEmail;
