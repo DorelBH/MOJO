@@ -42,6 +42,31 @@ const signup = async (req, res, next) => {
     }
 };
 
+const login = async (req, res, next) => {
+    const { username, password } = req.body;
+
+    try {
+        validateUsername(username);
+        validatePassword(password);
+
+        const existingUser = await User.findOne({ username: username });
+
+        if (!existingUser || existingUser.password !== password) {
+            return res.status(401).json({ message: 'Invalid credentials, could not log you in.' });
+        }
+
+        if (!existingUser.isVerified) {
+            console.log( 'Account is not verified, please verify your email.');
+            return res.json({ navigateTo: 'ConfirmEmail', email: existingUser.email });
+
+        }
+        
+        res.json({ message: 'Logged in!', user: existingUser.toObject({ getters: true }) });
+    } catch (error) {
+        res.status(500).json({ message: error.message || 'Failed to log in, please try again later.' });
+    }
+};
+
 const confirmEmail = async (req, res, next) => {
     const { email, verificationCode } = req.body;
 
@@ -75,4 +100,5 @@ const confirmEmail = async (req, res, next) => {
 
 
 exports.signup = signup;
+exports.login = login;
 exports.confirmEmail = confirmEmail;
