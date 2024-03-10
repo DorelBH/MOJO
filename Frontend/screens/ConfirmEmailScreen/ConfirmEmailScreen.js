@@ -14,7 +14,7 @@ const ConfirmEmailScreen = () => {
     const navigation=useNavigation();
     const route = useRoute();
     const { email } = route.params;// מהמסך הקודם
-    const apiUrl = process.env.REACT_APP_API_URL;
+    // const apiUrl = process.env.REACT_APP_API_URL;
 
 
     const onConfirmPressed = async () => {
