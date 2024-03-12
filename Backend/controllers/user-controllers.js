@@ -97,8 +97,35 @@ const confirmEmail = async (req, res, next) => {
     }
 };
 
+const verifyUsername = async (req, res, next) => {
+    const { username } = req.body;
+
+    try {
+        validateUsername(username);
+
+        const existingUser = await User.findOne({ username: username });
+
+        if (!existingUser) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        const resetCode = generateCode();
+        existingUser.resetCode = resetCode;
+        
+
+        await existingUser.save();
+
+        const email = existingUser.email;
+        sendPasswordResetEmail(email,resetCode);
+        res.status(200).json({ message: 'Username exists, continue to reset password.' });
+
+    } catch (error) {
+        res.status(500).json({ message: error.message || 'Failed to update reset code, please try again later.' });
+    }
+};
 
 
+exports.verifyUsername = verifyUsername;
 exports.signup = signup;
 exports.login = login;
 exports.confirmEmail = confirmEmail;
