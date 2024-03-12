@@ -44,6 +44,20 @@ const buttonStyles = StyleSheet.create({
     container_TERTIARY: {
 
     },
+    container_CONTINUE: {
+        borderColor:'#3871F3',
+        borderWidth:1,
+        position: 'absolute', // קובע את המיקום של הכפתור
+        bottom: "8%", // מרווח 20 פיקסלים מהתחתית
+        width: '90%', // רוחב 90% של הכפתור
+    },
+
+    container_HALL: {
+        borderColor:'#3871F3',
+        borderWidth:1,
+        width: '35%', 
+        margin:5
+    },
 
     text:{
         fontWeight:'bold',
@@ -57,6 +71,12 @@ const buttonStyles = StyleSheet.create({
         color:'gray',
     },
 
+    text_CONTINUE:{
+        color:'#3871F3'
+    },
+    text_HALL:{
+        color:'#3871F3'
+    },
 })
 
 export default CustomButton
