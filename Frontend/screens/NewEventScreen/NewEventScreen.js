@@ -5,7 +5,7 @@ import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 
 
-const NewEvent = () => {
+const NewEventScreen = () => {
   const [eventType, setEventType] = useState('');
   const navigation = useNavigation();
 
@@ -53,4 +53,4 @@ const NewEventStyle = StyleSheet.create({
   }
 });
 
-export default NewEvent;
+export default NewEventScreen;
