@@ -1,3 +1,5 @@
+const Event = require('../models/event');
+
 
 const getUserName = async (req, res, next) => {
     try {
@@ -9,4 +11,36 @@ const getUserName = async (req, res, next) => {
     }
 };
 
+const newEvent = async (req, res, next) => {
+    try {
+        const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions } = req.body;
+
+        const eventData = {
+            eventType,
+            amountInvited,
+            selectedRegions,
+            userId: req.user.userId 
+        };
+
+        if (eventType === "חתונה" || eventType === "חינה") {
+            eventData.groomName = groomName;
+            eventData.brideName = brideName;
+        } else {
+            eventData.name = name;
+        }
+
+        if (selectedDate) {
+            eventData.eventDate = selectedDate;
+        }
+
+        const createdEvent = new Event(eventData);
+        await createdEvent.save();
+
+        res.status(201).json({ message: "Event created successfully", event: createdEvent });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to create event", error: error.message });
+    }
+};
+
 exports.getUserName = getUserName;
+exports.newEvent=newEvent;

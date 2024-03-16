@@ -5,11 +5,14 @@ import CustomInput from '../../components/CustomInput';
 import CheckBox from '../../components/CheckBox'; 
 import { VALIDATOR_ONLY_DIGITS, VALIDATOR_REQUIRE, VALIDATOR_MAXLENGTH } from '../../util/validators';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { getToken } from "../../util/authToken"; 
+import { apiUrl } from "../../api";
+import { useNavigation } from '@react-navigation/native';
 
 const EditEventScreen = ({ route }) => {
     const { eventType } = route.params;
+    const navigation = useNavigation();
 
-    const [amountInvited, setAmountInvited] = useState('');
     const [isWedding, setIsWedding] = useState(false);
     const [closeHall, setCloseHall] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -21,32 +24,58 @@ const EditEventScreen = ({ route }) => {
     const [eventDetails, setEventDetails] = useState({
         groomName: '',
         brideName: '',
-        Name: '', //not wedding
-        eventLocation: '',
+        name: '', //not wedding
+        amountInvited:''
     });
 
     useEffect(() => {
         couple(eventType);
     }, [eventType]);
 
-    const onSavePressed = () => {
-        console.warn('אירוע נשמר');
-        console.log(selectedRegions);
-        if(closeHall)
-        console.log(selectedDate);
-        if(isWedding){
-        console.log(eventDetails.brideName);
-        console.log(eventDetails.groomName);
+    const onSavePressed = async () => {
+        const token = await getToken();
+        if (token) {
+            try {
+                const eventData = {
+                    eventType: eventType,
+                    selectedRegions: selectedRegions,
+                    amountInvited: eventDetails.amountInvited,
+                };
+    
+                if (isWedding) {
+                    eventData.groomName = eventDetails.groomName;
+                    eventData.brideName = eventDetails.brideName;
+                } else {
+                    eventData.name = eventDetails.name; // עבור אירועים שאינם חתונה או חינה
+                }
+    
+                if (closeHall && selectedDate) {
+                    eventData.eventDate = selectedDate;
+                }
+    
+                const response = await fetch(`${apiUrl}/api/events/editEvent`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(eventData),
+                });
+    
+                const responseData = await response.json();
+                if (!response.ok) {
+                    throw new Error(responseData.message || 'Failed to save event.');
+                }
+                console.warn('אירוע נשמר');
+                navigation.navigate('HomeScreen');
+            } catch (error) {
+                console.error('Error:', error.message || 'Something went wrong during the event saving process.');
+            }
+        } else {
+            console.error('No token found, please login.');
         }
-        else{
-            console.log(eventDetails.Name);
-        }
-        console.log(amountInvited);
-
-
-
-
     };
+    
 
     const couple = (eventType) => {
         setIsWedding(eventType === "חינה" || eventType === "חתונה");
@@ -106,8 +135,8 @@ const EditEventScreen = ({ route }) => {
             {!isWedding && (
                 <CustomInput
                     placeholder="שם החתן/כלה"
-                    value={eventDetails.Name}
-                    setValue={(text) => setEventDetails({ ...eventDetails, Name: text })}
+                    value={eventDetails.name}
+                    setValue={(text) => setEventDetails({ ...eventDetails, name: text })}
                     validators={[ VALIDATOR_REQUIRE()]}
                     errorMessage="הכנס שם "
                 />
@@ -115,8 +144,8 @@ const EditEventScreen = ({ route }) => {
             <Text style={EditEventStyle.text}>פרטי האירוע: </Text>
             <CustomInput
                 placeholder=" כמות מוזמנים משוערת"
-                value={amountInvited}
-                setValue={setAmountInvited}
+                value={eventDetails.amountInvited}
+                setValue={(text) => setEventDetails({ ...eventDetails, amountInvited: text })}
                 validators={[
                     VALIDATOR_ONLY_DIGITS(),
                     VALIDATOR_REQUIRE(),
