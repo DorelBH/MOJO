@@ -7,14 +7,16 @@ const generateCode = () => {
     return code.toString();
 };
 
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const signup = async (req, res, next) => {
-    const { username, email, password, passwordRepeat } = req.body;
+    const { username, email, password } = req.body;
 
     try {
         validateUsername(username);
         validateEmail(email);
         validatePassword(password);
-        validatePasswordMatch(password, passwordRepeat);
 
         const existingUser = await User.findOne({ username: username });
 
@@ -24,18 +26,26 @@ const signup = async (req, res, next) => {
 
         const verificationCode = generateCode();
 
+        let hashedPassword;
+        try{
+        hashedPassword= await bcrypt.hash(password,12);
+        } catch(error) {
+            res.status(500).json({ message: error.message || 'Could not create user, please try again.'});
+        }
+        
         const createdUser = new User({
             username,
             email,
-            password,
+            password:hashedPassword,
             verified: false,
             verificationCode: verificationCode
         });
 
         await createdUser.save();
 
-        sendVerificationEmail(email, verificationCode);
 
+        sendVerificationEmail(email, verificationCode);
+        
         res.status(200).json({ message: 'Verification code sent successfully.' });
     } catch (error) {
         res.status(500).json({ message: error.message || 'Failed to sign up, please try again later.' });
@@ -51,7 +61,18 @@ const login = async (req, res, next) => {
 
         const existingUser = await User.findOne({ username: username });
 
-        if (!existingUser || existingUser.password !== password) {
+        if (!existingUser ) {
+            return res.status(401).json({ message: 'Invalid credentials, could not log you in.' });
+        }
+
+        let isValidPassword = false;
+        try {
+        isValidPassword = await bcrypt.compare(password,existingUser.password);
+        }catch(error){
+            res.status(500).json({ message: error.message || 'Could not log you in, please check your credentials and try again.'});
+        }
+
+        if (!isValidPassword ) {
             return res.status(401).json({ message: 'Invalid credentials, could not log you in.' });
         }
 
@@ -60,8 +81,13 @@ const login = async (req, res, next) => {
             return res.json({ navigateTo: 'ConfirmEmail', email: existingUser.email });
 
         }
-        
-        res.json({ message: 'Logged in!', user: existingUser.toObject({ getters: true }) });
+        const token = jwt.sign(
+            { userId: existingUser._id, username: existingUser.username, email: existingUser.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' } 
+        );
+
+        res.json({ message: 'Logged in!', user: existingUser.toObject({ getters: true }), token: token });
     } catch (error) {
         res.status(500).json({ message: error.message || 'Failed to log in, please try again later.' });
     }
@@ -89,13 +115,21 @@ const confirmEmail = async (req, res, next) => {
 
         existingUser.isVerified = true;
 
+        const token = jwt.sign(
+            { userId: existingUser._id,username: existingUser.username, email: existingUser.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' } 
+        );
+
         await existingUser.save();
 
-        res.json({ message: 'Email confirmed successfully' });
+        res.json({ message: 'Email confirmed successfully', token: token });
     } catch (error) {
         res.status(500).json({ message: error.message || 'Failed to confirm email, please try again later.' });
     }
 };
+
+
 
 const resendVerificationCode = async (req, res, next) => {
     const { email } = req.body;
@@ -171,7 +205,15 @@ const resetPassword = async (req, res, next) => {
             return res.status(401).json({ message: 'Invalid reset code.' });
         }
 
-        existingUser.password = newPassword;
+        let hashedPassword;
+        try {
+            hashedPassword = await bcrypt.hash(newPassword, 12);
+        } catch (error) {
+            res.status(500).json({ message: error.message || 'Could not hash password, please try again.' });
+            return;
+        }
+
+        existingUser.password = hashedPassword;
         existingUser.resetCode = undefined;
 
         await existingUser.save();

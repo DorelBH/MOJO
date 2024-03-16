@@ -26,6 +26,11 @@ const SignUpScreen = () => {
 
     const onRegisterPressed = async () => {
 
+        if (password !== passwordRepeat) {
+            console.warn('Passwords do not match.');
+            return;
+        }
+
     try {
         const response = await fetch(`${apiUrl}/api/users/signup`, {
             method: 'POST',
@@ -36,7 +41,6 @@ const SignUpScreen = () => {
                 username: username,
                 email: email,
                 password: password,
-                passwordRepeat:passwordRepeat,
             }),
         });
 

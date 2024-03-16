@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { View, Text, Image, StyleSheet, useWindowDimensions,ScrollView } from "react-native";
+import { View, Image, StyleSheet, useWindowDimensions,ScrollView } from "react-native";
 
 import Logo from '../../assets/images/Logo_1.png'
 import CustomInput from "../../components/CustomInput";
@@ -8,17 +8,16 @@ import SocialSignInButtons from "../../components/SocialSignInButtons";
 
 import { useNavigation } from "@react-navigation/native";
 import { apiUrl } from "../../api";
+import { saveToken } from "../../util/authToken"; 
 
 
 const SignInScreen = () => {
-    const [username,setUserName]=useState('')
-    const [password,setPassword]=useState('')
-
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
     const { height } = useWindowDimensions();
     const navigation = useNavigation();
 
     const onSignInPress = async () => {
-
         try {
             const response = await fetch(`${apiUrl}/api/users/login`, {
                 method: 'POST',
@@ -27,19 +26,19 @@ const SignInScreen = () => {
                 },
                 body: JSON.stringify({
                     username: username,
-                    password: password
+                    password: password,
                 }),
             });
-        
             const responseData = await response.json();
 
             if (!response.ok) {
                 throw new Error(responseData.message || 'Login failed.');
             }
-            
+
             if (responseData.navigateTo === 'ConfirmEmail') {
                 navigation.navigate("ConfirmEmail", { email: responseData.email });
             } else {
+                await saveToken(responseData.token); 
                 navigation.navigate("HomeScreen");
             }
         } catch (error) {
@@ -47,15 +46,9 @@ const SignInScreen = () => {
         }
     };
 
-
-
-
     const onForgotPasswordPress = () =>{
-        
         navigation.navigate('ForgotPassword')
-
     }
-
 
     const onSignUpPress = () =>{
         navigation.navigate('SignUp');

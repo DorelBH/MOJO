@@ -1,30 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import InputChooser from '../../components/InputChooser';
 import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-
+import { apiUrl } from "../../api";
+import { getToken } from "../../util/authToken"; 
 
 const NewEvent = () => {
   const [eventType, setEventType] = useState('');
+  const [username, setUsername] = useState(''); 
   const navigation = useNavigation();
+  const options = ["חתונה", "חינה", "בר/בת מצווה", "ברית", "אירוע פרטי"];
 
-  const options = ["חתונה","חינה", "בר/בת מצווה", "ברית", "אירוע פרטי"];
+  useEffect(() => {
+    fetchUserData(setUsername);
+  }, []);
+
+
+    const fetchUserData = async () => {
+      const token = await getToken();
+      if (token) {
+        try {
+          const response = await fetch(`${apiUrl}/api/events/newEvent`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+          const responseData = await response.json();
+          if (response.ok) {
+            setUsername(responseData.username); 
+          } else {
+            throw new Error(data.message || 'Failed to fetch user data');
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+    };
 
   const handleEventTypeChange = (value) => {
     setEventType(value);
   };
 
-  const onContinuePressed =() =>{
-    if(eventType!=='')
-    navigation.navigate('EditEvent', { eventType: eventType });
-    else
-    console.warn("בחר סוג אירוע!")
-};
+  const onContinuePressed = () => {
+    if (eventType !== '') {
+      navigation.navigate('EditEvent', { eventType: eventType });
+    } else {
+      console.warn("בחר סוג אירוע!");
+    }
+  };
 
   return (
     <View style={NewEventStyle.container}>
-      <Text style={NewEventStyle.title}>Hello .....</Text>
+      <Text style={NewEventStyle.title}>Hello {username || "...."}</Text>
       <InputChooser
         options={options}
         onSelect={handleEventTypeChange}
@@ -32,7 +61,7 @@ const NewEvent = () => {
       />
       <Text>Selected Event Type: {eventType}</Text>
       <CustomButton
-        text="הבא" 
+        text="הבא"
         onPress={onContinuePressed}
         type="CONTINUE"
       />
