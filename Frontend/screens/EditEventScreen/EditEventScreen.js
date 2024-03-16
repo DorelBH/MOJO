@@ -146,7 +146,7 @@ const EditEventScreen = ({ route }) => {
         
         {closeHall && (
     <TouchableOpacity onPress={() => setIsVisible(true)}>
-        <Text style={EditEventStyle.button}>{selectedDate ? selectedDate.toLocaleDateString() : 'בחר תאריך'}</Text>
+        <Text style={EditEventStyle.button}>{selectedDate ? selectedDate.toLocaleDateString('he-IL') : 'בחר תאריך'}</Text>
     </TouchableOpacity>
         )}
 
@@ -156,7 +156,8 @@ const EditEventScreen = ({ route }) => {
         mode="date"
         textColor="black"
         onConfirm={handleDateConfirm}
-        onCancel={handleCancel}/>
+        onCancel={handleCancel}
+        locale="he"/>
         )}
 
 

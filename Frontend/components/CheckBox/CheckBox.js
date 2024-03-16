@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 const CheckBox = ({ label, checked, onChange }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={onChange}>
-            <View style={[styles.checkBox, checked && styles.checkedBox]} />
             <Text style={styles.label}>{label}</Text>
+            <View style={[styles.checkBox, checked && styles.checkedBox]} />
         </TouchableOpacity>
     );
 };
