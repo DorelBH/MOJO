@@ -1,21 +1,16 @@
 import React,{useState} from "react";
 import { View, Text, StyleSheet,ScrollView } from "react-native";
-
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
-
 import { apiUrl } from "../../api";
-
-
 import { useNavigation,useRoute} from "@react-navigation/native";
+import { saveToken } from "../../util/authToken"; 
 
 const ConfirmEmailScreen = () => {
     const [code,setCode]=useState('')
     const navigation=useNavigation();
     const route = useRoute();
     const { email } = route.params;// מהמסך הקודם
-    // const apiUrl = process.env.REACT_APP_API_URL;
-
 
     const onConfirmPressed = async () => {
         try {
@@ -30,24 +25,20 @@ const ConfirmEmailScreen = () => {
                 }),
             });
 
+            const responseData = await response.json();
             if (!response.ok) {
-                const responseData = await response.json();
                 throw new Error(responseData.message || 'Confirmation failed.');
                 }
-
+                await saveToken(responseData.token); 
                 navigation.navigate('HomeScreen');
             } catch (error) {
                 console.error('Error:', error.message || 'Something went wrong during confirmation.');
             }
          };
 
-
-
     const onSignInPress = () =>{
         navigation.navigate('SignIn')
     }
-
-
 
     const onResendPress = async () => {
         try {
