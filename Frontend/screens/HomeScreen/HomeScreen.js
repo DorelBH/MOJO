@@ -17,6 +17,7 @@ const HomeScreen = () => {
 
     const showAlert = (eventType) => {
         console.warn(`Event Type: ${eventType}`);
+        navigation.navigate("Main");
     }
     
     const fetchEvents = async () => {
