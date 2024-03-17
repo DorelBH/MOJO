@@ -59,6 +59,15 @@ const buttonStyles = StyleSheet.create({
         margin:5
     },
 
+    container_CALCULATE: {
+        borderColor: 'gray',
+        borderWidth: 1,
+        margin: 5,
+        alignItems: 'center',
+        alignSelf: 'center', 
+        justifyContent: 'center', 
+    },
+
     text:{
         fontWeight:'bold',
         color:'white',
@@ -76,6 +85,9 @@ const buttonStyles = StyleSheet.create({
     },
     text_HALL:{
         color:'#3871F3'
+    },
+    text_CALCULATE:{
+        color: 'gray'
     },
 })
 

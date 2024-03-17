@@ -10,7 +10,7 @@ const CustomInput = ({ value, setValue, placeholder, secureTextEntry, iconName, 
         setValue(inputValue);
         setIsValid(validate(inputValue, validators));
     };
-
+ 
     return (
         <View style={inputStyles.container}>
             <Icon name={iconName} style={inputStyles.icon} />
