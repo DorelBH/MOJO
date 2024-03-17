@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/newEvent', authenticateToken,eventsController.getUserName);
 router.post('/editEvent', authenticateToken,eventsController.newEvent);
+router.get('/getEvent', authenticateToken,eventsController.getEvent);
 
 
 module.exports = router;

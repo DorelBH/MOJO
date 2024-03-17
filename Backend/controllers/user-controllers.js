@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const { sendVerificationEmail, sendPasswordResetEmail } = require('./email-service');
-const { validateUsername, validateEmail, validatePassword, validatePasswordMatch } = require('./validationController.JS');
+const { validateUsername, validateEmail, validatePassword } = require('./validationController.js');
 
 const generateCode = () => {
     const code = Math.floor(100000 + Math.random() * 900000);

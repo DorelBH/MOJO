@@ -1,5 +1,6 @@
 const Event = require('../models/event');
 const User = require('../models/user');
+const { validateEventType, validateAmountInvited } = require('./validationController.js');
 
 
 const getUserName = async (req, res, next) => {
@@ -15,6 +16,9 @@ const getUserName = async (req, res, next) => {
 const newEvent = async (req, res, next) => {
     try {
         const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions } = req.body;
+
+        validateEventType(eventType);
+        validateAmountInvited(amountInvited);
 
         const eventData = {
             eventType,
@@ -48,6 +52,23 @@ const newEvent = async (req, res, next) => {
     }
 };
 
+const getEvent = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+        const userExists = await User.findById(userId );
 
+        if (!userExists) {
+            return res.status(404).json({ message: "User not found." });
+        }
+
+        const events = await Event.find({ userId: userId });
+
+        res.json({ events: events });
+            } catch (err) {
+                res.status(500).json({ message: err.message || "An error occurred while retrieving the events." });
+            }
+};
+
+exports.getEvent = getEvent;
 exports.getUserName = getUserName;
 exports.newEvent=newEvent;

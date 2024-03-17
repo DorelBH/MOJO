@@ -35,6 +35,25 @@ const validatePasswordMatch = (password, confirmPassword) => {
     }
 };
 
+const validateEventType = (eventType) => {
+    if (!eventType) {
+        throw new Error('Event type is required.');
+    }
+    // אפשר להוסיף כאן בדיקות נוספות, לדוגמה אם סוג האירוע נמצא ברשימה מוגדרת של סוגי אירועים תקפים
+};
+
+// Function to validate amount invited
+const validateAmountInvited = (amountInvited) => {
+    if (!amountInvited) {
+        throw new Error('Amount of invited people is required.');
+    }
+    if (isNaN(amountInvited) || amountInvited < 1) {
+        throw new Error('Amount of invited people must be a positive number.');
+    }
+};
+
+exports.validateEventType = validateEventType;
+exports.validateAmountInvited = validateAmountInvited;
 exports.validateUsername = validateUsername;
 exports.validateEmail = validateEmail;
 exports.validatePassword = validatePassword;

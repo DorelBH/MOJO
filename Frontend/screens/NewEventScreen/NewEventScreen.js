@@ -31,7 +31,7 @@ const NewEventScreen = () => {
           if (response.ok) {
             setUsername(responseData.username); 
           } else {
-            throw new Error(data.message || 'Failed to fetch user data');
+            throw new Error(responseData.message || 'Failed to fetch user data');
           }
         } catch (error) {
           console.error('Error fetching user data:', error);
