@@ -69,6 +69,39 @@ const getEvent = async (req, res, next) => {
             }
 };
 
+const deleteEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        if (!req.user || !req.user.userId) {
+            return res.status(403).json({ message: 'Not authorized' });
+        }
+
+        if (!event.userId) {
+            return res.status(500).json({ message: 'Event integrity error' });
+        }
+
+        if (event.userId.toString() !== req.user.userId.toString()) {
+            return res.status(403).json({ message: 'Not authorized to delete this event' });
+        }
+
+        await Event.findByIdAndDelete(eventId); // שימוש ב findByIdAndDelete במקום findByIdAndRemove
+        await User.updateOne({ _id: event.userId }, { $pull: { events: eventId } });
+        res.json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        console.error(`Failed to delete event with ID: ${eventId}, Error: ${error.message}`);
+        res.status(500).json({ message: 'Failed to delete event' });
+    }
+};
+
+
+
+
+exports.deleteEvent=deleteEvent;
 exports.getEvent = getEvent;
 exports.getUserName = getUserName;
 exports.newEvent=newEvent;

@@ -38,6 +38,30 @@ const HomeScreen = () => {
         }
     };
 
+    const deleteEvent = async (eventId) => {
+        const token = await getToken();
+        if (token) {
+        try {
+          const response = await fetch(`${apiUrl}/api/events/deleteEvent/${eventId}`, { 
+            method: 'DELETE', 
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+    
+          const responseData = await response.json(); 
+    
+          if (!response.ok) {
+            throw new Error(responseData.message || 'Failed to delete event.');
+          }
+          
+          fetchEvents(); // רענון האירועים
+        } catch (error) {
+          console.error('Error:', error.message);
+        }
+        }
+      };
+    
 
     useFocusEffect(
         React.useCallback(() => {
@@ -61,7 +85,7 @@ const HomeScreen = () => {
                 </Text>
             </View>
             {/* כאן מציגים את רשימת האירועים */}
-            <EventsList events={events} onPress={showAlert} />
+            <EventsList events={events} onPress={showAlert} onDeletePress={deleteEvent} />
         </View>
     );
 };
