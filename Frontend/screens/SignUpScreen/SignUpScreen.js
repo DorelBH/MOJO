@@ -27,7 +27,7 @@ const SignUpScreen = () => {
     const onRegisterPressed = async () => {
 
         if (password !== passwordRepeat) {
-            console.warn('Passwords do not match.');
+            console.warn('הסיסמאות לא זהות.');
             return;
         }
 
@@ -71,64 +71,64 @@ const SignUpScreen = () => {
     return(
         <ScrollView showsVerticalScrollIndicator= {false}>
         <View style={signUpStyles.container}>
-            <Text style={signUpStyles.title}>Create an acoount</Text>
+            <Text style={signUpStyles.title}>צור חשבון</Text>
              
             <CustomInput 
                 iconName="account"
-                placeholder="Username" 
+                placeholder="שם משתמש" 
                 value={username} 
                 setValue={setUserName}
                 validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
-                errorMessage="Username must be at least 3 characters"
+                errorMessage="מינימום 3 תווים"
             />
 
 
             <CustomInput 
                 iconName="email-outline"
-                placeholder="Email" 
+                placeholder="אימייל" 
                 value={email} 
                 setValue={setEmail}
                 validators={[{ type: 'EMAIL' }, { type: 'REQUIRE' }]}
-                errorMessage="Invalid email format"
+                errorMessage="אימייל לא תקין"
             />
 
 
              <CustomInput 
              iconName="lock-outline"
-             placeholder="Password" 
+             placeholder="סיסמא" 
              value={password} 
              setValue={setPassword} 
              secureTextEntry={true}
              validators={[{ type: 'MINLENGTH', val: 8 }, { type: 'REQUIRE' }]}
-             errorMessage="Password must be at least 8 characters long" 
+             errorMessage="מינימום 8 תווים!" 
              />
 
              <CustomInput 
              iconName="lock-outline"
-             placeholder="Repeat Password" 
+             placeholder="אימות סיסמא" 
              value={passwordRepeat} 
              setValue={setPasswordRepeat} 
              secureTextEntry={true} 
              validators={[{ type: 'MINLENGTH', val: 8 }, { type: 'REQUIRE' }]}
-             errorMessage="Password must be at least 8 characters long"
              />
 
              <CustomButton 
-             text="Register" 
+             text="הרשם" 
              onPress={onRegisterPressed}
              />
 
-             <Text style={signUpStyles.text}>
-                By registering, yout confirm that you accept our 
-                <Text style={signUpStyles.link} onPress={onTermsOfUsePressed}> Terms of use</Text> and 
-                <Text style={signUpStyles.link} onPress={onPrivacyPressed}> Privacy Policy.</Text>
-             </Text>
+            <Text style={signUpStyles.text}>
+            בהרשמה, את/ה מאשר/ת שאתה מקבל/ת את 
+            <Text style={signUpStyles.link} onPress={onTermsOfUsePressed}> תנאי השימוש</Text> ואת
+            <Text style={signUpStyles.link} onPress={onPrivacyPressed}> מדיניות הפרטיות</Text> שלנו.
+            </Text>
+
 
              <SocialSignInButtons/>
 
 
             <CustomButton 
-             text="Have an acoount? Sign in" 
+             text="יש לך חשבון? התחבר" 
              onPress={onSignInPress} 
              type="TERTIARY"
              />

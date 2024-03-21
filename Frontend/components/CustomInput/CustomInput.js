@@ -21,8 +21,9 @@ const CustomInput = ({ value, setValue, placeholder, secureTextEntry, iconName, 
                 style={inputStyles.input}
                 secureTextEntry={secureTextEntry}
             />
-            {!isValid && errorMessage && <Text style={inputStyles.errorText}>{errorMessage}</Text>}
+            {!isValid && errorMessage && <Text style={inputStyles.errorText}>*{errorMessage}</Text>}
         </View>
+        
     );
 };
 

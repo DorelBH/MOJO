@@ -11,7 +11,7 @@ const SocialSignInButtons =() => {
     return(
         <>
              <CustomButton 
-             text="Sign In With Facebook" 
+             text="התחבר עם פייסבוק" 
              onPress={onSignInFacebook} 
              bgColor="#E7EAF4"
              fgColor="#4765A9"
