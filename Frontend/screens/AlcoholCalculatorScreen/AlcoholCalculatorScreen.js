@@ -37,6 +37,7 @@ const AlcoholCalculatorScreen = () => {
                     setValue={setDrinkNum}
                     validators={[{ type: 'MIN', val: 1 }, {type: 'MAX', val: 100},{type: 'ONLY_DIGITS'},{ type: 'REQUIRE' }]}
                     errorMessage="הכנס מספר בטווח 1-100%"
+                    keyboardType="numeric"
                 />
 
                 <CustomButton

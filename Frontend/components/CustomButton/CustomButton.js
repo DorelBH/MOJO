@@ -66,7 +66,10 @@ const buttonStyles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center', 
         justifyContent: 'center', 
+        width: '40%',
+
     },
+
 
     text:{
         fontWeight:'bold',

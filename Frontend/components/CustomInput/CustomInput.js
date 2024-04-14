@@ -3,7 +3,7 @@ import { View, Text, TextInput,StyleSheet} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { validate } from "../../util/validators";
 
-const CustomInput = ({ value, setValue, placeholder, secureTextEntry, iconName, validators = [], errorMessage}) => {
+const CustomInput = ({ value, setValue, placeholder, secureTextEntry, iconName, validators = [], errorMessage,keyboardType}) => {
     const [isValid, setIsValid] = useState(true);
 
     const inputChangeHandler = (inputValue) => {
@@ -20,6 +20,8 @@ const CustomInput = ({ value, setValue, placeholder, secureTextEntry, iconName, 
                 placeholder={placeholder}
                 style={inputStyles.input}
                 secureTextEntry={secureTextEntry}
+                keyboardType={keyboardType}
+
             />
             {!isValid && errorMessage && <Text style={inputStyles.errorText}>*{errorMessage}</Text>}
         </View>

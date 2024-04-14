@@ -58,6 +58,7 @@ const NewPasswordScreen = () => {
                 setValue={setCode}
                 validators={[ { type: 'REQUIRE' }]}
                 errorMessage="פורמט הקוד אינו תקין"
+                keyboardType="numeric"
                 />
 
                 <CustomInput 

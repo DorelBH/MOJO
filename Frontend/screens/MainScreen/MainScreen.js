@@ -40,7 +40,7 @@ const MainScreen = ({ navigation }) => {
   };
 
   const slotsData = [
-    { slot: 'מחשבון הוצאות', icon: 'calculator' },
+    { slot: 'מחשבון הוצאות', icon: 'calculator', action: 'CostCalculator' },
     { slot: 'רשימת מוזמנים', icon: 'users' },
     { slot: 'מחשבון אלכוהול', icon: 'glass', action: 'AlcoholCalculator' },
     { slot: 'אולמות', icon: 'home' },
@@ -53,6 +53,9 @@ const MainScreen = ({ navigation }) => {
   const handleSlotPress = (action) => {
     if (action === 'AlcoholCalculator' && eventData) {
       navigation.navigate('AlcoholCalculator', { amountInvited: eventData.amountInvited });
+    }
+    if (action === 'CostCalculator' && eventData) {
+      navigation.navigate('CostCalculator', { eventType: eventData.eventType });
     }
   };
 

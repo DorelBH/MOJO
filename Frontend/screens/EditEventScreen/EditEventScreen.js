@@ -154,6 +154,7 @@ const EditEventScreen = ({ route }) => {
                     VALIDATOR_MAXLENGTH(5)
                 ]}
                 errorMessage="כמות לא תקינה!"
+                keyboardType="numeric"
             />
 
         <Text style={EditEventStyle.text}>האם סגרתם אולם?  </Text>

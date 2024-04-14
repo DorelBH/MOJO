@@ -78,6 +78,7 @@ const ConfirmEmailScreen = () => {
                 setValue={setCode}
                 validators={[{ type: 'LENGTH', val: 6 }, { type: 'REQUIRE' }]}
                 errorMessage="הקוד חייב להיות בן 6 ספרות"
+                keyboardType="numeric"
                 />
 
                 <CustomButton 
