@@ -2,10 +2,20 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
+import useAuthCheck from '../../hooks/useAuthCheck';
 
 const AlcoholCalculatorScreen = () => {
+    useAuthCheck();
     const [guestnum, setGuestNum] = useState('');
     const [drinkNum, setDrinkNum] = useState('');
+    const [result, setResult] = useState(null); // State to hold the result
+
+
+    const onCalcPress = () => {
+        // Calculate the total alcohol amount needed
+        const totalAlcohol = guestnum * (drinkNum / 100) * 0.15;
+        setResult(totalAlcohol); 
+    }
 
     return (
         <View style={AlcoholCalculatorStyles.container}>
@@ -17,8 +27,8 @@ const AlcoholCalculatorScreen = () => {
                     placeholder="כמות אורחים"
                     value={guestnum}
                     setValue={setGuestNum}
-                    validators={[{ type: 'MINLENGTH', val: 1 }, { type: 'REQUIRE' }]}
-                    errorMessage="Must be guests Number"
+                    validators={[{ type: 'MIN', val: 1 },{type: 'ONLY_DIGITS'}, { type: 'REQUIRE' }]}
+                    errorMessage="הכנס מספר אורחים תקין"
                 />
 
                 <CustomInput
@@ -26,15 +36,22 @@ const AlcoholCalculatorScreen = () => {
                     placeholder="אחוז השותים באירוע"
                     value={drinkNum}
                     setValue={setDrinkNum}
-                    validators={[{ type: 'MINLENGTH', val: 1 }, { type: 'REQUIRE' }]}
-                    errorMessage="Must"
+                    validators={[{ type: 'MIN', val: 1 }, {type: 'MAX', val: 100},{type: 'ONLY_DIGITS'},{ type: 'REQUIRE' }]}
+                    errorMessage="הכנס מספר בטווח 1-100%"
                 />
 
                 <CustomButton
                     text="חשב"
                     type="CALCULATE"
-                    
+                    onPress={onCalcPress} 
                 />
+
+                 {result !== null && (
+                    <Text style={AlcoholCalculatorStyles.resultText}>
+                        כמות האלכוהול הנדרשת היא: {result.toFixed(2)} ליטר
+                    </Text>
+                )}
+
             </View>
 
             <View style={AlcoholCalculatorStyles.slotButton}>
@@ -75,6 +92,12 @@ const AlcoholCalculatorStyles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 10,
       },
+      resultText: {
+        color: '#2f2f2f',
+        fontSize: 15,
+        marginTop: 20, // Adjust as necessary
+        textAlign: 'center',
+    },
     container: {
         flex: 1,
         alignItems: 'center',

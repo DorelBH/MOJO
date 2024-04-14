@@ -1,16 +1,16 @@
-import React,{useState} from "react";
-import { View, Text, StyleSheet,ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { apiUrl } from "../../api";
-import { useNavigation,useRoute} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { saveToken } from "../../util/authToken"; 
 
 const ConfirmEmailScreen = () => {
-    const [code,setCode]=useState('')
-    const navigation=useNavigation();
+    const [code, setCode] = useState('');
+    const navigation = useNavigation();
     const route = useRoute();
-    const { email } = route.params;// מהמסך הקודם
+    const { email } = route.params; // מהמסך הקודם
 
     const onConfirmPressed = async () => {
         try {
@@ -27,17 +27,17 @@ const ConfirmEmailScreen = () => {
 
             const responseData = await response.json();
             if (!response.ok) {
-                throw new Error(responseData.message || 'Confirmation failed.');
-                }
-                await saveToken(responseData.token); 
-                navigation.navigate('HomeScreen');
-            } catch (error) {
-                console.error('Error:', error.message || 'Something went wrong during confirmation.');
+                throw new Error(responseData.message || 'אישור נכשל.');
             }
-         };
+            await saveToken(responseData.token); 
+            navigation.navigate('HomeScreen');
+        } catch (error) {
+            console.error('Error:', error.message || 'משהו השתבש במהלך האישור.');
+        }
+    };
 
-    const onSignInPress = () =>{
-        navigation.navigate('SignIn')
+    const onSignInPress = () => {
+        navigation.navigate('SignIn');
     }
 
     const onResendPress = async () => {
@@ -53,52 +53,50 @@ const ConfirmEmailScreen = () => {
             });
 
             if (response.ok) {
-                const responseData = await response.json(); // extract data from successful response
-                console.warn(responseData.message); // display success message to the user
-                setCode(''); // empty code - resend new
+                const responseData = await response.json(); // חילוץ הנתונים מהתגובה המוצלחת
+                console.warn(responseData.message); // הצגת הודעת ההצלחה למשתמש
+                setCode(''); // נקה את הקוד - שלח חדש
             } else {
-                const responseData = await response.json(); // extract error data from response
-                throw new Error(responseData.message || 'Resend Code failed.'); // throw error with message from response or default message
+                const responseData = await response.json(); // חילוץ נתוני השגיאה מהתגובה
+                throw new Error(responseData.message || 'שליחת הקוד נכשלה.'); // הטלת שגיאה עם הודעה מהתגובה או הודעה דיפולטיבית
             }
         } catch (error) {
-            console.error('Error:', error.message || 'Something went wrong during Resend.');
+            console.error('Error:', error.message || 'משהו השתבש במהלך שליחת הקוד.');
         }
     };
 
     
-    return(
-        <ScrollView showsVerticalScrollIndicator= {false}>
-        <View style={confirmStyles.container}>
-            <Text style={confirmStyles.title}>Confirm your Email</Text>
+    return (
+        <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={confirmStyles.container}>
+                <Text style={confirmStyles.title}>אשר את כתובת הדוא"ל שלך</Text>
 
-             <CustomInput 
-             iconName="email-check-outline" 
-             placeholder="Enter your confirmation code" 
-             value={code} 
-             setValue={setCode}
-             validators={[{ type: 'LENGTH', val: 6 }, { type: 'REQUIRE' }]}
-             errorMessage="Code must be 6 digits"
-            />
+                <CustomInput 
+                iconName="email-check-outline" 
+                placeholder="הכנס את קוד האישור שלך" 
+                value={code} 
+                setValue={setCode}
+                validators={[{ type: 'LENGTH', val: 6 }, { type: 'REQUIRE' }]}
+                errorMessage="הקוד חייב להיות בן 6 ספרות"
+                />
 
-             <CustomButton 
-             text="Confirm" 
-             onPress={onConfirmPressed}
-             />
+                <CustomButton 
+                text="אשר" 
+                onPress={onConfirmPressed}
+                />
 
-             <CustomButton 
-             text="Resend code" 
-             onPress={onResendPress} 
-             type="SECONDARY"
-             />
+                <CustomButton 
+                text="שלח שוב את הקוד" 
+                onPress={onResendPress} 
+                type="SECONDARY"
+                />
 
-             <CustomButton 
-             text="Back to sign in" 
-             onPress={onSignInPress} 
-             type="TERTIARY"
-             />
-
-
-        </View>
+                <CustomButton 
+                text="חזור להתחברות" 
+                onPress={onSignInPress} 
+                type="TERTIARY"
+                />
+            </View>
         </ScrollView>
     );
     
@@ -107,15 +105,15 @@ const ConfirmEmailScreen = () => {
 const confirmStyles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        padding:20
+        padding: 20
     },
 
-    title:{
-    fontSize:26,
-    fontWeight:'bold',
-    color:'#051C60',
-    marginTop:60,
-    marginBottom:10,
+    title: {
+        fontSize: 26,
+        fontWeight: 'bold',
+        color: '#051C60',
+        marginTop: 60,
+        marginBottom: 10,
     },
     text: {
         color: 'gray',

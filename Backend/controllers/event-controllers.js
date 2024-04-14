@@ -98,9 +98,27 @@ const deleteEvent = async (req, res) => {
     }
 };
 
+const getSpecificEvent = async (req, res, next) => {
+    try {
+        const eventId = req.params.eventId;
+        const event = await Event.findById(eventId);
+        
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
 
+        // נבדוק אם המשתמש רשאי לגשת לאירוע זה
+        if (event.userId.toString() !== req.user.userId.toString()) {
+            return res.status(403).json({ message: 'Not authorized to access this event' });
+        }
 
+        res.json({ event });
+    } catch (err) {
+        res.status(500).json({ message: err.message || "An error occurred while retrieving the event." });
+    }
+};
 
+exports.getSpecificEvent = getSpecificEvent;
 exports.deleteEvent=deleteEvent;
 exports.getEvent = getEvent;
 exports.getUserName = getUserName;

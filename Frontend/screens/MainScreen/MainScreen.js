@@ -3,8 +3,15 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native'; 
 import CoupleLogo from '../../components/CoupleLogo';
 import MainSlots from '../../components/MainSlots';
-
+import useAuthCheck from '../../hooks/useAuthCheck';
+/* import { useRoute } from "@react-navigation/native";
+ */
 const MainScreen = ({ navigation }) => {
+/*   const route = useRoute();
+  const { eventId } = route.params || {}; */
+
+  useAuthCheck();
+
   const slotsData = [
     { slot: 'מחשבון הוצאות', icon: 'calculator' },
     { slot: 'רשימת מוזמנים', icon: 'users' },
@@ -20,7 +27,6 @@ const MainScreen = ({ navigation }) => {
     if (action === 'AlcoholCalculator') {
       navigation.navigate('AlcoholCalculator'); // Navigate to AlcoholCalculator screen
     }
-    // You can handle other slot actions here if needed
   };
 
   return (

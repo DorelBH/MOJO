@@ -5,8 +5,10 @@ import CustomButton from '../../components/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken"; 
+import useAuthCheck from '../../hooks/useAuthCheck';
 
 const NewEventScreen = () => {
+  useAuthCheck();
   const [eventType, setEventType] = useState('');
   const [username, setUsername] = useState(''); 
   const navigation = useNavigation();

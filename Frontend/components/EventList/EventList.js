@@ -20,7 +20,7 @@ const EventsList = ({ events, onPress, onDeletePress }) => {
       {events.map((event, index) => (
         <TouchableOpacity 
             key={index} 
-            onPress={() => onPress(event.eventType, event)}
+            onPress={() => onPress(event._id, event)}
             style={CardStyles.cardContainer}
         >
           <TouchableOpacity onPress={() => onDeletePress(event._id)} style={CardStyles.deleteButton}>

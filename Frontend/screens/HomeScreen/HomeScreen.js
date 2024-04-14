@@ -5,9 +5,11 @@ import { useNavigation,useFocusEffect } from '@react-navigation/native';
 import EventsList from '../../components/EventList';
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken"; 
+import useAuthCheck from "../../hooks/useAuthCheck";
 
 
 const HomeScreen = () => {
+    useAuthCheck();
     const navigation = useNavigation();
     const [events, setEvents] = useState([]);
 
@@ -15,10 +17,10 @@ const HomeScreen = () => {
         navigation.navigate("NewEvent");
     }
 
-    const showAlert = (eventType) => {
-        console.warn(`Event Type: ${eventType}`);
-        navigation.navigate("Main");
+    const goToMain = (eventId) => {
+        navigation.navigate("Main", { eventId });  // ניווט למסך Main עם מזהה האירוע
     }
+    
     
     const fetchEvents = async () => {
         const token = await getToken();
@@ -86,7 +88,7 @@ const HomeScreen = () => {
                 </Text>
             </View>
             {/* כאן מציגים את רשימת האירועים */}
-            <EventsList events={events} onPress={showAlert} onDeletePress={deleteEvent} />
+            <EventsList events={events} onPress={goToMain} onDeletePress={deleteEvent} />
         </View>
     );
 };

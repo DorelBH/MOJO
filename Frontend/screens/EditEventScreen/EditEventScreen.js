@@ -8,8 +8,10 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { getToken } from "../../util/authToken"; 
 import { apiUrl } from "../../api";
 import { useNavigation } from '@react-navigation/native';
+import useAuthCheck from '../../hooks/useAuthCheck';
 
 const EditEventScreen = ({ route }) => {
+    useAuthCheck();
     const { eventType } = route.params;
     const navigation = useNavigation();
 
