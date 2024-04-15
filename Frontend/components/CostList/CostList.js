@@ -1,48 +1,42 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import CustomInput from '../CustomInput';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"; // ייבוא האייקונים
 
-const CostList = ({ eventCosts, eventType, onUpdateCost }) => {
-  const weddingItems = ['bridalDress', 'groomSuit', 'weddingRings', 'bridalBouquet'];
-  const labels = {
-    venue: 'אולם/גן אירועים',
-    photographer: 'צלם',
-    dj: 'דיג\'יי',
-    acam: 'אקו"ם',
-    lightingAndSound: 'תאורה והגברה',
-    hallDesign: 'עיצוב אולם',
-    bridalDress: 'שמלת כלה',
-    bridalMakeup: 'איפור כלה',
-    bridalHairDesign: 'עיצוב שיער',
-    groomSuit: 'חליפת חתן',
-    weddingRings: 'טבעות נישואים',
-    rabbinate: 'רבנות',
-    weddingRabbi: 'רב לחופה',
-    magnetPhotographer: 'צלם מגנטים',
-    bridalBouquet: 'זר כלה',
-    carDecoration: 'קישוט לרכב',
-    invitations: 'הזמנות',
-    hotel: 'מלון',
-  };
-
+const CostList = ({ eventCosts, onUpdateCost, isEditing,onDeleteCost}) => {
   return (
     <ScrollView style={styles.listContainer}>
-      {Object.entries(eventCosts).map(([key, value]) => {
-        if (eventType !== 'חתונה' && weddingItems.includes(key)) {
-          return null;
-        }
-        return (
-          <TouchableOpacity key={key} style={styles.card} activeOpacity={1}>
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => onUpdateCost(key, text)}
-              value={value.toString()}
-              keyboardType="numeric"
-              placeholder="הכנס סכום"
-            />
-            <Text style={styles.cardTitle}>{labels[key]}</Text>
-          </TouchableOpacity>
-        );
-      })}
+        {Object.entries(eventCosts).map(([key, { label, cost }]) => (
+            <TouchableOpacity key={key} style={styles.card} activeOpacity={1}>
+                
+                {isEditing && (
+                    <TouchableOpacity onPress={() => onDeleteCost(key)} style={styles.deleteButton}>
+                        <Icon name="trash-can-outline" size={24} color="red" />
+                    </TouchableOpacity>
+                    )}
+                
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(text) => onUpdateCost(key, { cost: text })}
+                    value={cost.toString()} 
+                    keyboardType="numeric"
+                    placeholder="הכנס סכום"
+                />
+                
+                {isEditing ? (
+                    <CustomInput
+                    value={label}
+                    setValue={(text) => onUpdateCost(key, { label: text })}
+                    validators={[{ type: 'MINLENGTH', val: 1 }, { type: 'REQUIRE' }]}
+                    errorMessage="הכנס שדה חוקי"
+                    style={styles.inputLabel}
+                />
+                ) : (
+                    <Text style={styles.cardTitle}>{label}</Text>
+                )}
+
+            </TouchableOpacity>
+        ))}
     </ScrollView>
   );
 };
@@ -58,7 +52,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 0.2,
     borderColor: '#000',
-    // Make sure the entire card is clickable without changing appearance
     backgroundColor: 'transparent',
   },
   cardTitle: {
@@ -73,6 +66,11 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 80,
     marginLeft: 10,
+    textAlign: 'right',
+  },
+  inputLabel: {
+    borderColor: '#cccccc',
+    width: '82%', 
     textAlign: 'right',
   }
 });

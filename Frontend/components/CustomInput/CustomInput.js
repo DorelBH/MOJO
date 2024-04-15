@@ -3,25 +3,36 @@ import { View, Text, TextInput,StyleSheet} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { validate } from "../../util/validators";
 
-const CustomInput = ({ value, setValue, placeholder, secureTextEntry, iconName, validators = [], errorMessage,keyboardType}) => {
+const CustomInput = ({
+    value, 
+    setValue, 
+    placeholder, 
+    secureTextEntry, 
+    iconName, 
+    validators = [], 
+    errorMessage,
+    keyboardType,
+    style ,
+}) => {
     const [isValid, setIsValid] = useState(true);
 
     const inputChangeHandler = (inputValue) => {
         setValue(inputValue);
         setIsValid(validate(inputValue, validators));
     };
- 
+
+    const containerStyle = style || inputStyles.container; // בודק אם קיים סגנון מועבר, אם לא משתמש בברירת מחדל
+
     return (
-        <View style={inputStyles.container}>
+        <View style={containerStyle}> 
             <Icon name={iconName} style={inputStyles.icon} />
             <TextInput
                 value={value}
                 onChangeText={inputChangeHandler}
                 placeholder={placeholder}
-                style={inputStyles.input}
+                style={[inputStyles.input, { textAlign: 'right', writingDirection: 'rtl' }, style]} // עדכון כיוון הטקסט והכתיבה
                 secureTextEntry={secureTextEntry}
                 keyboardType={keyboardType}
-
             />
             {!isValid && errorMessage && <Text style={inputStyles.errorText}>*{errorMessage}</Text>}
         </View>
