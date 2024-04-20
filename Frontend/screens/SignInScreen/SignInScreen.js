@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from "react-native";
 
-import Logo from '../../assets/images/Logo_1.png';
+import Logo from '../../assets/images/mojo_logo.png';
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import SocialSignInButtons from "../../components/SocialSignInButtons";

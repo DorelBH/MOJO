@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
-import Wedding_Couple from '../../assets/images/Wedding_Couple.png';
+import Wedding_Couple from '../../assets/CoupleImage.png';
 
 const CoupleLogo = () => {
   return (

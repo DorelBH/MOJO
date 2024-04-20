@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import CoupleLogo from '../../components/CoupleLogo';
+import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import CoupleImage from '../../assets/images/CoupleImage.png';
 import MainSlots from '../../components/MainSlots';
+import CameraButton from '../../components/CameraButton';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import { useRoute } from "@react-navigation/native";
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken"; 
+
+
 
 const MainScreen = ({ navigation }) => {
   useAuthCheck();
   const route = useRoute();
   const { eventId } = route.params;  // קבלת ה-ID מה-HomeScreen
   const [eventData, setEventData] = useState(null);
+  const [imageUri, setImageUri] = useState(null);
 
   useEffect(() => {
     if (eventId) {
@@ -40,14 +44,10 @@ const MainScreen = ({ navigation }) => {
   };
 
   const slotsData = [
-    { slot: 'מחשבון הוצאות', icon: 'calculator', action: 'CostCalculator' },
-    { slot: 'רשימת מוזמנים', icon: 'users' },
-    { slot: 'מחשבון אלכוהול', icon: 'glass', action: 'AlcoholCalculator' },
-    { slot: 'אולמות', icon: 'home' },
-    { slot: 'ספקים', icon: 'star' },
-    { slot: 'צק ליסט', icon: 'check' },
-    { slot: 'טיפים', icon: 'lightbulb-o' },
-    { slot: 'בחירת שירים', icon: 'music' },
+    { title: 'אז איך מתחילים?', description: 'הפכו את התכנון לחוויה חלקה ומהנה של הצקליסט שלנו! כל מה שאתם צריכים לניהול מושלם של ספקים אולמות וכל פרט נוסף.', image: require('../../assets/images/CheckListSlot.png') },
+    { title: 'תמיד תהיו בבקרה על ההוצאות',description:'עם מחשבון ההוצאות שלנו תוכלו לאגד ולנהלאת כל ההוצאות לחתונה במקום אחד.המחשבון מאפשר לכם לשמור על התקציב ולהישאר בבקרה תמיד.', action: 'CostCalculator', image: require('../../assets/images/calc.png') },
+    { title: 'רשימת מוזמנים', description: 'ארגן את רשימת המוזמנים בצורה הפשוטה והיעילה ביותר! עם פונקציית רשימת המוזמנים שלנו תוכל להוסיף מוזמנים בקלות מתוך אנשי הקשר שלך ולעקוב אחרי אישורי ההגעה.', image: require('../../assets/images/GuestList.png') },
+    
   ];
 
   const handleSlotPress = (action) => {
@@ -59,10 +59,30 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
+/*   if (!eventData) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading event data...</Text>
+      </View>
+    );
+  } */
 
   return (
     <View style={styles.container}>
-      <CoupleLogo />
+      <View style={styles.imageContainer}>
+        {imageUri ? (
+          <Image
+            source={{uri: imageUri}}
+            style={styles.coupleImg}
+          />
+        ) : (
+          <Image
+            source={CoupleImage}
+            style={styles.coupleImg}
+          />
+        )}
+        <CameraButton onPress={handleImageChange} style={styles.cameraButton} />
+      </View>
       <MainSlots slotsData={slotsData} handleSlotPress={handleSlotPress} />
     </View>
   );
@@ -71,9 +91,21 @@ const MainScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: 'white',
   },
+  imageContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '30%', // Adjust the height as per your image aspect ratio
+  },
+  coupleImg: {
+    width: '100%',
+    height: '100%', // Adjust the height as per your image aspect ratio
+    resizeMode: 'cover',
+    
+  },
+  
+  
 });
 
 export default MainScreen;
