@@ -15,7 +15,7 @@ const getUserName = async (req, res, next) => {
 
 const newEvent = async (req, res, next) => {
     try {
-        const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions } = req.body;
+        const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions,costs} = req.body;
 
         validateEventType(eventType);
         validateAmountInvited(amountInvited);
@@ -24,7 +24,8 @@ const newEvent = async (req, res, next) => {
             eventType,
             amountInvited,
             selectedRegions,
-            userId: req.user.userId 
+            userId: req.user.userId,
+            costs
         };
 
         if (eventType === "חתונה" || eventType === "חינה") {
@@ -89,7 +90,7 @@ const deleteEvent = async (req, res) => {
             return res.status(403).json({ message: 'Not authorized to delete this event' });
         }
 
-        await Event.findByIdAndDelete(eventId); // שימוש ב findByIdAndDelete במקום findByIdAndRemove
+        await Event.findByIdAndDelete(eventId); 
         await User.updateOne({ _id: event.userId }, { $pull: { events: eventId } });
         res.json({ message: 'Event deleted successfully' });
     } catch (error) {
@@ -118,6 +119,90 @@ const getSpecificEvent = async (req, res, next) => {
     }
 };
 
+
+//COST - CALCULATOR 
+
+const addCostsToEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { costs } = req.body;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        for (const newCost of costs) {
+            const existingCost = event.costs.find(cost => cost.label === newCost.label);
+            if (existingCost) {
+                return res.status(400).json({ message:`Cost with label '${newCost.label}' already exists.`});
+            }
+            event.costs.push(newCost);
+        }
+
+        await event.save();
+        res.status(200).json({ message: "All new costs added successfully", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to update costs" });
+    }
+};
+
+const updateCostsInEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { index, newCostData,} = req.body;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        if (index < 0 || index >= event.costs.length) { // Ensure index is within bounds
+            return res.status(404).json({ message: "Cost index out of bounds" });
+        }              
+
+        // Proceed with updating
+        event.costs[index] = { ...event.costs[index], ...newCostData };
+        await event.save();
+        res.status(200).json({ message: "Cost updated successfully", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to update cost" });
+    }
+};
+
+/* const deleteCostInEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { index } = req.body;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        // ודא שהאינדקס תקין וכללי לפני המחיקה
+        if (index < 0 || index >= event.costs.length) {
+            return res.status(404).json({ message: "Cost index out of bounds" });
+        }
+
+        // מחיקת האיבר מהמערך
+        event.costs.splice(index, 1);
+        await event.save();
+        res.status(200).json({ message: "Cost deleted successfully", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to update cost" });
+    }
+}; */
+
+
+
+
+
+
+exports.addCostsToEvent=addCostsToEvent;
+exports.updateCostsInEvent=updateCostsInEvent;
+/* exports.deleteCostInEvent=deleteCostInEvent;
+ */
 exports.getSpecificEvent = getSpecificEvent;
 exports.deleteEvent=deleteEvent;
 exports.getEvent = getEvent;

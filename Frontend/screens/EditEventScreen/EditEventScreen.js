@@ -9,6 +9,7 @@ import { getToken } from "../../util/authToken";
 import { apiUrl } from "../../api";
 import { useNavigation } from '@react-navigation/native';
 import useAuthCheck from '../../hooks/useAuthCheck';
+import CostData from '../../components/CostData';
 
 const EditEventScreen = ({ route }) => {
     useAuthCheck();
@@ -54,6 +55,8 @@ const EditEventScreen = ({ route }) => {
                 if (closeHall && selectedDate) {
                     eventData.eventDate = selectedDate;
                 }
+                const eventCosts = CostData({ eventType: eventData.eventType }); // cost calc
+                eventData.costs = eventCosts; // מוסיף את ההוצאות לאובייקט eventData
     
                 const response = await fetch(`${apiUrl}/api/events/editEvent`, {
                     method: 'POST',
@@ -61,7 +64,7 @@ const EditEventScreen = ({ route }) => {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     },
-                    body: JSON.stringify(eventData),
+                    body: JSON.stringify(eventData), // שולח את כל האובייקט eventData כולל השדה costs
                 });
     
                 const responseData = await response.json();
@@ -77,6 +80,7 @@ const EditEventScreen = ({ route }) => {
             console.error('No token found, please login.');
         }
     };
+    
     
 
     const couple = (eventType) => {

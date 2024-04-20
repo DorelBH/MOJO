@@ -17,7 +17,7 @@ const MainScreen = ({ navigation }) => {
     if (eventId) {
       fetchEventData(eventId);
     }
-  }, [eventId]);
+  }, [eventData]);
 
   const fetchEventData = async (eventId) => {
     const token = await getToken();
@@ -55,17 +55,10 @@ const MainScreen = ({ navigation }) => {
       navigation.navigate('AlcoholCalculator', { amountInvited: eventData.amountInvited });
     }
     if (action === 'CostCalculator' && eventData) {
-      navigation.navigate('CostCalculator', { eventType: eventData.eventType });
+      navigation.navigate('CostCalculator', {eventType:eventData.eventType,costs:eventData.costs,eventId});
     }
   };
 
-/*   if (!eventData) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading event data...</Text>
-      </View>
-    );
-  } */
 
   return (
     <View style={styles.container}>

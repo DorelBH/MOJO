@@ -1,96 +1,52 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, StyleSheet } from 'react-native';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import { useRoute } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import CustomInput from '../../components/CustomInput';
 import CostList from '../../components/CostList/CostList';
+import useCostServerConnect from './useCostServerConnect';
 
 const CostCalculator = () => {
     useAuthCheck();
 
     const route = useRoute();
-    const { eventType } = route.params;
+    const { eventType, eventId, costs } = route.params;
 
-    const [modalVisible, setModalVisible] = useState(false); // MODAL - ADD NEW FIELD
+    const [modalVisible, setModalVisible] = useState(false);
     const [newFieldTitle, setNewFieldTitle] = useState('');
-    const [totalCost, setTotalCost] = useState(0);  // הגדרה זו חייבת להיות בתוך הפונקציה CostCalculator
+    const [totalCost, setTotalCost] = useState(0);
+    const [isEditing, setIsEditing] = useState(false);
+    const [eventCosts, setEventCosts] = useState(costs || {});
+    const [editCosts, setEditCosts] = useState({});
 
-    const [isEditing, setIsEditing] = useState(false); // EDIT FIELDS
-
-    const eventCostsBase = {
-        venue: { label: 'אולם/גן אירועים', cost: '' },
-        photographer: { label: 'צלם', cost: '' },
-        magnetPhotographer: { label: 'צלם מגנטים', cost: '' },
-        dj: { label: 'דיג\'יי', cost: '' },
-        acam: { label: 'אקו"ם', cost: '' },
-        lightingAndSound: { label: 'תאורה והגברה', cost: '' },
-        hallDesign: { label: 'עיצוב אולם', cost: '' },
-        bar: { label: 'בר אקטיבי', cost: '' }, 
-        invitations: { label: 'הזמנות', cost: '' },
-    };
-
-    const additionalCosts = {
-        חינה: {
-            groomOutfit: { label: 'תלבושת חתן', cost: '' },
-            bridalOutfit: { label: 'תלבושת כלה', cost: '' },
-            costumes: { label: 'תלבושת נוספות', cost: '' },
-        },
-        חתונה: {
-            bridalDress: { label: 'שמלת כלה', cost: '' },
-            bridalMakeup: { label: 'איפור כלה', cost: '' },
-            bridalHairDesign: { label: 'עיצוב שיער', cost: '' },
-            groomSuit: { label: 'חליפת חתן', cost: '' },
-            weddingRings: { label: 'טבעות נישואים', cost: '' },
-            rabbinate: { label: 'רבנות', cost: '' },
-            weddingRabbi: { label: 'רב לחופה', cost: '' },
-            bridalBouquet: { label: 'זר כלה', cost: '' },
-            carDecoration: { label: 'קישוט לרכב', cost: '' },
-            hotel: { label: 'מלון', cost: '' },
-        },
-        ברית: {
-            mohel: { label: 'מוהל', cost: '' },
-        },
-    };
-
-    const [eventCosts, setEventCosts] = useState({ ...eventCostsBase, ...additionalCosts[eventType] });
+    const { updateCost, /* onDeleteCost, */ handleAddNewField } = useCostServerConnect(
+        eventId, eventCosts, setEventCosts, setModalVisible, newFieldTitle,setNewFieldTitle
+    ); // Pass all necessary states and functions
 
     const calculateTotal = () => {
         const total = Object.values(eventCosts).reduce((acc, curr) => acc + parseFloat(curr.cost || 0), 0);
         setTotalCost(total);
     };
 
-    const onDeleteCost = (key) => {
-        setEventCosts(prevCosts => {
-            const updatedCosts = { ...prevCosts };
-            delete updatedCosts[key];
-            return updatedCosts;
-        });
-    };
-    
-    const updateCost = (key, newData) => {
-        setEventCosts(prevCosts => ({
-            ...prevCosts,
-            [key]: { ...prevCosts[key], ...newData }
-        }));
-    };
-
-    const handleAddNewField = () => {
-        if (newFieldTitle) {
-            setEventCosts(prevCosts => ({
-                ...prevCosts,
-                [newFieldTitle]: { label: newFieldTitle, cost: '' } // Initialize with label and empty cost
-            }));
-            setNewFieldTitle('');
-            setModalVisible(false);
-        }
-    };
 
     const toggleEditMode = () => {
+        if (isEditing) {
+            Object.entries(editCosts).forEach(([key, newData]) => {
+                updateCost(key, newData); // Update server only on edit mode exit
+            });
+            setEventCosts(editCosts);
+        } else {
+            setEditCosts({ ...eventCosts });
+        }
         setIsEditing(!isEditing);
     };
 
-    
+
+    useEffect(() => {
+
+    }, [eventCosts]);
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>מחשבון הוצאות ל{eventType}</Text>
@@ -107,11 +63,12 @@ const CostCalculator = () => {
                 />
             </View>
             <CostList
-                eventCosts={eventCosts}
-                onDeleteCost={onDeleteCost}
-                onUpdateCost={updateCost}
-                calculateTotal={calculateTotal}
+                eventCosts={isEditing ? editCosts : eventCosts}
+/*                 onDeleteCost={onDeleteCost}
+ */                
+                onUpdateCost={(key, newData) => setEditCosts(prev => ({ ...prev, [key]: { ...prev[key], ...newData }}))}
                 isEditing={isEditing}
+                eventId={eventId}
             />
             <View style={styles.btnCalc}>
                 <CustomButton
@@ -194,7 +151,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 20,
-        width: '90%', 
+        width: '90%',
         alignItems: 'center',
     },
 });
