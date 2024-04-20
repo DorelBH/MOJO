@@ -9,25 +9,43 @@ const MainSlots = ({ slotsData, handleSlotPress }) => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={SlotStyles.scrollViewContent}>
-      <View style={SlotStyles.slotContainer}>
+      <TouchableOpacity activeOpacity={1} style={SlotStyles.slotContainer}>
         {slotsData.map((item, index) => (
           <View key={index} style={SlotStyles.slotRow}>
             <Text style={SlotStyles.slotTitle}>{item.title}</Text>
+            {item.title === 'רשימת מוזמנים' ? (
+                <View>
+                  <Text style={[SlotStyles.slotDescription, { marginRight: 15 }]}>{item.description}</Text>
+                  <View style={SlotStyles.slotInviteButton}>
+                    <TouchableOpacity onPress={() => handleSlotPress(item.action)}>
+                      <Image source={item.image} style={SlotStyles.ButtonInvite}/>
+                      <Text style={SlotStyles.textInvite}> לרשימה המלאה</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleSlotPress(item.action)}>
+                      <Image source={item.image2} style={SlotStyles.ButtonInvite}/>
+                      <Text style={SlotStyles.textInvite}> הוסף מוזמנים</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+             ) : (
             <View style={SlotStyles.slotContent}>
               <View style={SlotStyles.slotButtonContainer}>
-                <TouchableOpacity onPress={() => handleSlotPress(item.action)}>
-                  <View style={[SlotStyles.slotButton, { borderRadius: 15 }]}>
+              <View style={[SlotStyles.slotButton, { borderRadius: 15 }]}>
                     <Image source={item.image} style={SlotStyles.slotButtonImage}/>
                   </View>
-                </TouchableOpacity>
               </View>
               <View style={SlotStyles.slotDescriptionContainer}>
                 <Text style={SlotStyles.slotDescription}>{item.description}</Text>
+                <TouchableOpacity style={SlotStyles.actionButton} onPress={() => handleSlotPress(item.action)}>
+                  <Text style={SlotStyles.actionButtonText}>{item.buttonText}</Text>
+                </TouchableOpacity>
               </View>
             </View>
+            )}
           </View>
         ))}
-      </View>
+      </TouchableOpacity>
+
       <Text style={SlotStyles.slotTitle}>יש לנו טיפי זהב בשבילכם</Text>
       <View style={SlotStyles.adContainer}>
         <TouchableOpacity style={SlotStyles.tipButton} onPress={() => {/* First wedding tip function */}}>
@@ -39,6 +57,7 @@ const MainSlots = ({ slotsData, handleSlotPress }) => {
         <TouchableOpacity style={SlotStyles.tipButton} onPress={() => {/* Third wedding tip function */}}>
           <Text style={SlotStyles.tipText}>להנות מכל רגע</Text>
         </TouchableOpacity>
+        
       </View>
     </ScrollView>
   );
@@ -60,7 +79,8 @@ const SlotStyles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 22,
     fontFamily: 'AcademyEngravedLetPlain',
-    marginTop: '13%',
+    marginTop: '10%',
+    marginBottom:'2%'
   },
   slotContent: {
     flexDirection: 'row',
@@ -71,13 +91,13 @@ const SlotStyles = StyleSheet.create({
     marginRight: 20,
   },
   slotButton: {
-    width: 100,
-    height: 100,
+    width: 130,
+    height: 130,
     borderColor: 'gray',
-    borderWidth: 2,
+    borderWidth: 0,
     position: 'relative',
     overflow: 'hidden', // Ensure image respects border-radius
-    marginLeft: '7%',
+    marginLeft: '8%',
   },
   slotButtonImage: {
     width: '100%',
@@ -108,7 +128,7 @@ const SlotStyles = StyleSheet.create({
   slotDescription: {
     textAlign: 'right',
     color: 'gray',
-    marginRight: '6%',
+    marginRight: '9%',
   },
   adContainer: {
     marginTop: 20,
@@ -136,6 +156,42 @@ const SlotStyles = StyleSheet.create({
     borderRadius: 10,
     fontFamily: 'AcademyEngravedLetPlain',
   },
+  actionButton: {
+    marginTop:7,
+    padding: 6,
+    backgroundColor: '#7B481C',
+    borderRadius: 15,
+    width: 150, 
+    height:30,
+    alignSelf: 'flex-end',
+    marginRight: '9%',
+    borderWidth: 1,
+  },
+  actionButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 14,
+  },
+
+  slotInviteButton: {
+    flexDirection: 'row', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginTop: 20, 
+    marginBottom: 10, 
+  },
+  ButtonInvite: {
+    width: 130, 
+    height: 130, 
+    resizeMode: 'contain', 
+    marginHorizontal: 20, 
+  },
+  textInvite: {
+    textAlign: 'center', 
+    marginTop: 5, 
+    fontSize: 16, 
+    color: 'black',
+  }
 });
 
 export default MainSlots;

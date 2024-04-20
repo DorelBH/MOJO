@@ -18,8 +18,10 @@ const CameraButton = ({ onPress }) => {
         quality: 1,
       });
 
-      if (!result.canceled) {
-        onPress(result.uri);
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        onPress(result.assets[0].uri); 
+      } else {
+        console.log("Image selection was canceled or no assets available"); 
       }
     } catch (error) {
       console.error('Error selecting image:', error);
@@ -32,6 +34,8 @@ const CameraButton = ({ onPress }) => {
     </TouchableOpacity>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {
