@@ -1,11 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Image } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import Idea from '../../assets/images/Idea.png';
-import CoupleImage from '../../assets/images/CoupleImage.png';
+
 
 const MainSlots = ({ slotsData, handleSlotPress }) => {
-  const slotWidth = (Dimensions.get('window').width - 60) / 2;
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={SlotStyles.scrollViewContent}>

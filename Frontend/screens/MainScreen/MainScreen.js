@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import CoupleImage from '../../assets/images/CoupleImage.png';
 import MainSlots from '../../components/MainSlots';
 import CameraButton from '../../components/CameraButton';
 import useAuthCheck from '../../hooks/useAuthCheck';
@@ -9,7 +8,11 @@ import { useRoute } from "@react-navigation/native";
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken"; 
 
-
+import CoupleImage from '../../assets/images/CoupleImage.png';
+import BritImage from '../../assets/images/BritImage.png';
+import HennaImage from '../../assets/images/HennaImage.jpg'
+import PartyImage from '../../assets/images/PartyImage.jpg'
+import BarMitzvaImage from '../../assets/images/BarMitzvaImage.jpg'
 
 const MainScreen = ({ navigation }) => {
   useAuthCheck();
@@ -23,9 +26,11 @@ const MainScreen = ({ navigation }) => {
     if (eventId) {
       fetchEventData(eventId);
     }
-  }, [eventData]);
+  }, [eventId,eventData]);
+
 
   const fetchEventData = async (eventId) => {
+    if (!eventId) return;
     const token = await getToken();
     try {
       const response = await fetch(`${apiUrl}/api/events/getEvent/${eventId}`, {
@@ -63,8 +68,8 @@ const MainScreen = ({ navigation }) => {
     {
       title: 'רשימת מוזמנים',
       description: 'ארגן את רשימת המוזמנים בצורה הפשוטה והיעילה ביותר! עם פונקציית רשימת המוזמנים שלנו תוכל להוסיף מוזמנים בקלות מתוך אנשי הקשר שלך ולעקוב אחרי אישורי ההגעה.',
-      image: require('../../assets/images/calc.png'),
-      image2: require('../../assets/images/CheckListSlot.png'),
+      image: require('../../assets/images/check.png'),
+      image2: require('../../assets/images/plus.png'),
       action: 'GuestList'
     }
   ];
@@ -84,15 +89,28 @@ const MainScreen = ({ navigation }) => {
     setImageUri(uri);
   };
 
+ const ImageByType = () => {
+    if (!eventData) return null; // אם אין נתונים, אל תחזיר תמונה
+    switch (eventData.eventType) {
+      case "חתונה": return CoupleImage;
+      case "חינה": return HennaImage;
+      case "ברית": return BritImage;
+      case "בר/בת מצווה": return BarMitzvaImage;
+      case "אירוע פרטי": return PartyImage;
+      default: return null;
+    }
+  };
+
+
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-      <Image
-        source={imageUri ? { uri: imageUri } : CoupleImage}
-        style={styles.coupleImg}
-      />
-      <CameraButton onPress={handleImageChange} style={styles.cameraButton} />
+        <Image
+          source={imageUri ? { uri: imageUri } : ImageByType()}
+          style={styles.coupleImg}
+        />
+        <CameraButton onPress={handleImageChange} style={styles.cameraButton} />
       </View>
       <MainSlots slotsData={slotsData} handleSlotPress={handleSlotPress} />
     </View>
@@ -116,7 +134,11 @@ const styles = StyleSheet.create({
     
   },
   
-  
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 export default MainScreen;
