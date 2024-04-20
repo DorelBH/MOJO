@@ -78,14 +78,15 @@ const HomeScreen = () => {
     return (
         <View style={HomeScreenStyle.container}>
             <View style={HomeScreenStyle.content}>
+                
+                <Text style={HomeScreenStyle.title}>
+                    {events.length > 0 ? "האירועים שלי" : "לא קיימים אירועים"}
+                </Text>
                 <CustomButton
                     text="יצירת אירוע חדש"
                     onPress={createNewEvent}
                     type="HALL"
                 />
-                <Text style={HomeScreenStyle.title}>
-                    {events.length > 0 ? "האירועים שלי:" : "לא קיימים אירועים"}
-                </Text>
             </View>
             {/* כאן מציגים את רשימת האירועים */}
             <EventsList events={events} onPress={goToMain} onDeletePress={deleteEvent} />
