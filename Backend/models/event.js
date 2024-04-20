@@ -11,6 +11,7 @@ const eventSchema = new Schema({
     amountInvited: { type: Number, required: true },
     selectedRegions: [{ type: String, required: true }],
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // הוספת מזהה המשתמש
+    photo: { type: String },
     costs: [{
         label: { type: String, required: false },
         cost: { type: Number, required: false }

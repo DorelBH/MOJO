@@ -26,7 +26,8 @@ const MainScreen = ({ navigation }) => {
     if (eventId) {
       fetchEventData(eventId);
     }
-  }, [eventId,eventData]);
+  }, [eventId,eventData]);//
+  
 
 
   const fetchEventData = async (eventId) => {
@@ -84,10 +85,6 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-  // פונקציה לשינוי התמונה
-  const handleImageChange = (uri) => {
-    setImageUri(uri);
-  };
 
  const ImageByType = () => {
     if (!eventData) return null; // אם אין נתונים, אל תחזיר תמונה
@@ -101,16 +98,19 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-
+  const ImageFromDB = () => {
+    if (!eventData) return null; // אם אין נתונים, אל תחזיר תמונה
+    return eventData.photo;
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <Image
-          source={imageUri ? { uri: imageUri } : ImageByType()}
+          source={ImageFromDB() ? { uri: ImageFromDB() } : ImageByType()}
           style={styles.coupleImg}
         />
-        <CameraButton onPress={handleImageChange} style={styles.cameraButton} />
+        <CameraButton eventId={eventId} style={styles.cameraButton} />
       </View>
       <MainSlots slotsData={slotsData} handleSlotPress={handleSlotPress} />
     </View>
@@ -130,14 +130,8 @@ const styles = StyleSheet.create({
   coupleImg: {
     width: '100%',
     height: '100%', // Adjust the height as per your image aspect ratio
-    resizeMode: 'cover',
+    resizeMode: 'stretch',
     
-  },
-  
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   }
 });
 

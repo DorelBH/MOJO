@@ -119,6 +119,26 @@ const getSpecificEvent = async (req, res, next) => {
     }
 };
 
+const addPhoto = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { photoUri } = req.body; 
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+          return res.status(404).json({ message: "Event not found." });
+        }
+    
+        event.photo = photoUri; // עדכון ה-URI במסד הנתונים
+        await event.save();
+        res.status(200).json({ message: "Photo URI added successfully", event });
+      } catch (error) {
+        console.error('Error adding photo URI:', error);
+        res.status(500).json({ message: "Failed to add photo URI", error: error.message });
+      }
+};
+
+
 
 //COST - CALCULATOR 
 
@@ -197,6 +217,7 @@ const updateCostsInEvent = async (req, res) => {
 
 
 
+exports.addPhoto=addPhoto;
 
 
 exports.addCostsToEvent=addCostsToEvent;

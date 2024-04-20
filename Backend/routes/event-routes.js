@@ -11,6 +11,7 @@ router.delete('/deleteEvent/:eventId', authenticateToken, eventsController.delet
 
 router.get('/getEvent/:eventId', authenticateToken, eventsController.getSpecificEvent);
 
+router.post('/addPhoto/:eventId', authenticateToken,eventsController.addPhoto);
 
 router.post('/addCosts/:eventId', authenticateToken, eventsController.addCostsToEvent);
 router.patch('/updateCosts/:eventId', authenticateToken, eventsController.updateCostsInEvent);
