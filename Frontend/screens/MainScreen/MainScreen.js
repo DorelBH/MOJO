@@ -59,13 +59,11 @@ const MainScreen = ({ navigation }) => {
     }
   };
 
-/*   if (!eventData) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading event data...</Text>
-      </View>
-    );
-  } */
+  const handleImageChange = (uri) => {
+    console.log("selected image URI:", uri)
+    setImageUri(uri); // Update imageUri state with selected image URI
+  };
+
 
   return (
     <View style={styles.container}>
