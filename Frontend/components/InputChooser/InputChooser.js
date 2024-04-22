@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     fontSize: 16,
+    textAlign: 'center',
   },
   dropdownOptions: {
     width: 200,

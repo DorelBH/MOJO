@@ -56,12 +56,13 @@ const NewEventScreen = () => {
   return (
     <View style={NewEventStyle.container}>
       <Text style={NewEventStyle.title}>Hello {username || "...."}</Text>
+      <Text style={NewEventStyle.description}> כדי להתחיל לייעל את תהליך התכנון, נשמח לדעת איזה סוג של אירוע אתם מתכננים. הנה תפריט עם האפשרויות שלנו:</Text>
       <InputChooser
         options={options}
         onSelect={handleEventTypeChange}
         chooserText={eventType || 'בחר סוג אירוע'}
       />
-      <Text>Selected Event Type: {eventType}</Text>
+      
       <CustomButton
         text="הבא"
         onPress={onContinuePressed}
@@ -80,8 +81,15 @@ const NewEventStyle = StyleSheet.create({
   },
   title: {
     fontSize: 30,
+    marginBottom: 15,
+    fontFamily: 'AcademyEngravedLetPlain',
+  },
+  description: {
+    fontSize: 15,
     marginBottom: 50,
-  }
+    fontFamily: 'AcademyEngravedLetPlain',
+    textAlign: 'center',
+  },
 });
 
 export default NewEventScreen;
