@@ -28,6 +28,7 @@ const buttonStyles = StyleSheet.create({
         alignItems:'center',
         borderRadius:5,
         paddingHorizontal:10,
+        padding:15, //change
     },
     container_PRIMARY: {
         backgroundColor:'#3871F3',
@@ -52,7 +53,7 @@ const buttonStyles = StyleSheet.create({
         borderWidth:1,
         width: '40%', 
         height: '5%',
-        justifyContent: 'center',
+        justifyContent: 'center', //change
     },
 
     container_CALCULATE: {
@@ -62,6 +63,7 @@ const buttonStyles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center', 
         justifyContent: 'center', 
+<<<<<<< HEAD
         width: 150,
         height: 50,
 
@@ -94,8 +96,36 @@ const buttonStyles = StyleSheet.create({
         justifyContent: 'center', 
         
 
+=======
+        width: '40%',
+>>>>>>> ronmo4
     },
 
+    container_PROVIDER: {
+        backgroundColor: '#7B481C',
+        borderRadius: 30,
+        borderColor: 'black', 
+        borderWidth: 1,
+        margin: 5,
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        width: '36%',
+        height:'30%',
+    },
+
+    container_PROVIDER_NOTACTIVE: {
+        backgroundColor: '#808080',
+        borderRadius: 30,
+        borderColor: 'black', 
+        borderWidth: 1,
+        margin: 5,
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        width: '36%',
+        height:'30%',
+    },
 
     text:{
         fontWeight:'bold',
@@ -123,6 +153,7 @@ const buttonStyles = StyleSheet.create({
         color: 'gray',
         
     },
+<<<<<<< HEAD
     text_MAINBROWN:{
         fontWeight:'bold',
         color:'white',
@@ -138,6 +169,16 @@ const buttonStyles = StyleSheet.create({
         textAlign: 'center',
     },
     
+=======
+    text_PROVIDER:{
+        color: 'white',
+        fontSize: 12,
+    },
+    text_PROVIDER_NOTACTIVE:{
+        color: 'white',
+        fontSize: 12,
+    }
+>>>>>>> ronmo4
 })
 
 export default CustomButton
