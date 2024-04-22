@@ -190,9 +190,9 @@ const updateCostsInEvent = async (req, res) => {
     }
 };
 
-/* const deleteCostInEvent = async (req, res) => {
+const deleteCostInEvent = async (req, res) => {
     const eventId = req.params.eventId;
-    const { index } = req.body;
+    const { index } = req.body; // קודם השתמשת ב-key, עכשיו אנחנו משתמשים ב-index
 
     try {
         const event = await Event.findById(eventId);
@@ -200,19 +200,20 @@ const updateCostsInEvent = async (req, res) => {
             return res.status(404).json({ message: "Event not found" });
         }
 
-        // ודא שהאינדקס תקין וכללי לפני המחיקה
         if (index < 0 || index >= event.costs.length) {
             return res.status(404).json({ message: "Cost index out of bounds" });
         }
 
-        // מחיקת האיבר מהמערך
+        // מחיקת העלות על פי האינדקס במערך
         event.costs.splice(index, 1);
         await event.save();
         res.status(200).json({ message: "Cost deleted successfully", event });
     } catch (error) {
-        res.status(500).json({ message: error.message || "Failed to update cost" });
+        console.error(`Failed to delete cost with ID: ${eventId}, Error: ${error.message}`);
+        res.status(500).json({ message: 'Failed to delete cost' });
     }
-}; */
+};
+
 
 
 
@@ -222,8 +223,8 @@ exports.addPhoto=addPhoto;
 
 exports.addCostsToEvent=addCostsToEvent;
 exports.updateCostsInEvent=updateCostsInEvent;
-/* exports.deleteCostInEvent=deleteCostInEvent;
- */
+exports.deleteCostInEvent=deleteCostInEvent;
+
 exports.getSpecificEvent = getSpecificEvent;
 exports.deleteEvent=deleteEvent;
 exports.getEvent = getEvent;

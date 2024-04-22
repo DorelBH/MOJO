@@ -43,9 +43,8 @@ const useCostServerConnect = (eventId, eventCosts, setEventCosts, setModalVisibl
         }
     };
     
-/*     const onDeleteCost = async (key) => {
+    const onDeleteCost = async (key) => {
         try {
-
             const token = await getToken();
             const response = await fetch(`${apiUrl}/api/events/deleteCost/${eventId}`, {
                 method: 'DELETE',
@@ -53,7 +52,7 @@ const useCostServerConnect = (eventId, eventCosts, setEventCosts, setModalVisibl
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ key }) 
+                body: JSON.stringify({ index: key }) 
             });
             if (!response.ok) {
                 const responseData = await response.json();
@@ -68,7 +67,8 @@ const useCostServerConnect = (eventId, eventCosts, setEventCosts, setModalVisibl
         } catch (error) {
             console.error('Error:', error.message || 'Error deleting cost.');
         }
-    }; */
+    };
+    
     
     
     const handleAddNewField = async () => {
@@ -103,7 +103,7 @@ const useCostServerConnect = (eventId, eventCosts, setEventCosts, setModalVisibl
         }
     };
 
-    return { updateCost, /* onDeleteCost, */ handleAddNewField };
+    return { updateCost,  onDeleteCost, handleAddNewField };
 };
 
 export default useCostServerConnect;

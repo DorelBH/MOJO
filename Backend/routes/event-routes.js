@@ -15,6 +15,6 @@ router.post('/addPhoto/:eventId', authenticateToken,eventsController.addPhoto);
 
 router.post('/addCosts/:eventId', authenticateToken, eventsController.addCostsToEvent);
 router.patch('/updateCosts/:eventId', authenticateToken, eventsController.updateCostsInEvent);
-/* router.delete('/deleteCost/:eventId', authenticateToken, eventsController.deleteCostInEvent);
- */
+router.delete('/deleteCost/:eventId', authenticateToken, eventsController.deleteCostInEvent);
+
 module.exports = router;
