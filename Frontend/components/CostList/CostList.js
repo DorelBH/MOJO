@@ -58,10 +58,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
     },
     cardTitle: {
-        fontSize: 15,
+        fontSize: 18,
         fontWeight: 'bold',
         flex: 1,
-        textAlign: 'right'
+        textAlign: 'right',
+        fontFamily: 'AcademyEngravedLetPlain',
     },
     input: {
         borderWidth: 1,
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
         width: 80,
         marginLeft: 10,
         textAlign: 'right',
+        borderRadius: 5,
     },
     inputLabel: {
         borderColor: '#cccccc',
