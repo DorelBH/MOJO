@@ -20,8 +20,6 @@ const MainScreen = ({ navigation }) => {
   const { eventId } = route.params;  // קבלת ה-ID מה-HomeScreen
   const [eventData, setEventData] = useState(null);
 
-  const [imageUri, setImageUri] = useState();
-
   useEffect(() => {
     if (eventId) {
       fetchEventData(eventId);
@@ -57,7 +55,14 @@ const MainScreen = ({ navigation }) => {
       description: 'הפכו את התכנון לחוויה חלקה ומהנה של הצקליסט שלנו! כל מה שאתם צריכים לניהול מושלם של ספקים אולמות וכל פרט נוסף.',
       image: require('../../assets/images/CheckListSlot.png'),
       buttonText: 'התחילו עכשיו',
-      action: 'Checklist'
+      action: 'start'
+    },
+    {
+      title: 'ספקי אלכוהול',
+      description: 'אלכוהול התחלה',
+      image: require('../../assets/images/CheckListSlot.png'),
+      buttonText: 'אלכוהול',
+      action: 'ChooseMain'
     },
     {
       title: 'תמיד תהיו בבקרה על ההוצאות',
@@ -83,6 +88,10 @@ const MainScreen = ({ navigation }) => {
     if (action === 'CostCalculator' && eventData) {
       navigation.navigate('CostCalculator', {eventType:eventData.eventType,costs:eventData.costs,eventId});
     }
+    if (action === 'ChooseMain' && eventData) {
+      navigation.navigate('ChooseMain',{ amountInvited: eventData.amountInvited });
+    }
+
   };
 
 

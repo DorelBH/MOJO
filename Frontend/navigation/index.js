@@ -16,7 +16,7 @@ import EditEventScreen from "../screens/EditEventScreen";
 import MainScreen from "../screens/MainScreen";
 import AlcoholCalculatorScreen from "../screens/AlcoholCalculatorScreen/AlcoholCalculatorScreen";
 import CostCalculator from "../screens/CostCalculator/CostCalculator";
-
+import ChooseMain from "../screens/ChooseMain/ChooseMain"
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
@@ -35,7 +35,7 @@ const Navigation = () => {
             <Stack.Screen name="Main" component={MainScreen}/> 
             <Stack.Screen name="AlcoholCalculator" component={AlcoholCalculatorScreen}/>
             <Stack.Screen name="CostCalculator" component={CostCalculator}/>
-            {/* <Stack.Screen name="InviteScreen" component={InviteScreen}/> */}
+            <Stack.Screen name="ChooseMain" component={ChooseMain}/> 
 
             </Stack.Navigator>
         </NavigationContainer>

@@ -104,7 +104,7 @@ const AlcoholCalculatorStyles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        paddingTop: 80,
+        paddingTop: 0,
         paddingHorizontal: 20,
     },
     title: {

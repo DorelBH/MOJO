@@ -67,9 +67,33 @@ const buttonStyles = StyleSheet.create({
         alignSelf: 'center', 
         justifyContent: 'center', 
         width: '40%',
-
     },
 
+    container_PROVIDER: {
+        backgroundColor: '#7B481C',
+        borderRadius: 30,
+        borderColor: 'black', 
+        borderWidth: 1,
+        margin: 5,
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        width: '36%',
+        height:'30%',
+    },
+
+    container_PROVIDER_NOTACTIVE: {
+        backgroundColor: '#808080',
+        borderRadius: 30,
+        borderColor: 'black', 
+        borderWidth: 1,
+        margin: 5,
+        alignItems: 'center',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        width: '36%',
+        height:'30%',
+    },
 
     text:{
         fontWeight:'bold',
@@ -92,6 +116,14 @@ const buttonStyles = StyleSheet.create({
     text_CALCULATE:{
         color: 'gray'
     },
+    text_PROVIDER:{
+        color: 'white',
+        fontSize: 12,
+    },
+    text_PROVIDER_NOTACTIVE:{
+        color: 'white',
+        fontSize: 12,
+    }
 })
 
 export default CustomButton
