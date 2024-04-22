@@ -78,27 +78,28 @@ const HomeScreen = () => {
     return (
         <View style={HomeScreenStyle.container}>
             <View style={HomeScreenStyle.content}>
-                
                 <Text style={HomeScreenStyle.title}>
                     {events.length > 0 ? "האירועים שלי" : "לא קיימים אירועים"}
                 </Text>
-                <CustomButton
-                    text="יצירת אירוע חדש"
-                    onPress={createNewEvent}
-                    type="HALL"
-                />
             </View>
             {/* כאן מציגים את רשימת האירועים */}
             <EventsList events={events} onPress={goToMain} onDeletePress={deleteEvent} />
+            <CustomButton
+                    text="יצירת אירוע חדש"
+                    onPress={createNewEvent}
+                    type="HALL"
+                    style={HomeScreenStyle.addButton}
+            />
         </View>
     );
 };
 
 const HomeScreenStyle = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1, // Ensure the container takes up the entire screen
+        justifyContent: 'center', // Center items vertically
+        alignItems: 'center', // Center items horizontally
         padding: 20,
-        marginTop: 40,
     },
     content: {
         alignItems: 'center', 
@@ -106,7 +107,11 @@ const HomeScreenStyle = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        marginBottom: 20,
+        fontFamily: 'AcademyEngravedLetPlain',
+        marginTop: '20%',
+    },
+    addButton: { 
+        marginTop: 50,
     },
 });
 
