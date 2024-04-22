@@ -20,7 +20,7 @@ const CostCalculator = () => {
     const [eventCosts, setEventCosts] = useState(costs || {});
     const [editCosts, setEditCosts] = useState({});
 
-    const { updateCost, /* onDeleteCost, */ handleAddNewField } = useCostServerConnect(
+    const { updateCost, onDeleteCost, handleAddNewField } = useCostServerConnect(
         eventId, eventCosts, setEventCosts, setModalVisible, newFieldTitle,setNewFieldTitle
     ); // Pass all necessary states and functions
 
@@ -64,8 +64,8 @@ const CostCalculator = () => {
             </View>
             <CostList
                 eventCosts={isEditing ? editCosts : eventCosts}
-/*                 onDeleteCost={onDeleteCost}
- */                
+                onDeleteCost={onDeleteCost}
+                 
                 onUpdateCost={(key, newData) => setEditCosts(prev => ({ ...prev, [key]: { ...prev[key], ...newData }}))}
                 isEditing={isEditing}
                 eventId={eventId}

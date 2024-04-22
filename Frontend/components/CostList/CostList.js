@@ -1,20 +1,18 @@
 import React from 'react';
 import { Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import CustomInput from '../CustomInput';
-/* import Icon from "react-native-vector-icons/MaterialCommunityIcons";
- */
-const CostList = ({ eventCosts, onUpdateCost, isEditing/* , onDeleteCost */ }) => {
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
+const CostList = ({ eventCosts, onUpdateCost, isEditing,onDeleteCost }) => {
     return (
         <ScrollView style={styles.listContainer}>
             {Object.entries(eventCosts).map(([key, { label, cost }]) => (
                 <TouchableOpacity key={key} style={styles.card} activeOpacity={1}>
-{/*                     {isEditing && (
-                        <TouchableOpacity onPress={() => onDeleteCost(key)} style={styles.deleteButton}>
+                        {!isEditing && (
+                        <TouchableOpacity onPress={!isEditing ? () => onDeleteCost(key) : null} style={styles.deleteButton}>
                             <Icon name="trash-can-outline" size={24} color="red" />
                         </TouchableOpacity>
-
-                    )} */}
-
+                        )}
 
                     {isEditing ? (
                         <>
