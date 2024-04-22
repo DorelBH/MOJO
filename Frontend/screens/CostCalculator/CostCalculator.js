@@ -128,9 +128,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         marginBottom: 20,
+        fontFamily: 'AcademyEngravedLetPlain',
     },
     btnCalc: {
         marginBottom: 10,

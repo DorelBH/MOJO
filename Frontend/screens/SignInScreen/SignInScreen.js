@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { View, Image, StyleSheet, useWindowDimensions, ScrollView } from "react-native";
-
-import Logo from '../../assets/images/mojo_logo.png';
+import { View, Image, StyleSheet, useWindowDimensions, ScrollView, ImageBackground } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import SocialSignInButtons from "../../components/SocialSignInButtons";
+import Boardingimage from '../../assets/images/Boardingimage.png';
 
 import { useNavigation } from "@react-navigation/native";
 import { apiUrl } from "../../api";
@@ -54,53 +53,54 @@ const SignInScreen = () => {
     }
 
     return(
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={signInStyles.container}>
-                <Image
-                 source={Logo}
-                 style={[signInStyles.logo,{height: height * 0.3}]}
-                 />
-                 
-                 <CustomInput 
-                 iconName="account"
-                 placeholder="שם משתמש" 
-                 value={username} 
-                 setValue={setUserName}
-                 validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
-                 errorMessage="שם המשתמש חייב להיות בעל 3 תווים לפחות"
-                />
+        <ImageBackground
+            source={Boardingimage}
+            style={signInStyles.backgroundImage}
+            resizeMode="cover"
+        >
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={signInStyles.container}>
+                    
+                    <CustomInput 
+                        iconName="account"
+                        placeholder="שם משתמש" 
+                        value={username} 
+                        setValue={setUserName}
+                        validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
+                        errorMessage="שם המשתמש חייב להיות בעל 3 תווים לפחות"
+                    />
 
-                 <CustomInput 
-                 iconName="lock-outline"
-                 placeholder="סיסמא" 
-                 value={password} 
-                 setValue={setPassword} 
-                 secureTextEntry={true} 
-                 validators={[{ type: 'MINLENGTH', val: 8 }, { type: 'REQUIRE' }]}
-                 errorMessage="הסיסמה חייבת להיות באורך של 8 תווים לפחות"
-                 />
+                    <CustomInput 
+                        iconName="lock-outline"
+                        placeholder="סיסמא" 
+                        value={password} 
+                        setValue={setPassword} 
+                        secureTextEntry={true} 
+                        validators={[{ type: 'MINLENGTH', val: 8 }, { type: 'REQUIRE' }]}
+                        errorMessage="הסיסמה חייבת להיות באורך של 8 תווים לפחות"
+                    />
 
-                 <CustomButton 
-                 text="התחברות" 
-                 onPress={onSignInPress}
-                 />
+                    <CustomButton 
+                        text="התחבר" 
+                        onPress={onSignInPress}
+                        type="MAINBROWN"
+                        
+                    />
 
-                 <CustomButton 
-                 text="שכחת סיסמא?" 
-                 onPress={onForgotPasswordPress} 
-                 type="TERTIARY"
-                 />
+                    <CustomButton 
+                        text="שכחת סיסמא?" 
+                        onPress={onForgotPasswordPress} 
+                        type="TERTIARY"
+                    />
 
-                 <SocialSignInButtons/>
-
-                <CustomButton 
-                 text="אין לך חשבון? צור אחד חדש" 
-                 onPress={onSignUpPress} 
-                 type="TERTIARY"
-                 />
-
-            </View>
-        </ScrollView>
+                    <CustomButton 
+                        text=" התחבר עם פייסבוק" 
+                        onPress={onForgotPasswordPress} 
+                        type="TERTIARY"
+                    />
+                </View>
+            </ScrollView>
+        </ImageBackground>
     );
     
 };
@@ -108,13 +108,15 @@ const SignInScreen = () => {
 const signInStyles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        padding: 20
+        padding: 20,
+        marginTop: '180%',
     },
-    logo: {
-        maxHeight: 200,
-        maxWidth: 200,
-        resizeMode: 'contain'
-    },
+    
+    backgroundImage: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 });
 
 export default SignInScreen;

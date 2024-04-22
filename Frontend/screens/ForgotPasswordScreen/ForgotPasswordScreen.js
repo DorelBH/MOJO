@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
 
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
+import Boardingimage from '../../assets/images/Boardingimage.png';
 
 import { useNavigation } from "@react-navigation/native";
 import { apiUrl } from "../../api";
@@ -40,34 +41,38 @@ const ForgotPasswordScreen = () => {
     const onSignInPress = () => {
         navigation.navigate('SignIn');
     }
-
+    
     return (
+    <ImageBackground
+        source={Boardingimage}
+        style={forgotStyles.backgroundImage}
+        resizeMode="cover"
+    >
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={forgotStyles.container}>
                 <Text style={forgotStyles.title}>איפוס הסיסמה שלך</Text>
+                    <CustomInput 
+                        iconName="account"
+                        placeholder="שם משתמש" 
+                        value={username} 
+                        setValue={setUsername}
+                        validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
+                        errorMessage="שם המשתמש חייב להיות בעל 3 תווים לפחות"
+                        />
+                    <CustomButton 
+                        text="שלח" 
+                        onPress={onSendPressed}
+                        type="MAINBROWN"
+                    />
 
-                <CustomInput 
-                iconName="account"
-                placeholder="שם משתמש" 
-                value={username} 
-                setValue={setUsername}
-                validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
-                errorMessage="שם המשתמש חייב להיות בעל 3 תווים לפחות"
-                />
-
-                <CustomButton 
-                text="שלח" 
-                onPress={onSendPressed}
-                />
-
-                <CustomButton 
-                text="חזרה להתחברות" 
-                onPress={onSignInPress} 
-                type="TERTIARY"
-                />
-
+                    <CustomButton 
+                        text="חזרה להתחברות" 
+                        onPress={onSignInPress} 
+                        type="TERTIARY"
+                    />
             </View>
         </ScrollView>
+    </ImageBackground>
     );
     
 };
@@ -75,15 +80,15 @@ const ForgotPasswordScreen = () => {
 const forgotStyles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        padding: 20
+        padding: 20,
+        marginTop: '200%',
     },
 
     title: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        color: '#051C60',
-        marginTop: 60,
-        marginBottom: 10,
+        fontSize: 20,
+        fontFamily: 'AcademyEngravedLetPlain',
+        color: 'white',
+      
     },
     text: {
         color: 'gray',
@@ -91,6 +96,11 @@ const forgotStyles = StyleSheet.create({
     },
     link: {
         color: '#FDB075',
+    },
+    backgroundImage: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

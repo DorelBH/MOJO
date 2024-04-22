@@ -10,6 +10,7 @@ import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import NewPasswordScreen from "../screens/NewPasswordScreen";
 import NewEventScreen from "../screens/NewEventScreen";
 import EditEventScreen from "../screens/EditEventScreen";
+import SignInOrSignOutScreen from "../screens/SignInOrSignOutScreen";
 // import InviteScreen from "../screens/InviteScreen";
 
 
@@ -24,6 +25,7 @@ const Navigation = () => {
         //hide navbar - headerShown:false
         <NavigationContainer> 
             <Stack.Navigator screenOptions={{headerShown:false}}> 
+            <Stack.Screen name="SignInOrSignOut" component={SignInOrSignOutScreen}/>
             <Stack.Screen name="SignIn" component={SignInScreen}/>
             <Stack.Screen name="SignUp" component={SignUpScreen}/>
             <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen}/>

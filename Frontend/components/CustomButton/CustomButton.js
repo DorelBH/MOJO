@@ -24,14 +24,9 @@ const CustomButton = ({onPress,text,type = "PRIMARY",bgColor,fgColor}) => {
 const buttonStyles = StyleSheet.create({
     container:{
         width:'100%',
-
-        padding:15,
         marginVertical:5,
-
         alignItems:'center',
-
         borderRadius:5,
-
         paddingHorizontal:10,
     },
     container_PRIMARY: {
@@ -53,10 +48,11 @@ const buttonStyles = StyleSheet.create({
     },
 
     container_HALL: {
-        borderColor:'#3871F3',
+        borderColor: 'gray',
         borderWidth:1,
-        width: '35%', 
-        margin:5
+        width: '40%', 
+        height: '5%',
+        justifyContent: 'center',
     },
 
     container_CALCULATE: {
@@ -66,7 +62,37 @@ const buttonStyles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center', 
         justifyContent: 'center', 
-        width: '40%',
+        width: 150,
+        height: 50,
+
+    },
+    container_MAINBROWN: {
+        marginTop:15,
+        padding: 6,
+        backgroundColor: '#7B481C',
+        borderRadius: 16,
+        width: 300, 
+        height:50,
+        alignSelf: 'flex-end',
+        borderWidth: 1,
+        alignItems: 'center',
+        alignSelf: 'center', 
+        justifyContent: 'center', 
+
+    },
+    container_MAINGRAY: {
+        marginTop:15,
+        padding: 6,
+        backgroundColor: '#696969',
+        borderRadius: 16,
+        width: 300, 
+        height:50,
+        alignSelf: 'flex-end',
+        borderWidth: 1,
+        alignItems: 'center',
+        alignSelf: 'center', 
+        justifyContent: 'center', 
+        
 
     },
 
@@ -87,11 +113,31 @@ const buttonStyles = StyleSheet.create({
         color:'#3871F3'
     },
     text_HALL:{
-        color:'#3871F3'
+        color:'gray',
+        fontFamily: 'AcademyEngravedLetPlain',
+        textAlign: 'center',
+        fontWeight:'bold',
+        fontSize: 16,
     },
     text_CALCULATE:{
-        color: 'gray'
+        color: 'gray',
+        
     },
+    text_MAINBROWN:{
+        fontWeight:'bold',
+        color:'white',
+        fontFamily: 'AcademyEngravedLetPlain',
+        fontSize: 20,
+        textAlign: 'center',
+    },
+    text_MAINGRAY:{
+        fontWeight:'bold',
+        color:'white',
+        fontFamily: 'AcademyEngravedLetPlain',
+        fontSize: 20,
+        textAlign: 'center',
+    },
+    
 })
 
 export default CustomButton

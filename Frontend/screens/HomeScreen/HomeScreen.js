@@ -111,7 +111,7 @@ const HomeScreenStyle = StyleSheet.create({
         marginTop: '20%',
     },
     addButton: { 
-        marginTop: 50,
+        marginBottom: 500,
     },
 });
 

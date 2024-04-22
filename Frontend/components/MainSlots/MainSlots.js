@@ -167,7 +167,8 @@ const SlotStyles = StyleSheet.create({
   actionButtonText: {
     color: 'white',
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: '13%',
+    fontFamily: 'AcademyEngravedLetPlain',
   },
 
   slotInviteButton: {
@@ -178,8 +179,8 @@ const SlotStyles = StyleSheet.create({
     marginBottom: 10, 
   },
   ButtonInvite: {
-    width: 130, 
-    height: 130, 
+    width: 100, 
+    height: 100, 
     resizeMode: 'contain', 
     marginHorizontal: 20, 
   },

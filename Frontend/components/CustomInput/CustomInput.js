@@ -40,17 +40,19 @@ const CustomInput = ({
     );
 };
 
+
 const inputStyles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
-        width: '100%',
+        width: 300,
+        height:50,
         borderColor: '#e8e8e8',
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 16,
         paddingHorizontal: 10,
         marginVertical: 5,
         flexDirection: 'row', // שורה אחת
-        alignItems: 'center', // איחוד אנכי
+        alignItems: 'center', // איחוד אנכי  
     },
     input: {
         flex: 1,
