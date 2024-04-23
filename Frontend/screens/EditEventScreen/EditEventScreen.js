@@ -258,7 +258,6 @@ const EditEventStyle = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderRadius: 8,
-        margin: 10,
         borderWidth: 1,
         borderColor: '#ccc', 
         textAlign: 'center', 

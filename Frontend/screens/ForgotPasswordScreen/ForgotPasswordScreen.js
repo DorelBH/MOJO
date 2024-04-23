@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground ,useWindowDimensions} from "react-native";
 
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
@@ -12,6 +12,7 @@ import { apiUrl } from "../../api";
 const ForgotPasswordScreen = () => {
     const [username, setUsername] = useState('');
     const navigation = useNavigation();
+    const { height } = useWindowDimensions();
 
     const onSendPressed = async () => {
         try {
@@ -49,7 +50,7 @@ const ForgotPasswordScreen = () => {
         resizeMode="cover"
     >
         <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={forgotStyles.container}>
+            <View style={[forgotStyles.container, { marginTop: height * 0.68 }]}>
                 <Text style={forgotStyles.title}>איפוס הסיסמה שלך</Text>
                     <CustomInput 
                         iconName="account"
@@ -81,7 +82,6 @@ const forgotStyles = StyleSheet.create({
     container: {
         alignItems: 'center',
         padding: 20,
-        marginTop: '200%',
     },
 
     title: {

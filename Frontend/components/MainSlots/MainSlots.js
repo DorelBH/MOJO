@@ -167,7 +167,7 @@ const SlotStyles = StyleSheet.create({
   actionButtonText: {
     color: 'white',
     textAlign: 'center',
-    fontSize: '13%',
+    fontSize: 13,
     fontFamily: 'AcademyEngravedLetPlain',
   },
 

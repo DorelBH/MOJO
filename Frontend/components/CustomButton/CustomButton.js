@@ -28,7 +28,7 @@ const buttonStyles = StyleSheet.create({
         alignItems:'center',
         borderRadius:5,
         paddingHorizontal:10,
-        padding:15, //change
+        
     },
     container_PRIMARY: {
         backgroundColor:'#3871F3',
@@ -46,6 +46,7 @@ const buttonStyles = StyleSheet.create({
         position: 'absolute', // קובע את המיקום של הכפתור
         bottom: "8%", // מרווח 20 פיקסלים מהתחתית
         width: '90%', // רוחב 90% של הכפתור
+        padding:15,
     },
 
     container_HALL: {
@@ -54,6 +55,8 @@ const buttonStyles = StyleSheet.create({
         width: '40%', 
         height: '5%',
         justifyContent: 'center', //change
+        padding:5,
+
     },
 
     container_CALCULATE: {
@@ -63,9 +66,9 @@ const buttonStyles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center', 
         justifyContent: 'center', 
-<<<<<<< HEAD
         width: 150,
         height: 50,
+       // width: '40%',
 
     },
     container_MAINBROWN: {
@@ -94,11 +97,6 @@ const buttonStyles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center', 
         justifyContent: 'center', 
-        
-
-=======
-        width: '40%',
->>>>>>> ronmo4
     },
 
     container_PROVIDER: {
@@ -153,7 +151,6 @@ const buttonStyles = StyleSheet.create({
         color: 'gray',
         
     },
-<<<<<<< HEAD
     text_MAINBROWN:{
         fontWeight:'bold',
         color:'white',
@@ -168,9 +165,7 @@ const buttonStyles = StyleSheet.create({
         fontSize: 20,
         textAlign: 'center',
     },
-    
-=======
-    text_PROVIDER:{
+        text_PROVIDER:{
         color: 'white',
         fontSize: 12,
     },
@@ -178,7 +173,6 @@ const buttonStyles = StyleSheet.create({
         color: 'white',
         fontSize: 12,
     }
->>>>>>> ronmo4
 })
 
 export default CustomButton

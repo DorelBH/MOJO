@@ -129,16 +129,16 @@ const MainScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   imageContainer: {
     position: 'relative',
     width: '100%',
-    height: '30%', // Adjust the height as per your image aspect ratio
+    height: '30%', 
+    
   },
   coupleImg: {
     width: '100%',
-    height: '100%', // Adjust the height as per your image aspect ratio
+    height: '100%', 
     resizeMode: 'stretch',
     
   }

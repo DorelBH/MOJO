@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView ,ImageBackground,useWindowDimensions} from "react-native";
 
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
+import Boardingimage from '../../assets/images/Boardingimage.png';
 
 import { useNavigation, useRoute } from "@react-navigation/native";
 
@@ -12,6 +13,7 @@ const NewPasswordScreen = () => {
     const [code, setCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const navigation = useNavigation();
+    const { height } = useWindowDimensions();
 
     const route = useRoute();
     const { username } = route.params; // מהמסך הקודם
@@ -47,8 +49,14 @@ const NewPasswordScreen = () => {
     }
 
     return(
+        <ImageBackground
+        source={Boardingimage}
+        style={newPassStyles.backgroundImage}
+        resizeMode="cover"
+    >
+
         <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={newPassStyles.container}>
+            <View style={[newPassStyles.container, { marginTop: height * 0.6 }]}>
                 <Text style={newPassStyles.title}>אפס את סיסמתך</Text>
 
                 <CustomInput 
@@ -74,6 +82,8 @@ const NewPasswordScreen = () => {
                 <CustomButton 
                 text="שלח" 
                 onPress={onSubmitPressed}
+                type="MAINBROWN"
+
                 />
 
                 <CustomButton 
@@ -83,6 +93,7 @@ const NewPasswordScreen = () => {
                 />
             </View>
         </ScrollView>
+        </ImageBackground>
     );
     
 };
@@ -90,23 +101,27 @@ const NewPasswordScreen = () => {
 const newPassStyles = StyleSheet.create({
     container: {
         alignItems: 'center',
-        padding: 20
+        padding: 20,
     },
 
-    title: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        color: '#051C60',
-        marginTop: 60,
-        marginBottom: 10,
-    },
     text: {
         color: 'gray',
         marginVertical: 10,
     },
     link: {
         color: '#FDB075',
-    }
+    },
+    backgroundImage: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    title: {
+        fontSize: 20,
+        fontFamily: 'AcademyEngravedLetPlain',
+        color: 'white',
+      
+    },
 });
 
 export default NewPasswordScreen;

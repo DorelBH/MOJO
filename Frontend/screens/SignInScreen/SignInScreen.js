@@ -59,7 +59,7 @@ const SignInScreen = () => {
             resizeMode="cover"
         >
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={signInStyles.container}>
+            <View style={[signInStyles.container, { marginTop: height * 0.6 }]}>
                     
                     <CustomInput 
                         iconName="account"
@@ -98,6 +98,11 @@ const SignInScreen = () => {
                         onPress={onForgotPasswordPress} 
                         type="TERTIARY"
                     />
+                    <CustomButton 
+                        text="אין לך חשבון? צור אחד" 
+                        onPress={onSignUpPress} 
+                        type="TERTIARY"
+                    />
                 </View>
             </ScrollView>
         </ImageBackground>
@@ -107,15 +112,15 @@ const SignInScreen = () => {
 
 const signInStyles = StyleSheet.create({
     container: {
+        flex:1,
         alignItems: 'center',
         padding: 20,
-        marginTop: '180%',
-    },
+ },
     
     backgroundImage: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     }
 });
 

@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { View, Text, StyleSheet, ScrollView, ImageBackground } from "react-native";
+import { View, Text, StyleSheet, ScrollView, ImageBackground ,useWindowDimensions} from "react-native";
 
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
@@ -23,6 +23,7 @@ const SignUpScreen = () => {
     const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
 
     const navigation = useNavigation();
+    const { height } = useWindowDimensions();
 
     const onRegisterPressed = async () => {
 
@@ -77,7 +78,7 @@ const SignUpScreen = () => {
         resizeMode="cover"
         >
         <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={signUpStyles.container}>
+            <View style={[signUpStyles.container, { marginTop: height * 0.4 }]}>
             <Text style={signUpStyles.title}>צור חשבון</Text>
                 
             <CustomInput 
@@ -160,12 +161,10 @@ const signUpStyles = StyleSheet.create({
     container: {
         alignItems: 'center',
         padding: 20,
-        marginTop: '100%',
     },
     backgroundImage: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'flex-end',
     },
 
     title: {

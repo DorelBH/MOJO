@@ -3,12 +3,13 @@ import { View, Image, StyleSheet, useWindowDimensions, ScrollView, ImageBackgrou
 import CustomButton from "../../components/CustomButton";
 import Boardingimage from '../../assets/images/Boardingimage.png';
 import { useNavigation } from "@react-navigation/native";
-import { apiUrl } from "../../api";
-import { saveToken } from "../../util/authToken"; 
+
 
 const SignInOrSignOutScreen = () => {
 
+
     const navigation = useNavigation();
+    const { height } = useWindowDimensions(); // Get the full height of the screen
 
     const onSignInPress = () => {
         navigation.navigate('SignIn');
@@ -25,7 +26,7 @@ const SignInOrSignOutScreen = () => {
             resizeMode="cover"
         >
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={signInStyles.container}>
+                <View style={[signInStyles.container,{ marginTop: height * 0.7 }]}>
                     
                     <CustomButton 
                         text="התחבר" 
@@ -48,7 +49,6 @@ const signInStyles = StyleSheet.create({
     container: {
         alignItems: 'center',
         padding: 20,
-        marginTop: '200%',
     },
     logo: {
         maxHeight: 200,
