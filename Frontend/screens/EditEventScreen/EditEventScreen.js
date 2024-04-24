@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import CostData from '../../components/CostData';
 
-const EditEventScreen = ({ route }) => {
+const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נתונים!!!
     useAuthCheck();
     const { eventType } = route.params;
     const navigation = useNavigation();
@@ -168,13 +168,18 @@ const EditEventScreen = ({ route }) => {
             <CustomButton
                 text="לא סגרנו"
                 onPress={onNotCloseHall}
-                type="HALL"
+                type={!closeHall ? 'MAINBROWN' : 'MAINGRAY'}
+                width="40%"
+                height='10'
+
             />
 
             <CustomButton
-                text="  סגרנו  "
+                text="סגרנו  "
                 onPress={onCloseHall}
-                type="HALL"
+                type={closeHall ? 'MAINBROWN' : 'MAINGRAY'}
+                width="40%"
+                height='10'
             />
 
 

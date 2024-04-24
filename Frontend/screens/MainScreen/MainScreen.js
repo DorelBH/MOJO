@@ -58,9 +58,9 @@ const MainScreen = ({ navigation }) => {
       action: 'start'
     },
     {
-      title: 'ספקי אלכוהול',
-      description: 'אלכוהול התחלה',
-      image: require('../../assets/images/CheckListSlot.png'),
+      title: 'שירותי בר',
+      description: 'הליך התכנון שלנו כולל מחשבון אלכוהול מותאם אישית שיעזור לכם לחשב את הכמות הנדרשת לפי מספר המוזמנים, וכן רשימת ספקים מובחרים שיספקו את השירות ברמה הגבוהה ביותר.',
+      image: require('../../assets/images/bar.png'),
       buttonText: 'אלכוהול',
       action: 'ChooseMain'
     },

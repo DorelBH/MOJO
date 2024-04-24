@@ -93,11 +93,11 @@ const SignInScreen = () => {
                         type="TERTIARY"
                     />
 
-                    <CustomButton 
+{/*                     <CustomButton 
                         text=" התחבר עם פייסבוק" 
                         onPress={onForgotPasswordPress} 
                         type="TERTIARY"
-                    />
+                    /> */}
                     <CustomButton 
                         text="אין לך חשבון? צור אחד" 
                         onPress={onSignUpPress} 

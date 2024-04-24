@@ -37,6 +37,7 @@ const newEvent = async (req, res, next) => {
 
         if (selectedDate) {
             eventData.eventDate = selectedDate;
+            console.log("Received event data:", req.body);
         }
 
         const createdEvent = new Event(eventData);

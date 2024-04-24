@@ -1,15 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView,ImageBackground,useWindowDimensions} from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { apiUrl } from "../../api";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { saveToken } from "../../util/authToken"; 
+import Boardingimage from '../../assets/images/Boardingimage.png';
 
 const ConfirmEmailScreen = () => {
     const [code, setCode] = useState('');
     const navigation = useNavigation();
     const route = useRoute();
+    const { height } = useWindowDimensions();
+
     const { email } = route.params; // מהמסך הקודם
 
     const onConfirmPressed = async () => {
@@ -67,8 +70,14 @@ const ConfirmEmailScreen = () => {
 
     
     return (
+        <ImageBackground
+        source={Boardingimage}
+        style={confirmStyles.backgroundImage}
+        resizeMode="cover"
+    >
         <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={confirmStyles.container}>
+            <View style={[confirmStyles.container, { marginTop: height * 0.6 }]}>
+
                 <Text style={confirmStyles.title}>אשר את כתובת הדוא"ל שלך</Text>
 
                 <CustomInput 
@@ -84,12 +93,13 @@ const ConfirmEmailScreen = () => {
                 <CustomButton 
                 text="אשר" 
                 onPress={onConfirmPressed}
+                type= "MAINBROWN"
                 />
 
                 <CustomButton 
                 text="שלח שוב את הקוד" 
                 onPress={onResendPress} 
-                type="SECONDARY"
+                type="CONTINUE_BROWN"
                 />
 
                 <CustomButton 
@@ -99,6 +109,8 @@ const ConfirmEmailScreen = () => {
                 />
             </View>
         </ScrollView>
+        </ImageBackground>
+
     );
     
 };
@@ -110,11 +122,9 @@ const confirmStyles = StyleSheet.create({
     },
 
     title: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        color: '#051C60',
-        marginTop: 60,
-        marginBottom: 10,
+        fontSize:20,
+        fontFamily: 'AcademyEngravedLetPlain',
+        color:'white',
     },
     text: {
         color: 'gray',
@@ -122,6 +132,11 @@ const confirmStyles = StyleSheet.create({
     },
     link: {
         color: '#FDB075',
+    },
+    backgroundImage: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 });
 

@@ -2,13 +2,15 @@ import React from "react";
 import { View, Text,StyleSheet,Pressable} from "react-native";
 
 
-const CustomButton = ({onPress,text,type = "PRIMARY",bgColor,fgColor}) => {
+const CustomButton = ({onPress,text,type = "PRIMARY",bgColor,fgColor, width,height}) => {
     return(
     <Pressable onPress={onPress}
     style={[
         buttonStyles.container,
         buttonStyles[`container_${type}`],
-        bgColor ? {backgroundColor:bgColor} : {}
+        bgColor ? {backgroundColor:bgColor} : {},
+        width ? { width } : {},
+        height ? {height} : {}
         ]}>
         <Text 
     style={[
@@ -41,8 +43,8 @@ const buttonStyles = StyleSheet.create({
 
     },
     container_CONTINUE: {
-        borderColor:'#3871F3',
-        borderWidth:1,
+        borderColor:'#7B481C',
+        borderWidth:1.3,
         position: 'absolute', // קובע את המיקום של הכפתור
         bottom: "8%", // מרווח 20 פיקסלים מהתחתית
         width: '90%', // רוחב 90% של הכפתור
@@ -52,11 +54,9 @@ const buttonStyles = StyleSheet.create({
     container_HALL: {
         borderColor: 'gray',
         borderWidth:1,
-        width: '40%', 
-        height: '5%',
+        width: '45%', 
         justifyContent: 'center', //change
         padding:5,
-
     },
 
     container_CALCULATE: {
@@ -68,7 +68,6 @@ const buttonStyles = StyleSheet.create({
         justifyContent: 'center', 
         width: 150,
         height: 50,
-       // width: '40%',
 
     },
     container_MAINBROWN: {
@@ -76,10 +75,10 @@ const buttonStyles = StyleSheet.create({
         padding: 6,
         backgroundColor: '#7B481C',
         borderRadius: 16,
-        width: 300, 
-        height:50,
         alignSelf: 'flex-end',
         borderWidth: 1,
+        width: 300, 
+        height:50,
         alignItems: 'center',
         alignSelf: 'center', 
         justifyContent: 'center', 
@@ -97,6 +96,21 @@ const buttonStyles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center', 
         justifyContent: 'center', 
+    },
+
+    container_CONTINUE_BROWN: {
+        marginTop:5,
+        padding: 6,
+        borderColor:'#7B481C',
+        borderRadius: 16,
+        alignSelf: 'flex-end',
+        borderWidth: 1,
+        width: 300, 
+        height:50,
+        alignItems: 'center',
+        alignSelf: 'center', 
+        justifyContent: 'center', 
+
     },
 
     container_PROVIDER: {
@@ -138,7 +152,7 @@ const buttonStyles = StyleSheet.create({
     },
 
     text_CONTINUE:{
-        color:'#3871F3'
+        color:'#7B481C'
     },
     text_HALL:{
         color:'gray',
@@ -157,6 +171,10 @@ const buttonStyles = StyleSheet.create({
         fontFamily: 'AcademyEngravedLetPlain',
         fontSize: 20,
         textAlign: 'center',
+    },
+    text_CONTINUE_BROWN:{
+        fontWeight:'bold',
+        color:'#7B481C',
     },
     text_MAINGRAY:{
         fontWeight:'bold',
