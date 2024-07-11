@@ -12,7 +12,7 @@ import NewEventScreen from "../screens/NewEventScreen";
 import EditEventScreen from "../screens/EditEventScreen";
 import SignInOrSignOutScreen from "../screens/SignInOrSignOutScreen";
 // import InviteScreen from "../screens/InviteScreen";
-
+import CheckList from "../screens/CheckList/CheckList";
 
 import MainScreen from "../screens/MainScreen";
 import AlcoholCalculatorScreen from "../screens/AlcoholCalculatorScreen/AlcoholCalculatorScreen";
@@ -38,6 +38,7 @@ const Navigation = () => {
             <Stack.Screen name="AlcoholCalculator" component={AlcoholCalculatorScreen}/>
             <Stack.Screen name="CostCalculator" component={CostCalculator}/>
             <Stack.Screen name="ChooseMain" component={ChooseMain}/> 
+            <Stack.Screen name="CheckList" component={CheckList} />
 
             </Stack.Navigator>
         </NavigationContainer>

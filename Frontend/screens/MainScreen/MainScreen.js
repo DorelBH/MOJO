@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import MainSlots from '../../components/MainSlots';
@@ -19,14 +18,23 @@ const MainScreen = ({ navigation }) => {
   const route = useRoute();
   const { eventId } = route.params;  // קבלת ה-ID מה-HomeScreen
   const [eventData, setEventData] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
     if (eventId) {
       fetchEventData(eventId);
     }
-  }, [eventId,eventData]);//
-  
+  }, [eventId]);
 
+  useEffect(() => {
+    if (eventData && eventData.eventDate) {
+      const interval = setInterval(() => {
+        updateCountdown(eventData.eventDate);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [eventData]);
+  
 
   const fetchEventData = async (eventId) => {
     if (!eventId) return;
@@ -47,6 +55,24 @@ const MainScreen = ({ navigation }) => {
     } catch (error) {
       console.error('Error fetching event data:', error);
     }
+  };
+
+  const updateCountdown = (eventDate) => {
+    const now = new Date();
+    const eventTime = new Date(eventDate);
+    const timeDifference = eventTime - now;
+
+    if (timeDifference <= 0) {
+      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 }); // לעשות תיקון לכתוב מזל טוב  
+      return;
+    }
+
+    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+    setTimeLeft({ days, hours, minutes, seconds });
   };
 
   const slotsData = [
@@ -79,7 +105,6 @@ const MainScreen = ({ navigation }) => {
       action: 'GuestList'
     }
   ];
-  
 
   const handleSlotPress = (action) => {
     if (action === 'AlcoholCalculator' && eventData) {
@@ -91,11 +116,12 @@ const MainScreen = ({ navigation }) => {
     if (action === 'ChooseMain' && eventData) {
       navigation.navigate('ChooseMain',{ amountInvited: eventData.amountInvited });
     }
-
+    if (action === 'start' && eventData) {
+      navigation.navigate('CheckList',{ eventType:eventData.eventType });
+    }
   };
 
-
- const ImageByType = () => {
+  const ImageByType = () => {
     if (!eventData) return null; // אם אין נתונים, אל תחזיר תמונה
     switch (eventData.eventType) {
       case "חתונה": return CoupleImage;
@@ -119,6 +145,28 @@ const MainScreen = ({ navigation }) => {
           source={ImageFromDB() ? { uri: ImageFromDB() } : ImageByType()}
           style={styles.coupleImg}
         />
+        <View style={styles.countdownContainer}>
+          {timeLeft && (
+            <View style={styles.countdown}>
+              <View style={styles.countdownItem}>
+                <Text style={styles.countdownValue}>{timeLeft.days}</Text>
+                <Text style={styles.countdownLabel}>ימים</Text>
+              </View>
+              <View style={styles.countdownItem}>
+                <Text style={styles.countdownValue}>{timeLeft.hours}</Text>
+                <Text style={styles.countdownLabel}>שעות</Text>
+              </View>
+              <View style={styles.countdownItem}>
+                <Text style={styles.countdownValue}>{timeLeft.minutes}</Text>
+                <Text style={styles.countdownLabel}>דקות</Text>
+              </View>
+              <View style={styles.countdownItem}>
+                <Text style={styles.countdownValue}>{timeLeft.seconds}</Text>
+                <Text style={styles.countdownLabel}>שניות</Text>
+              </View>
+            </View>
+          )}
+        </View>
         <CameraButton eventId={eventId} style={styles.cameraButton} />
       </View>
       <MainSlots slotsData={slotsData} handleSlotPress={handleSlotPress} />
@@ -133,17 +181,43 @@ const styles = StyleSheet.create({
   imageContainer: {
     position: 'relative',
     width: '100%',
-    height: '30%', 
-    
+    height: '30%',
   },
   coupleImg: {
     width: '100%',
-    height: '100%', 
+    height: '100%',
     resizeMode: 'stretch',
-    
-  }
+  },
+  countdownContainer: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  countdown: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingVertical: 10,
+  },
+  countdownItem: {
+    alignItems: 'center',
+  },
+  countdownValue: {
+    color: 'white',
+    fontSize: 24,
+  },
+  countdownLabel: {
+    color: 'white',
+    fontSize: 12,
+  },
+  cameraButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
 });
 
 export default MainScreen;
-
-

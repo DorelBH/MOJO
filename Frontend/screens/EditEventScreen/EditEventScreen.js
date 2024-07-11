@@ -43,6 +43,7 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
                     eventType: eventType,
                     selectedRegions: selectedRegions,
                     amountInvited: eventDetails.amountInvited,
+                    selectedDate: selectedDate,
                 };
     
                 if (isWedding) {
@@ -54,6 +55,7 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
     
                 if (closeHall && selectedDate) {
                     eventData.eventDate = selectedDate;
+                    console.log(selectedDate)
                 }
                 const eventCosts = CostData({ eventType: eventData.eventType }); // cost calc
                 eventData.costs = eventCosts; // מוסיף את ההוצאות לאובייקט eventData
