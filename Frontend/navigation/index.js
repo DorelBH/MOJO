@@ -17,7 +17,10 @@ import CheckList from "../screens/CheckList/CheckList";
 import MainScreen from "../screens/MainScreen";
 import AlcoholCalculatorScreen from "../screens/AlcoholCalculatorScreen/AlcoholCalculatorScreen";
 import CostCalculator from "../screens/CostCalculator/CostCalculator";
-import ChooseMain from "../screens/ChooseMain/ChooseMain"
+import ChooseMain from "../screens/ChooseMain/ChooseMain";
+
+import NotificationHandler from "../Notification/NotificationHandler";
+
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
@@ -41,6 +44,7 @@ const Navigation = () => {
             <Stack.Screen name="CheckList" component={CheckList} />
 
             </Stack.Navigator>
+            
         </NavigationContainer>
     )
 }

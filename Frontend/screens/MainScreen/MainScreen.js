@@ -6,6 +6,7 @@ import useAuthCheck from '../../hooks/useAuthCheck';
 import { useRoute, useFocusEffect } from "@react-navigation/native";
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken"; 
+import { calculateTimeLeft } from '../../util/timeUtils';
 
 import CoupleImage from '../../assets/images/CoupleImage.png';
 import BritImage from '../../assets/images/BritImage.png';
@@ -50,29 +51,12 @@ const MainScreen = ({ navigation }) => {
   useEffect(() => {
     if (eventData && eventData.eventDate) {
       const interval = setInterval(() => {
-        updateCountdown(eventData.eventDate);
+        const timeLeft = calculateTimeLeft(eventData.eventDate);
+        setTimeLeft(timeLeft);
       }, 1000);
       return () => clearInterval(interval);
     }
   }, [eventData]);
-
-  const updateCountdown = (eventDate) => {
-    const now = new Date();
-    const eventTime = new Date(eventDate);
-    const timeDifference = eventTime - now;
-
-    if (timeDifference <= 0) {
-      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 }); // לעשות תיקון לכתוב מזל טוב  
-      return;
-    }
-
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-
-    setTimeLeft({ days, hours, minutes, seconds });
-  };
 
   const slotsData = [
     {
@@ -110,10 +94,10 @@ const MainScreen = ({ navigation }) => {
       navigation.navigate('AlcoholCalculator', { amountInvited: eventData.amountInvited });
     }
     if (action === 'CostCalculator' && eventData) {
-      navigation.navigate('CostCalculator', {eventType:eventData.eventType,costs:eventData.costs,eventId});
+      navigation.navigate('CostCalculator', { eventType: eventData.eventType, costs: eventData.costs, eventId });
     }
     if (action === 'ChooseMain' && eventData) {
-      navigation.navigate('ChooseMain',{ amountInvited: eventData.amountInvited });
+      navigation.navigate('ChooseMain', { amountInvited: eventData.amountInvited });
     }
     if (action === 'start' && eventData) {
       navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });

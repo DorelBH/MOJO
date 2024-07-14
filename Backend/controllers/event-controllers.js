@@ -38,7 +38,6 @@ const newEvent = async (req, res, next) => {
         
         if (selectedDate) {
             eventData.eventDate = selectedDate;
-            console.log("Received event data:", req.body);
         }
 
         const createdEvent = new Event(eventData);
@@ -235,6 +234,11 @@ const addTasksToEvent = async (req, res) => {
                 checkList => checkList.timeframe === newTask.timeframe
             );
 
+            // בדיקה אם יש שדות ריקים
+            if (!newTask.timeframe || newTask.tasks.some(task => !task.label)) {
+                return res.status(400).json({ message: "Timeframe and task labels must not be empty." });
+            }
+
             if (existingCheckList) {
                 // בדיקה אם יש כותרת שכבר קיימת
                 for (const task of newTask.tasks) {
@@ -260,6 +264,7 @@ const addTasksToEvent = async (req, res) => {
         res.status(500).json({ message: error.message || "Failed to update check List" });
     }
 };
+
 
 const updateTaskCompletion = async (req, res) => {
     const eventId = req.params.eventId;
