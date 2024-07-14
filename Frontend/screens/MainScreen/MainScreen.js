@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { View, Image, StyleSheet, Text } from 'react-native';
 import MainSlots from '../../components/MainSlots';
 import CameraButton from '../../components/CameraButton';
 import useAuthCheck from '../../hooks/useAuthCheck';
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useFocusEffect } from "@react-navigation/native";
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken"; 
 
 import CoupleImage from '../../assets/images/CoupleImage.png';
 import BritImage from '../../assets/images/BritImage.png';
-import HennaImage from '../../assets/images/HennaImage.jpg'
-import PartyImage from '../../assets/images/PartyImage.jpg'
-import BarMitzvaImage from '../../assets/images/BarMitzvaImage.jpg'
+import HennaImage from '../../assets/images/HennaImage.jpg';
+import PartyImage from '../../assets/images/PartyImage.jpg';
+import BarMitzvaImage from '../../assets/images/BarMitzvaImage.jpg';
 
 const MainScreen = ({ navigation }) => {
   useAuthCheck();
@@ -20,23 +20,7 @@ const MainScreen = ({ navigation }) => {
   const [eventData, setEventData] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
 
-  useEffect(() => {
-    if (eventId) {
-      fetchEventData(eventId);
-    }
-  }, [eventId]);
-
-  useEffect(() => {
-    if (eventData && eventData.eventDate) {
-      const interval = setInterval(() => {
-        updateCountdown(eventData.eventDate);
-      }, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [eventData]);
-  
-
-  const fetchEventData = async (eventId) => {
+  const fetchEventData = async () => {
     if (!eventId) return;
     const token = await getToken();
     try {
@@ -56,6 +40,21 @@ const MainScreen = ({ navigation }) => {
       console.error('Error fetching event data:', error);
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchEventData();
+    }, [eventId])
+  );
+
+  useEffect(() => {
+    if (eventData && eventData.eventDate) {
+      const interval = setInterval(() => {
+        updateCountdown(eventData.eventDate);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [eventData]);
 
   const updateCountdown = (eventDate) => {
     const now = new Date();
@@ -117,7 +116,7 @@ const MainScreen = ({ navigation }) => {
       navigation.navigate('ChooseMain',{ amountInvited: eventData.amountInvited });
     }
     if (action === 'start' && eventData) {
-      navigation.navigate('CheckList',{ eventType:eventData.eventType });
+      navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
     }
   };
 

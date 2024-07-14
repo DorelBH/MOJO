@@ -1,74 +1,116 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import CheckBox from '../../components/CheckBox';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import CustomButton from '../../components/CustomButton';
+import CustomInput from '../../components/CustomInput';
+import useAuthCheck from '../../hooks/useAuthCheck';
+import { useRoute } from "@react-navigation/native";
+import useTaskServerConnect from './useTaskServerConnect';
 
-const tasksData = [
-  {
-    timeframe: 'שנה לאירוע',
-    tasks: ['סגירת אולם', 'סגירת דיג\'יי', 'הזמנת תקליטנים', 'בדיקת תאורה וסאונד']
-  },
-  {
-    timeframe: 'ששה חודשים לאירוע',
-    tasks: ['בחירת תפריט', 'בדיקת קייטרינג', 'הזמנת צלם']
-  },
-  {
-    timeframe: 'שלושה חודשים לאירוע',
-    tasks: ['הכנת מוזמנים', 'שליחת הזמנות להדפסה', 'קביעת מופעים חיים']
-  },
-  {
-    timeframe: 'חודש לאירוע',
-    tasks: ['שליחת הזמנות', 'שליחת אישורי הגעה', 'אישור סופי של תפריט']
-  },
-  {
-    timeframe: 'שבוע לאירוע',
-    tasks: ['ללכת לרבנות', 'איסוף שמלות וחליפות', 'פגישה אחרונה עם הקייטרינג']
-  },
-  {
-    timeframe: 'יום לפני האירוע',
-    tasks: ['בדיקת סידורי ישיבה', 'טיפול בתשלומים סופיים', 'בדיקה כללית של המקום']
-  }
-];
+const CheckListScreen = () => {
+    useAuthCheck();
 
-const CheckList = () => {
-    const [completedTasks, setCompletedTasks] = useState({});
+    const route = useRoute();
+    const { eventType, eventId, checkLists } = route.params;
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [newFieldTitle, setNewFieldTitle] = useState('');
+    const [newTimeframe, setNewTimeframe] = useState('');
+    const [tasks, setTasks] = useState(checkLists);
+
+    const { toggleTaskCompletion, addNewTask } = useTaskServerConnect(eventId, setTasks);
+
+    useEffect(() => {
+        setTasks(checkLists);
+    }, [checkLists]);
 
     const handleToggleTask = (timeframe, task) => {
-        const taskKey = `${timeframe}-${task}`;
-        setCompletedTasks({
-            ...completedTasks,
-            [taskKey]: !completedTasks[taskKey]
-        });
+        toggleTaskCompletion(timeframe, task.label, !task.completed)
+            .then(updatedCheckLists => {
+                setTasks(updatedCheckLists);
+            });
+    };
+
+    const handleAddNewField = () => {
+        const formattedTimeframe = `${newTimeframe} לאירוע`;
+        addNewTask(formattedTimeframe, newFieldTitle)
+            .then(updatedCheckLists => {
+                setTasks(updatedCheckLists);
+            });
+        setNewFieldTitle('');
+        setNewTimeframe('');
+        setModalVisible(false);
     };
 
     return (
         <View style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Text style={styles.pageTitle}>רשימת משימות לאירוע</Text>
-            </View>
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-            <TouchableOpacity activeOpacity={1}>
-
-                {tasksData.map((section, index) => (
+            <Text style={styles.pageTitle}>רשימת משימות ל{eventType}</Text>
+            <CustomButton
+                onPress={() => setModalVisible(true)}
+                text="+"
+                type="CIRCLE"
+            />
+            <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
+                {tasks.map((section, index) => (
                     <View key={index} style={styles.section}>
                         <Text style={styles.header}>{section.timeframe}</Text>
-                        {section.tasks.map((task, taskIndex) => {
-                            const taskKey = `${section.timeframe}-${task}`;
-                            return (
-                                <View key={taskIndex} style={styles.taskContainer}>
-                                    <CheckBox
-                                        checked={!!completedTasks[taskKey]}
-                                        onChange={() => handleToggleTask(section.timeframe, task)}
-                                    />
-                                    <Text style={[styles.taskText, completedTasks[taskKey] && styles.completedTaskText]}>
-                                        {task}
-                                    </Text>
-                                </View>
-                            );
-                        })}
+                        {section.tasks.map((task, idx) => (
+                            <TouchableOpacity key={idx} style={styles.taskContainer} onPress={() => handleToggleTask(section.timeframe, task)}>
+                                <View
+                                    style={[
+                                        styles.circle,
+                                        task.completed && styles.completedCircle
+                                    ]}
+                                />
+                                <Text style={[
+                                    styles.taskText,
+                                    task.completed && styles.completedTaskText
+                                ]}>
+                                    {task.label}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
                     </View>
                 ))}
-                </TouchableOpacity>
             </ScrollView>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(!modalVisible)}
+            >
+                <View style={styles.addModal}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.row}>
+                            <Text style={styles.label}>לאירוע</Text>
+                            <CustomInput
+                                placeholder="הכנס זמן"
+                                value={newTimeframe}
+                                setValue={setNewTimeframe}
+                                validators={[{ type: 'MINLENGTH', val: 1 }, { type: 'REQUIRE' }]}
+                                errorMessage="הכנס זמן חוקי"
+                                style={styles.halfWidthContainer}
+                            />
+                        </View>
+                        <CustomInput
+                            placeholder="הכנס את שם המשימה"
+                            value={newFieldTitle}
+                            setValue={setNewFieldTitle}
+                            validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
+                            errorMessage="הכנס שדה חוקי"
+                        />
+                        <CustomButton
+                            text="הוסף שדה חדש"
+                            onPress={handleAddNewField}
+                            type="CALCULATE"
+                        />
+                        <CustomButton
+                            text="בטל"
+                            onPress={() => setModalVisible(false)}
+                            type="CALCULATE"
+                        />
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
@@ -76,25 +118,25 @@ const CheckList = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: 50,
-    },
-    headerContainer: {
-        paddingHorizontal: 10,
-        paddingTop: 20,
-        paddingBottom: 10,
-        zIndex: 1, 
+        paddingTop: 70,
+        backgroundColor: '#f5f5f5',
+        alignItems: 'center',
     },
     pageTitle: {
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center',
+        marginBottom: 10,
+    },
+    scrollView: {
+        width: '100%',
     },
     scrollContent: {
-        paddingBottom: 50, // כדי להוסיף רווח בתחתית התוכן הגלול
+        paddingBottom: 50,
+        paddingHorizontal: 10,
     },
     section: {
         marginBottom: 20,
-        paddingHorizontal: 10,
     },
     header: {
         fontSize: 19,
@@ -103,29 +145,70 @@ const styles = StyleSheet.create({
         color: 'black',
         paddingVertical: 10,
         paddingHorizontal: 20,
-        
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
     },
     taskContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         marginVertical: 5,
-        backgroundColor:'#F5DEB3',
+        backgroundColor: 'white',
         padding: 10,
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: '#2f2f2f',
-        
+        borderColor: '#ccc',
     },
     completedTaskText: {
-        textDecorationLine: 'line-through', // קו חוצה למשימות שבוצעו
-        color: '#a9a9a9', // צבע טקסט אפור למשימות שבוצעו
+        textDecorationLine: 'line-through',
+        color: '#a9a9a9',
     },
     taskText: {
         fontSize: 18,
         textAlign: 'right',
         flex: 1,
     },
+    circle: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: '#7B481C',
+        marginRight: 10,
+    },
+    completedCircle: {
+        backgroundColor: '#7B481C',
+    },
+    addModal: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 20,
+        width: '90%',
+        alignItems: 'center',
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        width: '95%',
+    },
+    halfWidthContainer: {
+        width: '50%',
+        height: 50,
+        borderColor: '#e8e8e8',
+        borderWidth: 1,
+        borderRadius: 16,
+    },
+    label: {
+        fontSize: 16,
+        marginRight: 10,
+        color: "#a9a9a9"
+    },
 });
 
-export default CheckList;
+export default CheckListScreen;

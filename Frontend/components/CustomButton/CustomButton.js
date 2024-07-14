@@ -139,6 +139,16 @@ const buttonStyles = StyleSheet.create({
         height:'30%',
     },
 
+    container_CIRCLE:{
+        backgroundColor: '#7B481C',
+        borderRadius: 20,
+        width: 30,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    
     text:{
         fontWeight:'bold',
         color:'white',
@@ -190,6 +200,11 @@ const buttonStyles = StyleSheet.create({
     text_PROVIDER_NOTACTIVE:{
         color: 'white',
         fontSize: 12,
+    },
+    text_CIRCLE:{
+        color: 'white',
+        fontSize: 18,
+        lineHeight: 20,
     }
 })
 

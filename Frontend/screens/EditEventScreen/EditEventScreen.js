@@ -10,6 +10,7 @@ import { apiUrl } from "../../api";
 import { useNavigation } from '@react-navigation/native';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import CostData from '../../components/CostData';
+import CheckListData from '../../components/CheckListData';
 
 const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נתונים!!!
     useAuthCheck();
@@ -60,6 +61,10 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
                 const eventCosts = CostData({ eventType: eventData.eventType }); // cost calc
                 eventData.costs = eventCosts; // מוסיף את ההוצאות לאובייקט eventData
     
+                const eventCheckLists = CheckListData({ eventType: eventData.eventType }); // checklist
+                eventData.checkLists = eventCheckLists; // מוסיף את ההוצאות לאובייקט eventData
+    
+
                 const response = await fetch(`${apiUrl}/api/events/editEvent`, {
                     method: 'POST',
                     headers: {

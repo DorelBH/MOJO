@@ -15,7 +15,7 @@ const getUserName = async (req, res, next) => {
 
 const newEvent = async (req, res, next) => {
     try {
-        const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions,costs} = req.body;
+        const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions,costs,checkLists} = req.body;
 
         validateEventType(eventType);
         validateAmountInvited(amountInvited);
@@ -25,7 +25,8 @@ const newEvent = async (req, res, next) => {
             amountInvited,
             selectedRegions,
             userId: req.user.userId,
-            costs
+            costs,
+            checkLists
         };
 
         if (eventType === "חתונה" || eventType === "חינה") {
@@ -217,11 +218,89 @@ const deleteCostInEvent = async (req, res) => {
 
 
 
+//CheckList - Tasks 
+
+const addTasksToEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { checkLists } = req.body;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        for (const newTask of checkLists) {
+            const existingCheckList = event.checkLists.find(
+                checkList => checkList.timeframe === newTask.timeframe
+            );
+
+            if (existingCheckList) {
+                // בדיקה אם יש כותרת שכבר קיימת
+                for (const task of newTask.tasks) {
+                    const existingTask = existingCheckList.tasks.find(t => t.label === task.label);
+                    if (existingTask) {
+                        return res.status(400).json({
+                            message: `Task "${task.label}" already exists in the timeframe "${newTask.timeframe}".`
+                        });
+                    }
+                }
+
+                // הוספת משימות חדשות לרשימת זמן קיימת
+                existingCheckList.tasks.push(...newTask.tasks);
+            } else {
+                // הוספת רשימת זמן חדשה
+                event.checkLists.push(newTask);
+            }
+        }
+
+        await event.save();
+        res.status(200).json({ message: "All new Tasks added successfully", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to update check List" });
+    }
+};
+
+const updateTaskCompletion = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { timeframe, label, completed } = req.body;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        const checkList = event.checkLists.find(
+            checkList => checkList.timeframe === timeframe
+        );
+
+        if (!checkList) {
+            return res.status(404).json({ message: "Timeframe not found" });
+        }
+
+        const task = checkList.tasks.find(t => t.label === label);
+
+        if (!task) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+
+        task.completed = completed;
+
+        await event.save();
+        res.status(200).json({ message: "Task updated successfully", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to update task completion status" });
+    }
+};
+
+
 
 
 exports.addPhoto=addPhoto;
 
-
+exports.addTasksToEvent=addTasksToEvent;
+exports.updateTaskCompletion=updateTaskCompletion;
 exports.addCostsToEvent=addCostsToEvent;
 exports.updateCostsInEvent=updateCostsInEvent;
 exports.deleteCostInEvent=deleteCostInEvent;

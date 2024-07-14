@@ -15,6 +15,13 @@ const eventSchema = new Schema({
     costs: [{
         label: { type: String, required: false },
         cost: { type: Number, required: false }
+    }],
+    checkLists: [{
+        timeframe: { type: String, required: false },
+        tasks: [{
+            label: { type: String, required: false },
+            completed: { type: Boolean, required: false }
+        }]
     }]
 });
 

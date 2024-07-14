@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput,StyleSheet} from "react-native";
+import { View, Text, TextInput, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { validate } from "../../util/validators";
 
@@ -21,22 +21,22 @@ const CustomInput = ({
         setIsValid(validate(inputValue, validators));
     };
 
-    const containerStyle = style || inputStyles.container; // בודק אם קיים סגנון מועבר, אם לא משתמש בברירת מחדל
+    const combinedStyles = StyleSheet.flatten([inputStyles.container, style]);
 
     return (
-        <View style={containerStyle}> 
+        <View style={combinedStyles}> 
             <Icon name={iconName} style={inputStyles.icon} />
             <TextInput
                 value={value}
                 onChangeText={inputChangeHandler}
                 placeholder={placeholder}
-                style={[inputStyles.input, { textAlign: 'right', writingDirection: 'rtl' }, style]} // עדכון כיוון הטקסט והכתיבה
+                style={[inputStyles.input, { textAlign: 'right', writingDirection: 'rtl' }]}
                 secureTextEntry={secureTextEntry}
                 keyboardType={keyboardType}
+                placeholderTextColor="#a9a9a9" 
             />
             {!isValid && errorMessage && <Text style={inputStyles.errorText}>*{errorMessage}</Text>}
         </View>
-        
     );
 };
 
@@ -45,14 +45,14 @@ const inputStyles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         width: 300,
-        height:50,
+        height: 50,
         borderColor: '#e8e8e8',
         borderWidth: 1,
         borderRadius: 16,
         paddingHorizontal: 10,
         marginVertical: 5,
-        flexDirection: 'row', // שורה אחת
-        alignItems: 'center', // איחוד אנכי  
+        flexDirection: 'row',
+        alignItems: 'center',
     },
     input: {
         flex: 1,

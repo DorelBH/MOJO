@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     },
     inputLabel: {
         borderColor: '#cccccc',
-        width: '82%',
+        flex: 3,
         textAlign: 'right',
     },
     calc: {
