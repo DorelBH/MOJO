@@ -67,6 +67,13 @@ const MainScreen = ({ navigation }) => {
       action: 'start'
     },
     {
+      title: 'צק ליסט',
+      description: 'הפכו את התכנון לחוויה חלקה ומהנה של הצקליסט שלנו! כל מה שאתם צריכים לניהול מושלם של ספקים אולמות וכל פרט נוסף.',
+      image: require('../../assets/images/CheckListSlot.png'),
+      buttonText: 'התחילו עכשיו',
+      action: 'checkList'
+    },
+    {
       title: 'שירותי בר',
       description: 'הליך התכנון שלנו כולל מחשבון אלכוהול מותאם אישית שיעזור לכם לחשב את הכמות הנדרשת לפי מספר המוזמנים, וכן רשימת ספקים מובחרים שיספקו את השירות ברמה הגבוהה ביותר.',
       image: require('../../assets/images/bar.png'),
@@ -99,7 +106,7 @@ const MainScreen = ({ navigation }) => {
     if (action === 'ChooseMain' && eventData) {
       navigation.navigate('ChooseMain', { amountInvited: eventData.amountInvited });
     }
-    if (action === 'start' && eventData) {
+    if (action === 'checkList' && eventData) {
       navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
     }
   };
