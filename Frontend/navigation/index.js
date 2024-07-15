@@ -19,7 +19,7 @@ import AlcoholCalculatorScreen from "../screens/AlcoholCalculatorScreen/AlcoholC
 import CostCalculator from "../screens/CostCalculator/CostCalculator";
 import ChooseMain from "../screens/ChooseMain/ChooseMain";
 
-import NotificationHandler from "../Notification/NotificationHandler";
+import ChatbotScreen from "../screens/Chatbot/ChatbotScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +42,7 @@ const Navigation = () => {
             <Stack.Screen name="CostCalculator" component={CostCalculator}/>
             <Stack.Screen name="ChooseMain" component={ChooseMain}/> 
             <Stack.Screen name="CheckList" component={CheckList} />
+            <Stack.Screen name="ChatBot" component={ChatbotScreen} />
 
             </Stack.Navigator>
             

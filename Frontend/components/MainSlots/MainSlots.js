@@ -43,18 +43,11 @@ const MainSlots = ({ slotsData, handleSlotPress }) => {
         ))}
       </TouchableOpacity>
 
-      <Text style={SlotStyles.slotTitle}>יש לנו טיפי זהב בשבילכם</Text>
+      <Text style={SlotStyles.slotTitle}>MOJO BOT</Text>
       <View style={SlotStyles.adContainer}>
-        <TouchableOpacity style={SlotStyles.tipButton} onPress={() => {/* First wedding tip function */}}>
-          <Text style={SlotStyles.tipText}>לקחת הזמנות נכונות</Text>
+        <TouchableOpacity style={SlotStyles.avatarButton} onPress={() => handleSlotPress('ChatBot')}>
+          <Image source={{ uri: 'https://www.botlibre.com/avatars/a12601515.png' }} style={SlotStyles.avatarImage} />
         </TouchableOpacity>
-        <TouchableOpacity style={SlotStyles.tipButton} onPress={() => {/* Second wedding tip function */}}>
-          <Text style={SlotStyles.tipText}>תיאום פרטים מראש</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={SlotStyles.tipButton} onPress={() => {/* Third wedding tip function */}}>
-          <Text style={SlotStyles.tipText}>להנות מכל רגע</Text>
-        </TouchableOpacity>
-        
       </View>
     </ScrollView>
   );
@@ -77,7 +70,7 @@ const SlotStyles = StyleSheet.create({
     fontSize: 22,
     fontFamily: 'AcademyEngravedLetPlain',
     marginTop: '10%',
-    marginBottom:'2%'
+    marginBottom: '2%',
   },
   slotContent: {
     flexDirection: 'row',
@@ -93,7 +86,7 @@ const SlotStyles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 0,
     position: 'relative',
-    overflow: 'hidden', // Ensure image respects border-radius
+    overflow: 'hidden',
     marginLeft: '8%',
   },
   slotButtonImage: {
@@ -102,22 +95,6 @@ const SlotStyles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-  },
-  slotButtonOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  slotButtonText: {
-    color: '#2f2f2f',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 10,
   },
   slotDescriptionContainer: {
     flex: 1,
@@ -128,38 +105,33 @@ const SlotStyles = StyleSheet.create({
     marginRight: '9%',
   },
   adContainer: {
-    marginTop: 20,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '80%',
   },
-  tipButton: {
+  avatarButton: {
     width: 100,
     height: 100,
     borderColor: 'gray',
     borderWidth: 2,
-    borderRadius: 15,
+    borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
-  tipText: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: '#cd853f',
-    textAlign: 'center',
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    fontFamily: 'AcademyEngravedLetPlain',
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 50,
   },
   actionButton: {
-    marginTop:7,
+    marginTop: 7,
     padding: 6,
     backgroundColor: '#7B481C',
     borderRadius: 15,
-    width: 150, 
-    height:30,
+    width: 150,
+    height: 30,
     alignSelf: 'flex-end',
     marginRight: '9%',
     borderWidth: 1,
@@ -170,26 +142,25 @@ const SlotStyles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'AcademyEngravedLetPlain',
   },
-
   slotInviteButton: {
-    flexDirection: 'row', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginTop: 20, 
-    marginBottom: 10, 
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 10,
   },
   ButtonInvite: {
-    width: 100, 
-    height: 100, 
-    resizeMode: 'contain', 
-    marginHorizontal: 20, 
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+    marginHorizontal: 20,
   },
   textInvite: {
-    textAlign: 'center', 
-    marginTop: 5, 
-    fontSize: 16, 
+    textAlign: 'center',
+    marginTop: 5,
+    fontSize: 16,
     color: 'black',
-  }
+  },
 });
 
 export default MainSlots;

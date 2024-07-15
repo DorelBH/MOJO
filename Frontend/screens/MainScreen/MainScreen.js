@@ -109,6 +109,9 @@ const MainScreen = ({ navigation }) => {
     if (action === 'checkList' && eventData) {
       navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
     }
+    if (action === 'ChatBot') {
+      navigation.navigate('ChatBot');
+    }
   };
 
   const ImageByType = () => {
