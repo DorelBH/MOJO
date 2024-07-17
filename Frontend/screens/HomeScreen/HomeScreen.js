@@ -1,12 +1,11 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import CustomButton from "../../components/CustomButton";
-import { useNavigation,useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import EventsList from '../../components/EventList';
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken"; 
 import useAuthCheck from "../../hooks/useAuthCheck";
-
 
 const HomeScreen = () => {
     useAuthCheck();
@@ -20,7 +19,10 @@ const HomeScreen = () => {
     const goToMain = (eventId) => {
         navigation.navigate("Main", { eventId });  // ניווט למסך Main עם מזהה האירוע
     }
-    
+
+    const editEvent = (eventId, eventType) => {
+        navigation.navigate("EditEvent", { eventId, eventType });
+    }
     
     const fetchEvents = async () => {
         const token = await getToken();
@@ -72,9 +74,6 @@ const HomeScreen = () => {
         }, [])
     );
     
-
-
-
     return (
         <View style={HomeScreenStyle.container}>
             <View style={HomeScreenStyle.content}>
@@ -83,7 +82,7 @@ const HomeScreen = () => {
                 </Text>
             </View>
             {/* כאן מציגים את רשימת האירועים */}
-            <EventsList events={events} onPress={goToMain} onDeletePress={deleteEvent} />
+            <EventsList events={events} onPress={goToMain} onDeletePress={deleteEvent} onEditPress={editEvent} />
             <CustomButton
                     text="יצירת אירוע חדש"
                     onPress={createNewEvent}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import CustomInput from '../../components/CustomInput';
 import CheckBox from '../../components/CheckBox'; 
@@ -12,9 +12,9 @@ import useAuthCheck from '../../hooks/useAuthCheck';
 import CostData from '../../components/CostData';
 import CheckListData from '../../components/CheckListData';
 
-const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נתונים!!!
+const EditEventScreen = ({ route }) => {
     useAuthCheck();
-    const { eventType } = route.params;
+    const { eventType, eventId } = route.params || {};
     const navigation = useNavigation();
 
     const [isWedding, setIsWedding] = useState(false);
@@ -22,19 +22,59 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
     const [selectedDate, setSelectedDate] = useState(null);
     const [isVisible, setIsVisible] = useState(false);
 
-    const [selectedRegions, setSelectedRegions] = useState([]); //מה בחר המשתמש 
+    const [selectedRegions, setSelectedRegions] = useState([]);
     const regions = ['דרום', 'צפון', 'מרכז', 'ירושלים', 'שרון'];
 
     const [eventDetails, setEventDetails] = useState({
         groomName: '',
         brideName: '',
-        name: '', //not wedding
-        amountInvited:''
+        name: '',
+        amountInvited: ''
     });
 
     useEffect(() => {
         couple(eventType);
-    }, [eventType]);
+        if (eventId) {
+            fetchEventDetails(eventId);
+        } else {
+            const eventCosts = CostData({ eventType });
+            setEventDetails(prevState => ({ ...prevState, costs: eventCosts }));
+
+            const eventCheckLists = CheckListData({ eventType });
+            setEventDetails(prevState => ({ ...prevState, checkLists: eventCheckLists }));
+        }
+    }, [eventType, eventId]);
+
+    const fetchEventDetails = async (id) => {
+        const token = await getToken();
+        if (token) {
+            try {
+                const response = await fetch(`${apiUrl}/api/events/getEvent/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+                const responseData = await response.json();
+                if (!response.ok) {
+                    throw new Error(responseData.message || 'Failed to fetch event data.');
+                }
+                const event = responseData.event;
+                setEventDetails({
+                    groomName: event.groomName || '',
+                    brideName: event.brideName || '',
+                    name: event.name || '',
+                    amountInvited: event.amountInvited?.toString() || '',
+                    costs: event.costs || [],
+                    checkLists: event.checkLists || []
+                });
+                setSelectedDate(event.eventDate ? new Date(event.eventDate) : null);
+                setSelectedRegions(event.selectedRegions || []);
+            } catch (error) {
+                console.error('Error:', error.message || 'Something went wrong during fetching the event details.');
+            }
+        }
+    };
 
     const onSavePressed = async () => {
         const token = await getToken();
@@ -45,35 +85,33 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
                     selectedRegions: selectedRegions,
                     amountInvited: eventDetails.amountInvited,
                     selectedDate: selectedDate,
+                    costs: eventDetails.costs,
+                    checkLists: eventDetails.checkLists,
                 };
-    
+
                 if (isWedding) {
                     eventData.groomName = eventDetails.groomName;
                     eventData.brideName = eventDetails.brideName;
                 } else {
-                    eventData.name = eventDetails.name; // עבור אירועים שאינם חתונה או חינה
+                    eventData.name = eventDetails.name;
                 }
-    
+
                 if (closeHall && selectedDate) {
                     eventData.eventDate = selectedDate;
-                    console.log(selectedDate)
                 }
-                const eventCosts = CostData({ eventType: eventData.eventType }); // cost calc
-                eventData.costs = eventCosts; // מוסיף את ההוצאות לאובייקט eventData
-    
-                const eventCheckLists = CheckListData({ eventType: eventData.eventType }); // checklist
-                eventData.checkLists = eventCheckLists; // מוסיף את ההוצאות לאובייקט eventData
-    
 
-                const response = await fetch(`${apiUrl}/api/events/editEvent`, {
-                    method: 'POST',
+                const url = eventId ? `${apiUrl}/api/events/updateEvent/${eventId}` : `${apiUrl}/api/events/editEvent`;
+                const method = eventId ? 'PATCH' : 'POST';
+
+                const response = await fetch(url, {
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
                     },
-                    body: JSON.stringify(eventData), // שולח את כל האובייקט eventData כולל השדה costs
+                    body: JSON.stringify(eventData),
                 });
-    
+
                 const responseData = await response.json();
                 if (!response.ok) {
                     throw new Error(responseData.message || 'Failed to save event.');
@@ -87,8 +125,6 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
             console.error('No token found, please login.');
         }
     };
-    
-    
 
     const couple = (eventType) => {
         setIsWedding(eventType === "חינה" || eventType === "חתונה");
@@ -106,25 +142,28 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
         return selectedRegions.includes(region);
     };
 
-    const onCloseHall = () =>{
-        setCloseHall(true)
+    const onCloseHall = () => {
+        setCloseHall(true);
     }
 
-    const onNotCloseHall = () =>{
-        setCloseHall(false)
+    const onNotCloseHall = () => {
+        setCloseHall(false);
     }
 
     const handleDateConfirm = (date) => {
-        setSelectedDate(date);
-        setIsVisible(false); // Close the picker after selecting the date
+        if (date < new Date()) {
+            Alert.alert("תאריך לא תקין", "לא ניתן לבחור תאריך מהעבר");
+        } else {
+            setSelectedDate(date);
+        }
+        setIsVisible(false);
     };
 
     const handleCancel = () => {
-        setIsVisible(false); // Close the picker if canceled
+        setIsVisible(false);
     };
-    
+
     return (
-        
         <View style={EditEventStyle.container}>
             <Text style={EditEventStyle.title}>עריכת אירוע</Text>
             {isWedding && (
@@ -132,7 +171,7 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
                     placeholder="שם החתן"
                     value={eventDetails.groomName}
                     setValue={(text) => setEventDetails({ ...eventDetails, groomName: text })}
-                    validators={[ VALIDATOR_REQUIRE()]}
+                    validators={[ VALIDATOR_REQUIRE() ]}
                     errorMessage="הכנס שם חתן"
                 />
             )}
@@ -141,16 +180,16 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
                     placeholder="שם הכלה"
                     value={eventDetails.brideName}
                     setValue={(text) => setEventDetails({ ...eventDetails, brideName: text })}
-                    validators={[ VALIDATOR_REQUIRE()]}
+                    validators={[ VALIDATOR_REQUIRE() ]}
                     errorMessage="הכנס שם כלה"
                 />
             )}
             {!isWedding && (
                 <CustomInput
-                    placeholder="שם החתן/כלה"
+                    placeholder="שם האירוע"
                     value={eventDetails.name}
                     setValue={(text) => setEventDetails({ ...eventDetails, name: text })}
-                    validators={[ VALIDATOR_REQUIRE()]}
+                    validators={[ VALIDATOR_REQUIRE() ]}
                     errorMessage="הכנס שם "
                 />
             )}
@@ -168,57 +207,52 @@ const EditEventScreen = ({ route }) => { // לתקן תאריך בבסיס נת�
                 keyboardType="numeric"
             />
 
-        <Text style={EditEventStyle.text}>האם סגרתם אולם?  </Text>
+            <Text style={EditEventStyle.text}>האם סגרתם אולם?  </Text>
 
-       <View style={EditEventStyle.Buttons}>
-       
-            <CustomButton
-                text="לא סגרנו"
-                onPress={onNotCloseHall}
-                type={!closeHall ? 'MAINBROWN' : 'MAINGRAY'}
-                width="40%"
-                height='10'
-
-            />
-
-            <CustomButton
-                text="סגרנו  "
-                onPress={onCloseHall}
-                type={closeHall ? 'MAINBROWN' : 'MAINGRAY'}
-                width="40%"
-                height='10'
-            />
-
-
-        </View>      
-        
-        {closeHall && (
-    <TouchableOpacity onPress={() => setIsVisible(true)}>
-        <Text style={EditEventStyle.button}>{selectedDate ? selectedDate.toLocaleDateString('he-IL') : 'בחר תאריך'}</Text>
-    </TouchableOpacity>
-        )}
-
-        {closeHall && (
-    <DateTimePickerModal
-        isVisible={isVisible}
-        mode="date"
-        textColor="black"
-        onConfirm={handleDateConfirm}
-        onCancel={handleCancel}
-        locale="he"/>
-        )}
-
-
-         <Text style={EditEventStyle.text}>איזור האירוע :</Text>
-            <View style={EditEventStyle.regionsContainer}>
-            {regions.map((region) => (
-                <CheckBox
-                    key={region}
-                    label={region}
-                    checked={isChecked(region)}
-                    onChange={() => handleRegionChange(region)}
+            <View style={EditEventStyle.Buttons}>
+                <CustomButton
+                    text="לא סגרנו"
+                    onPress={onNotCloseHall}
+                    type={!closeHall ? 'MAINBROWN' : 'MAINGRAY'}
+                    width="40%"
+                    height='10'
                 />
-            ))}
+                <CustomButton
+                    text="סגרנו  "
+                    onPress={onCloseHall}
+                    type={closeHall ? 'MAINBROWN' : 'MAINGRAY'}
+                    width="40%"
+                    height='10'
+                />
+            </View>
+
+            {closeHall && (
+                <TouchableOpacity onPress={() => setIsVisible(true)}>
+                    <Text style={EditEventStyle.button}>{selectedDate ? selectedDate.toLocaleDateString('he-IL') : 'בחר תאריך'}</Text>
+                </TouchableOpacity>
+            )}
+
+            {closeHall && (
+                <DateTimePickerModal
+                    isVisible={isVisible}
+                    mode="date"
+                    textColor="black"
+                    onConfirm={handleDateConfirm}
+                    onCancel={handleCancel}
+                    locale="he"
+                />
+            )}
+
+            <Text style={EditEventStyle.text}>איזור האירוע :</Text>
+            <View style={EditEventStyle.regionsContainer}>
+                {regions.map((region) => (
+                    <CheckBox
+                        key={region}
+                        label={region}
+                        checked={isChecked(region)}
+                        onChange={() => handleRegionChange(region)}
+                    />
+                ))}
             </View>
             <CustomButton
                 text="המשך לאפליקציה"
@@ -242,7 +276,7 @@ const EditEventStyle = StyleSheet.create({
     },
     text: {
         fontSize: 20,
-        margin:15
+        margin: 15
     },
     input: {
         width: '100%',
@@ -257,12 +291,10 @@ const EditEventStyle = StyleSheet.create({
         flexWrap: 'wrap',
         marginTop: 10, 
         justifyContent: 'flex-end', 
-
     },
-    Buttons:{
+    Buttons: {
         flexDirection: 'row',
     },
-
     button: {
         fontSize: 20,
         color: 'black',
@@ -274,7 +306,6 @@ const EditEventStyle = StyleSheet.create({
         borderColor: '#ccc', 
         textAlign: 'center', 
     }
-    
 });
 
 export default EditEventScreen;

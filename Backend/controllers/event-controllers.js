@@ -2,11 +2,9 @@ const Event = require('../models/event');
 const User = require('../models/user');
 const { validateEventType, validateAmountInvited } = require('./validationController.js');
 
-
 const getUserName = async (req, res, next) => {
     try {
         const userData = req.user;
-        
         res.json({ username: userData.username });
     } catch (err) {
         res.status(500).json({ message: err.message || 'Failed to get user data' });
@@ -15,10 +13,14 @@ const getUserName = async (req, res, next) => {
 
 const newEvent = async (req, res, next) => {
     try {
-        const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions,costs,checkLists} = req.body;
+        const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions, costs, checkLists } = req.body;
 
         validateEventType(eventType);
         validateAmountInvited(amountInvited);
+
+        if (selectedDate && new Date(selectedDate) < new Date()) {
+            return res.status(400).json({ message: "The event date cannot be in the past." });
+        }
 
         const eventData = {
             eventType,
@@ -43,7 +45,6 @@ const newEvent = async (req, res, next) => {
         const createdEvent = new Event(eventData);
         await createdEvent.save();
 
-        // חיפוש המשתמש המתאים ועדכון מערך האירועים שלו
         const user = await User.findById(req.user.userId);
         user.events.push(createdEvent);
         await user.save();
@@ -57,7 +58,7 @@ const newEvent = async (req, res, next) => {
 const getEvent = async (req, res, next) => {
     try {
         const userId = req.user.userId;
-        const userExists = await User.findById(userId );
+        const userExists = await User.findById(userId);
 
         if (!userExists) {
             return res.status(404).json({ message: "User not found." });
@@ -66,9 +67,9 @@ const getEvent = async (req, res, next) => {
         const events = await Event.find({ userId: userId });
 
         res.json({ events: events });
-            } catch (err) {
-                res.status(500).json({ message: err.message || "An error occurred while retrieving the events." });
-            }
+    } catch (err) {
+        res.status(500).json({ message: err.message || "An error occurred while retrieving the events." });
+    }
 };
 
 const deleteEvent = async (req, res) => {
@@ -109,7 +110,6 @@ const getSpecificEvent = async (req, res, next) => {
             return res.status(404).json({ message: 'Event not found' });
         }
 
-        // נבדוק אם המשתמש רשאי לגשת לאירוע זה
         if (event.userId.toString() !== req.user.userId.toString()) {
             return res.status(403).json({ message: 'Not authorized to access this event' });
         }
@@ -122,7 +122,7 @@ const getSpecificEvent = async (req, res, next) => {
 
 const addPhoto = async (req, res) => {
     const eventId = req.params.eventId;
-    const { photoUri } = req.body; 
+    const { photoUri } = req.body;
 
     try {
         const event = await Event.findById(eventId);
@@ -130,7 +130,7 @@ const addPhoto = async (req, res) => {
           return res.status(404).json({ message: "Event not found." });
         }
     
-        event.photo = photoUri; // עדכון ה-URI במסד הנתונים
+        event.photo = photoUri; 
         await event.save();
         res.status(200).json({ message: "Photo URI added successfully", event });
       } catch (error) {
@@ -139,9 +139,37 @@ const addPhoto = async (req, res) => {
       }
 };
 
+const updateEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { groomName, brideName, name, amountInvited, selectedDate, selectedRegions } = req.body;
 
+    try {
+        if (selectedDate && new Date(selectedDate) < new Date()) {
+            return res.status(400).json({ message: "The event date cannot be in the past." });
+        }
 
-//COST - CALCULATOR 
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        if (event.eventType === "חתונה" || event.eventType === "חינה") {
+            event.groomName = groomName;
+            event.brideName = brideName;
+        } else {
+            event.name = name;
+        }
+
+        event.amountInvited = amountInvited;
+        event.eventDate = selectedDate;
+        event.selectedRegions = selectedRegions;
+
+        await event.save();
+        res.status(200).json({ message: "Event updated successfully", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to update event" });
+    }
+};
 
 const addCostsToEvent = async (req, res) => {
     const eventId = req.params.eventId;
@@ -170,7 +198,7 @@ const addCostsToEvent = async (req, res) => {
 
 const updateCostsInEvent = async (req, res) => {
     const eventId = req.params.eventId;
-    const { index, newCostData,} = req.body;
+    const { index, newCostData } = req.body;
 
     try {
         const event = await Event.findById(eventId);
@@ -178,11 +206,10 @@ const updateCostsInEvent = async (req, res) => {
             return res.status(404).json({ message: "Event not found" });
         }
 
-        if (index < 0 || index >= event.costs.length) { // Ensure index is within bounds
+        if (index < 0 || index >= event.costs.length) { 
             return res.status(404).json({ message: "Cost index out of bounds" });
         }              
 
-        // Proceed with updating
         event.costs[index] = { ...event.costs[index], ...newCostData };
         await event.save();
         res.status(200).json({ message: "Cost updated successfully", event });
@@ -193,7 +220,7 @@ const updateCostsInEvent = async (req, res) => {
 
 const deleteCostInEvent = async (req, res) => {
     const eventId = req.params.eventId;
-    const { index } = req.body; // קודם השתמשת ב-key, עכשיו אנחנו משתמשים ב-index
+    const { index } = req.body; 
 
     try {
         const event = await Event.findById(eventId);
@@ -205,7 +232,6 @@ const deleteCostInEvent = async (req, res) => {
             return res.status(404).json({ message: "Cost index out of bounds" });
         }
 
-        // מחיקת העלות על פי האינדקס במערך
         event.costs.splice(index, 1);
         await event.save();
         res.status(200).json({ message: "Cost deleted successfully", event });
@@ -214,10 +240,6 @@ const deleteCostInEvent = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete cost' });
     }
 };
-
-
-
-//CheckList - Tasks 
 
 const addTasksToEvent = async (req, res) => {
     const eventId = req.params.eventId;
@@ -234,13 +256,11 @@ const addTasksToEvent = async (req, res) => {
                 checkList => checkList.timeframe === newTask.timeframe
             );
 
-            // בדיקה אם יש שדות ריקים
             if (!newTask.timeframe || newTask.tasks.some(task => !task.label)) {
                 return res.status(400).json({ message: "Timeframe and task labels must not be empty." });
             }
 
             if (existingCheckList) {
-                // בדיקה אם יש כותרת שכבר קיימת
                 for (const task of newTask.tasks) {
                     const existingTask = existingCheckList.tasks.find(t => t.label === task.label);
                     if (existingTask) {
@@ -250,10 +270,8 @@ const addTasksToEvent = async (req, res) => {
                     }
                 }
 
-                // הוספת משימות חדשות לרשימת זמן קיימת
                 existingCheckList.tasks.push(...newTask.tasks);
             } else {
-                // הוספת רשימת זמן חדשה
                 event.checkLists.push(newTask);
             }
         }
@@ -264,7 +282,6 @@ const addTasksToEvent = async (req, res) => {
         res.status(500).json({ message: error.message || "Failed to update check List" });
     }
 };
-
 
 const updateTaskCompletion = async (req, res) => {
     const eventId = req.params.eventId;
@@ -299,19 +316,15 @@ const updateTaskCompletion = async (req, res) => {
     }
 };
 
-
-
-
-exports.addPhoto=addPhoto;
-
-exports.addTasksToEvent=addTasksToEvent;
-exports.updateTaskCompletion=updateTaskCompletion;
-exports.addCostsToEvent=addCostsToEvent;
-exports.updateCostsInEvent=updateCostsInEvent;
-exports.deleteCostInEvent=deleteCostInEvent;
-
+exports.addPhoto = addPhoto;
+exports.addTasksToEvent = addTasksToEvent;
+exports.updateTaskCompletion = updateTaskCompletion;
+exports.addCostsToEvent = addCostsToEvent;
+exports.updateCostsInEvent = updateCostsInEvent;
+exports.deleteCostInEvent = deleteCostInEvent;
 exports.getSpecificEvent = getSpecificEvent;
-exports.deleteEvent=deleteEvent;
+exports.deleteEvent = deleteEvent;
 exports.getEvent = getEvent;
 exports.getUserName = getUserName;
-exports.newEvent=newEvent;
+exports.newEvent = newEvent;
+exports.updateEvent = updateEvent;
