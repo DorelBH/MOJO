@@ -1,43 +1,47 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import ChatBotImage from '../../assets/images/chatbot.webp';
 
-
-const MainSlots = ({ slotsData, handleSlotPress }) => {
-
+const MainSlots = ({ slotsData, handleSlotPress, showBackButton, handleBackPress }) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={SlotStyles.scrollViewContent}>
+      {showBackButton && (
+        <TouchableOpacity onPress={handleBackPress} style={SlotStyles.backButton}>
+          <Text style={SlotStyles.backButtonText}>חזרה</Text>
+        </TouchableOpacity>
+      )}
       <TouchableOpacity activeOpacity={1} style={SlotStyles.slotContainer}>
         {slotsData.map((item, index) => (
           <View key={index} style={SlotStyles.slotRow}>
-            <Text style={SlotStyles.slotTitle}>{item.title}</Text>
+            <Text style={[SlotStyles.slotTitle, showBackButton && SlotStyles.barTitle]}>{item.title}</Text>
             {item.title === 'רשימת מוזמנים' ? (
-                <View>
-                  <Text style={[SlotStyles.slotDescription, { marginRight: 15 }]}>{item.description}</Text>
-                  <View style={SlotStyles.slotInviteButton}>
-                    <TouchableOpacity onPress={() => handleSlotPress(item.action)}>
-                      <Image source={item.image} style={SlotStyles.ButtonInvite}/>
-                      <Text style={SlotStyles.textInvite}> לרשימה המלאה</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleSlotPress(item.action)}>
-                      <Image source={item.image2} style={SlotStyles.ButtonInvite}/>
-                      <Text style={SlotStyles.textInvite}> הוסף מוזמנים</Text>
-                    </TouchableOpacity>
-                  </View>
+              <View>
+                <Text style={[SlotStyles.slotDescription, { marginRight: 15 }]}>{item.description}</Text>
+                <View style={SlotStyles.slotInviteButton}>
+                  <TouchableOpacity onPress={() => handleSlotPress(item.action)}>
+                    <Image source={item.image} style={SlotStyles.ButtonInvite}/>
+                    <Text style={SlotStyles.textInvite}> לרשימה המלאה</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => handleSlotPress(item.action)}>
+                    <Image source={item.image2} style={SlotStyles.ButtonInvite}/>
+                    <Text style={SlotStyles.textInvite}> הוסף מוזמנים</Text>
+                  </TouchableOpacity>
                 </View>
-             ) : (
-            <View style={SlotStyles.slotContent}>
-              <View style={SlotStyles.slotButtonContainer}>
-              <View style={[SlotStyles.slotButton, { borderRadius: 15 }]}>
+              </View>
+            ) : (
+              <View style={SlotStyles.slotContent}>
+                <View style={SlotStyles.slotButtonContainer}>
+                  <View style={[SlotStyles.slotButton, { borderRadius: 15 }]}>
                     <Image source={item.image} style={SlotStyles.slotButtonImage}/>
                   </View>
+                </View>
+                <View style={SlotStyles.slotDescriptionContainer}>
+                  <Text style={SlotStyles.slotDescription}>{item.description}</Text>
+                  <TouchableOpacity style={SlotStyles.actionButton} onPress={() => handleSlotPress(item.action)}>
+                    <Text style={SlotStyles.actionButtonText}>{item.buttonText}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={SlotStyles.slotDescriptionContainer}>
-                <Text style={SlotStyles.slotDescription}>{item.description}</Text>
-                <TouchableOpacity style={SlotStyles.actionButton} onPress={() => handleSlotPress(item.action)}>
-                  <Text style={SlotStyles.actionButtonText}>{item.buttonText}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
             )}
           </View>
         ))}
@@ -46,7 +50,7 @@ const MainSlots = ({ slotsData, handleSlotPress }) => {
       <Text style={SlotStyles.slotTitle}>MOJO BOT</Text>
       <View style={SlotStyles.adContainer}>
         <TouchableOpacity style={SlotStyles.avatarButton} onPress={() => handleSlotPress('ChatBot')}>
-          <Image source={{ uri: 'https://www.botlibre.com/avatars/a12601515.png' }} style={SlotStyles.avatarImage} />
+          <Image source={ChatBotImage} style={SlotStyles.avatarImage} />
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -71,6 +75,9 @@ const SlotStyles = StyleSheet.create({
     fontFamily: 'AcademyEngravedLetPlain',
     marginTop: '10%',
     marginBottom: '2%',
+  },
+  barTitle: {
+    marginTop: 5, // מרווח קטן יותר מעל הכותרת שירותי בר
   },
   slotContent: {
     flexDirection: 'row',
@@ -160,6 +167,21 @@ const SlotStyles = StyleSheet.create({
     marginTop: 5,
     fontSize: 16,
     color: 'black',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    padding: 10,
+    borderWidth: 1,
+    backgroundColor: '#7B481C',
+    marginTop: 10,
+    borderRadius: 30,
+
+  },
+  backButtonText: {
+    color: 'white',
+    fontSize: 15,
   },
 });
 

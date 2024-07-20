@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Image, StyleSheet, Text } from 'react-native';
+import { View, Image, StyleSheet, Text} from 'react-native';
 import MainSlots from '../../components/MainSlots';
 import CameraButton from '../../components/CameraButton';
 import useAuthCheck from '../../hooks/useAuthCheck';
@@ -20,6 +20,7 @@ const MainScreen = ({ navigation }) => {
   const { eventId } = route.params;  // קבלת ה-ID מה-HomeScreen
   const [eventData, setEventData] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
+  const [showBarServices, setShowBarServices] = useState(false);
 
   const fetchEventData = async () => {
     if (!eventId) return;
@@ -61,8 +62,8 @@ const MainScreen = ({ navigation }) => {
   const slotsData = [
     {
       title: 'אז איך מתחילים?',
-      description: 'הפכו את התכנון לחוויה חלקה ומהנה של הצקליסט שלנו! כל מה שאתם צריכים לניהול מושלם של ספקים אולמות וכל פרט נוסף.',
-      image: require('../../assets/images/CheckListSlot.png'),
+      description: 'ניהול מושלם מתחיל כאן! גלו את רשימת הספקים ונותני השירות המומלצים שלנו וכל הכלים שיעזרו לכם בתכנון האירוע.',
+      image: require('../../assets/images/startNow.webp'),
       buttonText: 'התחילו עכשיו',
       action: 'start'
     },
@@ -70,15 +71,8 @@ const MainScreen = ({ navigation }) => {
       title: 'צק ליסט',
       description: 'הפכו את התכנון לחוויה חלקה ומהנה של הצקליסט שלנו! כל מה שאתם צריכים לניהול מושלם של ספקים אולמות וכל פרט נוסף.',
       image: require('../../assets/images/CheckListSlot.png'),
-      buttonText: 'התחילו עכשיו',
+      buttonText: "לצ'ק ליסט שלנו",
       action: 'checkList'
-    },
-    {
-      title: 'שירותי בר',
-      description: 'הליך התכנון שלנו כולל מחשבון אלכוהול מותאם אישית שיעזור לכם לחשב את הכמות הנדרשת לפי מספר המוזמנים, וכן רשימת ספקים מובחרים שיספקו את השירות ברמה הגבוהה ביותר.',
-      image: require('../../assets/images/bar.png'),
-      buttonText: 'אלכוהול',
-      action: 'ChooseMain'
     },
     {
       title: 'תמיד תהיו בבקרה על ההוצאות',
@@ -93,25 +87,40 @@ const MainScreen = ({ navigation }) => {
       image: require('../../assets/images/check.png'),
       image2: require('../../assets/images/plus.png'),
       action: 'GuestList'
+    },
+    {
+      title: 'שירותי בר',
+      description: 'הליך התכנון שלנו כולל מחשבון אלכוהול מותאם אישית שיעזור לכם לחשב את הכמות הנדרשת לפי מספר המוזמנים, וכן רשימת ספקים מובחרים שיספקו את השירות ברמה הגבוהה ביותר.',
+      image: require('../../assets/images/bar.png'),
+      buttonText: 'אלכוהול',
+      action: 'ChooseMain'
     }
   ];
 
   const handleSlotPress = (action) => {
-    if (action === 'AlcoholCalculator' && eventData) {
-      navigation.navigate('AlcoholCalculator', { amountInvited: eventData.amountInvited });
+    if (action === 'start') {
+      setShowBarServices(true);
+    } else {
+      if (action === 'AlcoholCalculator' && eventData) {
+        navigation.navigate('AlcoholCalculator', { amountInvited: eventData.amountInvited });
+      }
+      if (action === 'CostCalculator' && eventData) {
+        navigation.navigate('CostCalculator', { eventType: eventData.eventType, costs: eventData.costs, eventId });
+      }
+      if (action === 'ChooseMain' && eventData) {
+        navigation.navigate('ChooseMain', { amountInvited: eventData.amountInvited });
+      }
+      if (action === 'checkList' && eventData) {
+        navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
+      }
+      if (action === 'ChatBot') {
+        navigation.navigate('ChatBot');
+      }
     }
-    if (action === 'CostCalculator' && eventData) {
-      navigation.navigate('CostCalculator', { eventType: eventData.eventType, costs: eventData.costs, eventId });
-    }
-    if (action === 'ChooseMain' && eventData) {
-      navigation.navigate('ChooseMain', { amountInvited: eventData.amountInvited });
-    }
-    if (action === 'checkList' && eventData) {
-      navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
-    }
-    if (action === 'ChatBot') {
-      navigation.navigate('ChatBot');
-    }
+  };
+  
+  const handleBackPress = () => {
+    setShowBarServices(false);
   };
 
   const ImageByType = () => {
@@ -162,7 +171,11 @@ const MainScreen = ({ navigation }) => {
         </View>
         <CameraButton eventId={eventId} style={styles.cameraButton} />
       </View>
-      <MainSlots slotsData={slotsData} handleSlotPress={handleSlotPress} />
+      {showBarServices ? (
+        <MainSlots slotsData={slotsData.filter(item => item.action === 'ChooseMain' || item.action === 'ChatBot')} handleSlotPress={handleSlotPress} showBackButton={true} handleBackPress={handleBackPress} />
+      ) : (
+        <MainSlots slotsData={slotsData.filter(item => item.action !== 'ChooseMain')} handleSlotPress={handleSlotPress} showBackButton={false} />
+      )}
     </View>
   );
 };
