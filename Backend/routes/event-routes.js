@@ -1,7 +1,7 @@
 const express = require('express');
 const eventsController = require ('../controllers/event-controllers');
 const authenticateToken = require('../middleware/authMiddleware');
-
+const sendingSMS = require('../controllers/sendSMS');
 const router = express.Router();
 
 router.get('/newEvent', authenticateToken,eventsController.getUserName);
@@ -20,6 +20,8 @@ router.delete('/deleteCost/:eventId', authenticateToken, eventsController.delete
 router.post('/addGuest/:eventId', authenticateToken, eventsController.addGuestToEvent);
 router.get('/getGuests/:eventId', authenticateToken, eventsController.getEventGuests);
 router.delete('/removeGuest/:eventId', authenticateToken, eventsController.removeGuestFromEvent);
+
+router.post('/notifyGuests/:eventId', authenticateToken, sendingSMS.notifyGuests);
 
 
 module.exports = router;
