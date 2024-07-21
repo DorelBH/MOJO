@@ -15,9 +15,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSContactsUsageDescription": "This app uses your contacts to invite them to the event.",
+        "NSContactsAlwaysUsageDescription": "This app requires access to contacts to invite them to your events."
+      }
     },
     "android": {
+      "permissions": [
+        "READ_CONTACTS"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

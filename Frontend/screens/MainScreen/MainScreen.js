@@ -116,6 +116,9 @@ const MainScreen = ({ navigation }) => {
     if (action === 'ChooseMain' && eventData) {
       navigation.navigate('ChooseMain',{ amountInvited: eventData.amountInvited });
     }
+    if (action === 'GuestList' && eventData) {
+      navigation.navigate('GuestList',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
+    }
     if (action === 'start' && eventData) {
       navigation.navigate('CheckList',{ eventType:eventData.eventType });
     }

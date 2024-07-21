@@ -17,4 +17,9 @@ router.post('/addCosts/:eventId', authenticateToken, eventsController.addCostsTo
 router.patch('/updateCosts/:eventId', authenticateToken, eventsController.updateCostsInEvent);
 router.delete('/deleteCost/:eventId', authenticateToken, eventsController.deleteCostInEvent);
 
+router.post('/addGuest/:eventId', authenticateToken, eventsController.addGuestToEvent);
+router.get('/getGuests/:eventId', authenticateToken, eventsController.getEventGuests);
+router.delete('/removeGuest/:eventId', authenticateToken, eventsController.removeGuestFromEvent);
+
+
 module.exports = router;
