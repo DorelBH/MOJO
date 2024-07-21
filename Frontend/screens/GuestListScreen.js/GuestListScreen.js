@@ -39,6 +39,29 @@ const GuestListScreen = ({ navigation, route }) => {
     }
   };
 
+  const sendNotificationToGuests = async () => {
+    const token = await getToken();
+    try {
+      const response = await fetch(`${apiUrl}/api/events/notifyGuests/${eventId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert('Notifications sent successfully');
+      } else {
+        throw new Error(data.message || 'Failed to send notifications');
+      }
+    } catch (error) {
+      console.error('Error sending notifications:', error);
+      alert('Error sending notifications');
+    }
+  };
+  
+
   const toggleSelectGuest = (guest) => {
     setSelectedGuests((prevSelected) => {
       if (prevSelected.includes(guest)) {
@@ -67,7 +90,12 @@ const GuestListScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>רשימת מוזמנים</Text>
+       <View style={styles.header}>
+        <Text style={styles.title}>רשימת מוזמנים</Text>
+        <TouchableOpacity style={styles.sendButton} onPress={sendNotificationToGuests}>
+          <Text style={styles.sendButtonText}>שלח הודעה</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         data={guests}
         renderItem={renderItem}

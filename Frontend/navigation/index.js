@@ -20,6 +20,7 @@ import CostCalculator from "../screens/CostCalculator/CostCalculator";
 import ChooseMain from "../screens/ChooseMain/ChooseMain"
 import GuestListScreen from "../screens/GuestListScreen.js/GuestListScreen";
 import AddGuestScreen from "../screens/AddGuestScreen/AddGuestScreen";
+import GuestCheckScreen from "../screens/GuestCheckScreen/GuestCheckScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,7 @@ const Navigation = () => {
             <Stack.Screen name="CheckList" component={CheckList} />
             <Stack.Screen name="GuestList" component={GuestListScreen} />
             <Stack.Screen name="AddGuest" component={AddGuestScreen} />
+            <Stack.Screen name="GuestCheck" component={GuestCheckScreen} />
 
             </Stack.Navigator>
         </NavigationContainer>

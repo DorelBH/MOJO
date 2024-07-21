@@ -14,7 +14,7 @@ const MainSlots = ({ slotsData, handleSlotPress }) => {
                 <View>
                   <Text style={[SlotStyles.slotDescription, { marginRight: 15 }]}>{item.description}</Text>
                   <View style={SlotStyles.slotInviteButton}>
-                    <TouchableOpacity onPress={() => handleSlotPress(item.action)}>
+                    <TouchableOpacity onPress={() => handleSlotPress('GuestCheck')}>
                       <Image source={item.image} style={SlotStyles.ButtonInvite}/>
                       <Text style={SlotStyles.textInvite}> לרשימה המלאה</Text>
                     </TouchableOpacity>

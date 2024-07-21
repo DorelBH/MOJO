@@ -65,7 +65,7 @@ const useGuestServerConnect = (eventId, setSelectedContacts, setAllContacts, set
         }
     };
 
-    const searchContacts = (searchText) => {
+    const searchContacts = (searchText, allContacts) => {
         const filtered = allContacts.filter(contact =>
             (contact.name && contact.name.toLowerCase().includes(searchText.toLowerCase())) ||
             (contact.phoneNumbers && contact.phoneNumbers.length > 0 && contact.phoneNumbers[0].number && contact.phoneNumbers[0].number.includes(searchText))

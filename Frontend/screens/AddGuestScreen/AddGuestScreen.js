@@ -15,7 +15,7 @@ const AddGuestScreen = ({ navigation, route }) => {
   const [selectedContactId, setSelectedContactId] = useState(null);
   const [showAddNewContact, setShowAddNewContact] = useState(false); // State to manage the display of new contact fields
 
-  const { addGuest: addGuestFromServer, fetchContacts, searchContacts } = useGuestServerConnect(eventId, setSelectedContacts, setAllContacts, setFilteredContacts);
+  const { addGuest: addGuestFromServer, fetchContacts, searchContacts } = useGuestServerConnect(eventId, setSelectedContacts, setAllContacts, setFilteredContacts, allContacts);
 
   useEffect(() => {
     (async () => {
@@ -70,7 +70,7 @@ const AddGuestScreen = ({ navigation, route }) => {
 
   const handleSearch = (text) => {
     setSearchText(text); // Update the search text state
-    searchContacts(text); // קריאה לפונקציה searchContacts מתוך useGuestServerConnect
+    searchContacts(text, allContacts); // קריאה לפונקציה searchContacts מתוך useGuestServerConnect עם allContacts כפרופס
   };
 
   const isGuestSelected = (phone) => {
@@ -120,7 +120,7 @@ const AddGuestScreen = ({ navigation, route }) => {
             <View style={styles.contactCard}>
               <Text style={styles.contactName}>{item.name}</Text>
               <Text style={styles.contactPhone}>{item.phoneNumbers && item.phoneNumbers.length > 0 ? item.phoneNumbers[0].number : ''}</Text>
-              {isGuestSelected(item.phoneNumbers && item.phoneNumbers[0].number) && <Text style={styles.checkMark}>✓</Text>}
+               {isGuestSelected(item.phoneNumbers && item.phoneNumbers[0].number) && <Text style={styles.checkMark}>✓</Text>}
             </View>
           </TouchableOpacity>
         )}

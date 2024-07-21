@@ -105,7 +105,7 @@ const MainScreen = ({ navigation }) => {
       action: 'GuestList'
     }
   ];
-
+  
   const handleSlotPress = (action) => {
     if (action === 'AlcoholCalculator' && eventData) {
       navigation.navigate('AlcoholCalculator', { amountInvited: eventData.amountInvited });
@@ -118,6 +118,9 @@ const MainScreen = ({ navigation }) => {
     }
     if (action === 'GuestList' && eventData) {
       navigation.navigate('GuestList',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
+    }
+    if (action === 'GuestCheck' && eventData) {
+      navigation.navigate('GuestCheck',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
     }
     if (action === 'start' && eventData) {
       navigation.navigate('CheckList',{ eventType:eventData.eventType });
