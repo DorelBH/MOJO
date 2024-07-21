@@ -316,6 +316,87 @@ const updateTaskCompletion = async (req, res) => {
     }
 };
 
+const addGuestToEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { name, phone } = req.body;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        // Check if the phone number already exists in the guest list
+        const guestExists = event.guests.some(guest => guest.phone === phone);
+        if (guestExists) {
+            return res.status(400).json({ message: "Phone number already exists in the guest list" });
+        }
+
+        // Add the new guest with invited set to true
+        event.guests.push({ name, phone, invited: true });
+        await event.save();
+
+        res.status(200).json({ message: "Guest added successfully", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to add guest" });
+    }
+};
+
+
+const getEventGuests = async (req, res) => {
+    const eventId = req.params.eventId;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        res.status(200).json({ guests: event.guests });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to retrieve guests" });
+    }
+};
+
+const removeGuestFromEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { phone } = req.body;
+
+    if (!phone) {
+        return res.status(400).json({ message: "Phone number is required" });
+    }
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+       
+        const guestIndex = event.guests.findIndex(guest => guest.phone === phone);
+        if (guestIndex === -1) {
+            return res.status(404).json({ message: "Guest not found in the list" });
+        }
+
+        if (guestIndex < 0 || guestIndex >= event.guests.length) {
+            return res.status(404).json({ message: "Guest not found in the list" });
+        }
+        
+        event.guests.splice(guestIndex, 1);
+        await event.save();
+
+        res.status(200).json({ message: "Guest removed successfully", event });
+    } catch (error) {
+        console.error(`Failed to remove guest with phone: ${phone}, Error: ${error.message}`);
+        res.status(500).json({ message: error.message || "Failed to remove guest" });
+    }
+};
+
+
+
+exports.removeGuestFromEvent = removeGuestFromEvent;
+exports.addGuestToEvent = addGuestToEvent;
+exports.getEventGuests = getEventGuests;
+
 exports.addPhoto = addPhoto;
 exports.addTasksToEvent = addTasksToEvent;
 exports.updateTaskCompletion = updateTaskCompletion;

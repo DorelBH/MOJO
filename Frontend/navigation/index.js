@@ -17,10 +17,13 @@ import CheckList from "../screens/CheckList/CheckList";
 import MainScreen from "../screens/MainScreen";
 import AlcoholCalculatorScreen from "../screens/AlcoholCalculatorScreen/AlcoholCalculatorScreen";
 import CostCalculator from "../screens/CostCalculator/CostCalculator";
+import ChooseMain from "../screens/ChooseMain/ChooseMain"
 import ChooseMain from "../screens/ChooseMain/ChooseMain";
 
 import ChatbotScreen from "../screens/Chatbot/ChatbotScreen";
-
+import GuestListScreen from "../screens/GuestListScreen.js/GuestListScreen";
+import AddGuestScreen from "../screens/AddGuestScreen/AddGuestScreen";
+import GuestCheckScreen from "../screens/GuestCheckScreen/GuestCheckScreen";
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
@@ -43,7 +46,9 @@ const Navigation = () => {
             <Stack.Screen name="ChooseMain" component={ChooseMain}/> 
             <Stack.Screen name="CheckList" component={CheckList} />
             <Stack.Screen name="ChatBot" component={ChatbotScreen} />
-
+            <Stack.Screen name="GuestList" component={GuestListScreen} />
+            <Stack.Screen name="AddGuest" component={AddGuestScreen} />
+            <Stack.Screen name="GuestCheck" component={GuestCheckScreen} />
             </Stack.Navigator>
             
         </NavigationContainer>

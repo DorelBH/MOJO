@@ -15,7 +15,7 @@ const eventSchema = new Schema({
     costs: [{
         label: { type: String, required: false },
         cost: { type: Number, required: false }
-    }],
+    }]
     checkLists: [{
         timeframe: { type: String, required: false },
         tasks: [{
@@ -23,6 +23,11 @@ const eventSchema = new Schema({
             completed: { type: Boolean, required: false }
         }]
     }]
+    guests: [{ 
+        name: { type: String, required: true },
+        phone: { type: String, required: true },
+        invited: { type: Boolean, default: false }
+    }],
 });
 
 module.exports = mongoose.model('Event', eventSchema);

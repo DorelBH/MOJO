@@ -113,8 +113,15 @@ const MainScreen = ({ navigation }) => {
       if (action === 'checkList' && eventData) {
         navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
       }
+      
       if (action === 'ChatBot') {
         navigation.navigate('ChatBot');
+      }
+      if (action === 'GuestList' && eventData) {
+        navigation.navigate('GuestList',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
+      }
+      if (action === 'GuestCheck' && eventData) {
+        navigation.navigate('GuestCheck',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
       }
     }
   };
