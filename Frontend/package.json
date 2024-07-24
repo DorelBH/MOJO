@@ -26,6 +26,7 @@
     "react-native": "^0.73.6",
     "react-native-contacts": "^7.0.8",
     "react-native-gesture-handler": "~2.16.0",
+    "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-modal-datetime-picker": "^17.1.0",
     "react-native-paper": "^5.12.3",
     "react-native-sms": "^1.11.0",

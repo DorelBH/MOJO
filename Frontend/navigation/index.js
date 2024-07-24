@@ -17,7 +17,6 @@ import CheckList from "../screens/CheckList/CheckList";
 import MainScreen from "../screens/MainScreen";
 import AlcoholCalculatorScreen from "../screens/AlcoholCalculatorScreen/AlcoholCalculatorScreen";
 import CostCalculator from "../screens/CostCalculator/CostCalculator";
-import ChooseMain from "../screens/ChooseMain/ChooseMain"
 import ChooseMain from "../screens/ChooseMain/ChooseMain";
 
 import ChatbotScreen from "../screens/Chatbot/ChatbotScreen";

@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView ,ImageBackground,useWindowDimensions} from "react-native";
-
+import { View, Text, StyleSheet, ScrollView, ImageBackground, useWindowDimensions, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import Boardingimage from '../../assets/images/Boardingimage.png';
-
 import { useNavigation, useRoute } from "@react-navigation/native";
-
 import { apiUrl } from "../../api";
 
 const NewPasswordScreen = () => {
@@ -14,9 +11,8 @@ const NewPasswordScreen = () => {
     const [newPassword, setNewPassword] = useState('');
     const navigation = useNavigation();
     const { height } = useWindowDimensions();
-
     const route = useRoute();
-    const { username } = route.params; // מהמסך הקודם
+    const { username } = route.params;
 
     const onSubmitPressed = async () => {
         try {
@@ -50,52 +46,56 @@ const NewPasswordScreen = () => {
 
     return(
         <ImageBackground
-        source={Boardingimage}
-        style={newPassStyles.backgroundImage}
-        resizeMode="cover"
-    >
+            source={Boardingimage}
+            style={newPassStyles.backgroundImage}
+            resizeMode="cover"
+        >
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={{ flex: 1 }}
+            >
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={[newPassStyles.container, { marginTop: height * 0.6 }]}>
+                            <Text style={newPassStyles.title}>אפס את סיסמתך</Text>
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={[newPassStyles.container, { marginTop: height * 0.6 }]}>
-                <Text style={newPassStyles.title}>אפס את סיסמתך</Text>
+                            <CustomInput 
+                                iconName="email-check"
+                                placeholder="קוד" 
+                                value={code} 
+                                setValue={setCode}
+                                validators={[ { type: 'REQUIRE' }]}
+                                errorMessage="פורמט הקוד אינו תקין"
+                                keyboardType="numeric"
+                            />
 
-                <CustomInput 
-                iconName="email-check"
-                placeholder="קוד" 
-                value={code} 
-                setValue={setCode}
-                validators={[ { type: 'REQUIRE' }]}
-                errorMessage="פורמט הקוד אינו תקין"
-                keyboardType="numeric"
-                />
+                            <CustomInput 
+                                iconName="lock-outline"
+                                placeholder="הכנס סיסמה חדשה" 
+                                value={newPassword} 
+                                secureTextEntry={true} 
+                                setValue={setNewPassword}
+                                validators={[{ type: 'MINLENGTH', val: 8 }, { type: 'REQUIRE' }]}
+                                errorMessage="הסיסמה חייבת להיות באורך של לפחות 8 תווים"
+                            />
 
-                <CustomInput 
-                iconName="lock-outline"
-                placeholder="הכנס סיסמה חדשה" 
-                value={newPassword} 
-                secureTextEntry={true} 
-                setValue={setNewPassword}
-                validators={[{ type: 'MINLENGTH', val: 8 }, { type: 'REQUIRE' }]}
-                errorMessage="הסיסמה חייבת להיות באורך של לפחות 8 תווים"
-                />
+                            <CustomButton 
+                                text="שלח" 
+                                onPress={onSubmitPressed}
+                                type="MAINBROWN"
+                            />
 
-                <CustomButton 
-                text="שלח" 
-                onPress={onSubmitPressed}
-                type="MAINBROWN"
-
-                />
-
-                <CustomButton 
-                text="חזרה להתחברות" 
-                onPress={onSignInPress} 
-                type="TERTIARY"
-                />
-            </View>
-        </ScrollView>
+                            <CustomButton 
+                                text="חזרה להתחברות" 
+                                onPress={onSignInPress} 
+                                type="TERTIARY"
+                            />
+                        </View>
+                    </TouchableWithoutFeedback>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </ImageBackground>
     );
-    
 };
 
 const newPassStyles = StyleSheet.create({
@@ -103,7 +103,6 @@ const newPassStyles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
-
     text: {
         color: 'gray',
         marginVertical: 10,
@@ -120,7 +119,6 @@ const newPassStyles = StyleSheet.create({
         fontSize: 20,
         fontFamily: 'AcademyEngravedLetPlain',
         color: 'white',
-      
     },
 });
 

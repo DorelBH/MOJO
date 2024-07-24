@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, ImageBackground ,useWindowDimensions} from "react-native";
-
+import { View, Text, StyleSheet, ScrollView, ImageBackground, useWindowDimensions, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import Boardingimage from '../../assets/images/Boardingimage.png';
-
 import { useNavigation } from "@react-navigation/native";
 import { apiUrl } from "../../api";
-
 
 const ForgotPasswordScreen = () => {
     const [username, setUsername] = useState('');
@@ -26,11 +23,11 @@ const ForgotPasswordScreen = () => {
                 }),
             });
 
-            const responseData = await response.json(); // חילוץ הנתונים מהתגובה המוצלחת
+            const responseData = await response.json();
 
             if (response.ok) {
-                console.warn(responseData.message); // הצגת הודעת ההצלחה למשתמש
-                navigation.navigate("NewPassword", { username }); // נשלח את שם המשתמש לדף איפוס סיסמה
+                console.warn(responseData.message);
+                navigation.navigate("NewPassword", { username });
             } else {
                 throw new Error(responseData.message || 'אימות שם משתמש נכשל.');
             }
@@ -42,40 +39,46 @@ const ForgotPasswordScreen = () => {
     const onSignInPress = () => {
         navigation.navigate('SignIn');
     }
-    
-    return (
-    <ImageBackground
-        source={Boardingimage}
-        style={forgotStyles.backgroundImage}
-        resizeMode="cover"
-    >
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={[forgotStyles.container, { marginTop: height * 0.68 }]}>
-                <Text style={forgotStyles.title}>איפוס הסיסמה שלך</Text>
-                    <CustomInput 
-                        iconName="account"
-                        placeholder="שם משתמש" 
-                        value={username} 
-                        setValue={setUsername}
-                        validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
-                        errorMessage="שם המשתמש חייב להיות בעל 3 תווים לפחות"
-                        />
-                    <CustomButton 
-                        text="שלח" 
-                        onPress={onSendPressed}
-                        type="MAINBROWN"
-                    />
 
-                    <CustomButton 
-                        text="חזרה להתחברות" 
-                        onPress={onSignInPress} 
-                        type="TERTIARY"
-                    />
-            </View>
-        </ScrollView>
-    </ImageBackground>
+    return (
+        <ImageBackground
+            source={Boardingimage}
+            style={forgotStyles.backgroundImage}
+            resizeMode="cover"
+        >
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={{ flex: 1 }}
+            >
+                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={[forgotStyles.container, { marginTop: height * 0.68 }]}>
+                            <Text style={forgotStyles.title}>איפוס הסיסמה שלך</Text>
+                            <CustomInput 
+                                iconName="account"
+                                placeholder="שם משתמש" 
+                                value={username} 
+                                setValue={setUsername}
+                                validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
+                                errorMessage="שם המשתמש חייב להיות בעל 3 תווים לפחות"
+                            />
+                            <CustomButton 
+                                text="שלח" 
+                                onPress={onSendPressed}
+                                type="MAINBROWN"
+                            />
+
+                            <CustomButton 
+                                text="חזרה להתחברות" 
+                                onPress={onSignInPress} 
+                                type="TERTIARY"
+                            />
+                        </View>
+                    </TouchableWithoutFeedback>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </ImageBackground>
     );
-    
 };
 
 const forgotStyles = StyleSheet.create({
@@ -83,12 +86,10 @@ const forgotStyles = StyleSheet.create({
         alignItems: 'center',
         padding: 20,
     },
-
     title: {
         fontSize: 20,
         fontFamily: 'AcademyEngravedLetPlain',
         color: 'white',
-      
     },
     text: {
         color: 'gray',
