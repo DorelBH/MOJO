@@ -51,8 +51,10 @@ const ProviderDetails = ({ route }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={{ uri: imageUrl }} style={styles.mainImage} />
+      <TouchableOpacity activeOpacity={1}>
       <Text style={styles.name}>{name}</Text>
       <Text style={styles.description}>{description}</Text>
+      </TouchableOpacity>
       <Text style={styles.price}>מחיר ממוצע: <Text style={styles.boldText}>{price}</Text></Text>
       <View style={styles.icons}>
         <TouchableOpacity onPress={handleCallPress}>
@@ -104,6 +106,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    textAlign: 'center',
   },
   description: {
     fontSize: 16,

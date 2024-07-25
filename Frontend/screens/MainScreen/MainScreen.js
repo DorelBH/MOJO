@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Image, StyleSheet, Text} from 'react-native';
+import { View, Image, StyleSheet, Text } from 'react-native';
 import MainSlots from '../../components/MainSlots';
 import CameraButton from '../../components/CameraButton';
 import useAuthCheck from '../../hooks/useAuthCheck';
@@ -93,22 +93,30 @@ const MainScreen = ({ navigation }) => {
       description: 'הליך התכנון שלנו כולל מחשבון אלכוהול מותאם אישית שיעזור לכם לחשב את הכמות הנדרשת לפי מספר המוזמנים, וכן רשימת ספקים מובחרים שיספקו את השירות ברמה הגבוהה ביותר.',
       image: require('../../assets/images/bar.png'),
       buttonText: 'אלכוהול',
-      action: 'ChooseMain'
+      action: 'AlcoholMain'
     }
   ];
+
+  // Add Rabbi to slotsData if event type is wedding
+  if (eventData && eventData.eventType === 'חתונה') {
+    slotsData.push({
+      title: 'רב לאירוע',
+      description: 'מצא את הרב המושלם לאירוע שלך! אנו מציעים מגוון רבנים מוסמכים שיברכו אתכם ביום החשוב שלכם ויוסיפו לקדושת הטקס.',
+      image: require('../../assets/images/rabbi_wedding.webp'),
+      buttonText: 'רב לאירוע',
+      action: 'RavProviders'
+    });
+  }
 
   const handleSlotPress = (action) => {
     if (action === 'start') {
       setShowBarServices(true);
     } else {
-      if (action === 'AlcoholCalculator' && eventData) {
-        navigation.navigate('AlcoholCalculator', { amountInvited: eventData.amountInvited });
-      }
       if (action === 'CostCalculator' && eventData) {
         navigation.navigate('CostCalculator', { eventType: eventData.eventType, costs: eventData.costs, eventId });
       }
-      if (action === 'ChooseMain' && eventData) {
-        navigation.navigate('ChooseMain', { amountInvited: eventData.amountInvited });
+      if (action === 'AlcoholMain' && eventData) {
+        navigation.navigate('AlcoholMain', { amountInvited: eventData.amountInvited });
       }
       if (action === 'checkList' && eventData) {
         navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
@@ -122,6 +130,9 @@ const MainScreen = ({ navigation }) => {
       }
       if (action === 'GuestCheck' && eventData) {
         navigation.navigate('GuestCheck',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
+      }
+      if (action === 'RavProviders' && eventData) {
+        navigation.navigate('RavProviders', { });
       }
     }
   };
@@ -179,9 +190,9 @@ const MainScreen = ({ navigation }) => {
         <CameraButton eventId={eventId} style={styles.cameraButton} />
       </View>
       {showBarServices ? (
-        <MainSlots slotsData={slotsData.filter(item => item.action === 'ChooseMain' || item.action === 'ChatBot')} handleSlotPress={handleSlotPress} showBackButton={true} handleBackPress={handleBackPress} />
+        <MainSlots slotsData={slotsData.filter(item => item.action === 'AlcoholMain' || item.action === 'ChatBot' || item.action === 'RavProviders')} handleSlotPress={handleSlotPress} showBackButton={true} handleBackPress={handleBackPress} />
       ) : (
-        <MainSlots slotsData={slotsData.filter(item => item.action !== 'ChooseMain')} handleSlotPress={handleSlotPress} showBackButton={false} />
+        <MainSlots slotsData={slotsData.filter(item => item.action !== 'AlcoholMain' && item.action !== 'RavProviders')} handleSlotPress={handleSlotPress} showBackButton={false} />
       )}
     </View>
   );

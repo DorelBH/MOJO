@@ -4,7 +4,7 @@ import AlcoholCalculatorScreen from '../AlcoholCalculatorScreen';
 import BarProviders from '../../Providers/BarProviders';
 import CustomButton from '../../components/CustomButton';
 
-const ChooseMain = () => {
+const AlcoholMain = () => {
     const [currentScreen, setCurrentScreen] = useState('AlcoholCalc');
 
     const handlePressDJ = () => setCurrentScreen('AlcoholCalc');
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ChooseMain;
+export default AlcoholMain;
