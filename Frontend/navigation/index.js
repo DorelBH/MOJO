@@ -23,6 +23,9 @@ import ChatbotScreen from "../screens/Chatbot/ChatbotScreen";
 import GuestListScreen from "../screens/GuestListScreen.js/GuestListScreen";
 import AddGuestScreen from "../screens/AddGuestScreen/AddGuestScreen";
 import GuestCheckScreen from "../screens/GuestCheckScreen/GuestCheckScreen";
+
+import ProviderDetails from "../components/ProviderDetails";
+
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
@@ -48,6 +51,8 @@ const Navigation = () => {
             <Stack.Screen name="GuestList" component={GuestListScreen} />
             <Stack.Screen name="AddGuest" component={AddGuestScreen} />
             <Stack.Screen name="GuestCheck" component={GuestCheckScreen} />
+            <Stack.Screen name="ProviderDetails" component={ProviderDetails}/>
+
             </Stack.Navigator>
             
         </NavigationContainer>

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import AlcoholCalculatorScreen from '../AlcoholCalculatorScreen';
-import ProvideComponent from '../../components/Provider';
+import BarProviders from '../../Providers/BarProviders';
 import CustomButton from '../../components/CustomButton';
 
-const MainScreen = () => {//fix this screen חשוב 
+const ChooseMain = () => {
     const [currentScreen, setCurrentScreen] = useState('AlcoholCalc');
 
     const handlePressDJ = () => setCurrentScreen('AlcoholCalc');
@@ -28,7 +28,7 @@ const MainScreen = () => {//fix this screen חשוב
             </View>
             <View style={styles.showComponent}>
                 {currentScreen === 'AlcoholCalc' && <AlcoholCalculatorScreen />}
-                {currentScreen === 'provide' && <ProvideComponent />}
+                {currentScreen === 'provide' && <BarProviders />}
             </View>
         </View>
     );
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start', // אלין לראש המסך
         alignItems: 'center',
-        marginTop:'15%'
+        marginTop:'10%'
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default MainScreen;
+export default ChooseMain;
