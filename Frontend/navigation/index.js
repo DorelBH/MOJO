@@ -24,8 +24,9 @@ import GuestListScreen from "../screens/GuestListScreen.js/GuestListScreen";
 import AddGuestScreen from "../screens/AddGuestScreen/AddGuestScreen";
 import GuestCheckScreen from "../screens/GuestCheckScreen/GuestCheckScreen";
 
-import ProviderDetails from "../components/ProviderDetails";
+import ProviderDetails from "../screens/ProviderDetails";;
 import RavProviders from "../Providers/RavProviders";
+import HallsProviders from "../Providers/HallsProviders";
 
 
 const Stack = createNativeStackNavigator();
@@ -56,6 +57,7 @@ const Navigation = () => {
 
             <Stack.Screen name="ProviderDetails" component={ProviderDetails}/>
             <Stack.Screen name="RavProviders" component={RavProviders}/>
+            <Stack.Screen name="HallsProviders" component={HallsProviders}/>
 
             </Stack.Navigator>
             

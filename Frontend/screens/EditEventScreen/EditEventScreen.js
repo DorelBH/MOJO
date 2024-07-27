@@ -22,8 +22,8 @@ const EditEventScreen = ({ route }) => {
     const [selectedDate, setSelectedDate] = useState(null);
     const [isVisible, setIsVisible] = useState(false);
 
-    const [selectedRegions, setSelectedRegions] = useState([]);
-    const regions = ['דרום', 'צפון', 'מרכז', 'ירושלים', 'שרון'];
+    const [selectedRegion, setSelectedRegion] = useState('');
+    const regions = ['ירושלים', 'מרכז', 'דרום', 'צפון'];
 
     const [eventDetails, setEventDetails] = useState({
         groomName: '',
@@ -69,7 +69,7 @@ const EditEventScreen = ({ route }) => {
                     checkLists: event.checkLists || []
                 });
                 setSelectedDate(event.eventDate ? new Date(event.eventDate) : null);
-                setSelectedRegions(event.selectedRegions || []);
+                setSelectedRegion(event.selectedRegions ? event.selectedRegions[0] : '');
             } catch (error) {
                 console.error('Error:', error.message || 'Something went wrong during fetching the event details.');
             }
@@ -82,7 +82,7 @@ const EditEventScreen = ({ route }) => {
             try {
                 const eventData = {
                     eventType: eventType,
-                    selectedRegions: selectedRegions,
+                    selectedRegions: [selectedRegion],
                     amountInvited: eventDetails.amountInvited,
                     selectedDate: selectedDate,
                     costs: eventDetails.costs,
@@ -131,15 +131,11 @@ const EditEventScreen = ({ route }) => {
     };
 
     const handleRegionChange = (region) => {
-        if (selectedRegions.includes(region)) {
-            setSelectedRegions(selectedRegions.filter((r) => r !== region));
-        } else {
-            setSelectedRegions([...selectedRegions, region]);
-        }
+        setSelectedRegion(region);
     };
 
     const isChecked = (region) => {
-        return selectedRegions.includes(region);
+        return selectedRegion === region;
     };
 
     const onCloseHall = () => {

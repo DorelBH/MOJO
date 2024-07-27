@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Modal, Lin
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ProviderDetails = ({ route }) => {
-  const { name, imageUrl, description, price, phone, whatsapp, gallery } = route.params;
+  const { name, imageUrl, description, price, phone, whatsapp, gallery, address } = route.params;
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [showAllImages, setShowAllImages] = useState(false);
@@ -52,10 +52,11 @@ const ProviderDetails = ({ route }) => {
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={{ uri: imageUrl }} style={styles.mainImage} />
       <TouchableOpacity activeOpacity={1}>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.description}>{description}</Text>
+        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.description}>{description}</Text>
       </TouchableOpacity>
       <Text style={styles.price}>מחיר ממוצע: <Text style={styles.boldText}>{price}</Text></Text>
+      {address && <Text style={styles.address}><Text style={styles.boldText}>כתובת: </Text>{address}</Text>}
       <View style={styles.icons}>
         <TouchableOpacity onPress={handleCallPress}>
           <Icon name="phone" size={30} color="#000" />
@@ -116,6 +117,13 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 18,
     marginBottom: 20,
+    textAlign: 'center', // Ensure the text is centered
+  },
+  address: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'right', // Ensure the text is aligned to the right
+    width: '100%',
   },
   boldText: {
     fontWeight: 'bold',

@@ -46,7 +46,7 @@ const MainScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       fetchEventData();
-    }, [eventId])
+    }, [eventId,eventData])
   );
 
   useEffect(() => {
@@ -94,10 +94,17 @@ const MainScreen = ({ navigation }) => {
       image: require('../../assets/images/bar.png'),
       buttonText: 'אלכוהול',
       action: 'AlcoholMain'
-    }
+    },
+    {
+        title: 'אולמות',
+        description: 'אצלנו תמצאו מגוון אולמות וגני אירועים שמתאימים לכל סוגי האירועים. נציע לכם רשימה מובחרת של ספקים ובעלי מקצוע שיעניקו שירות ברמה הגבוהה ביותר, כדי שהאירוע שלכם יהיה בלתי נשכח.',
+        image: require('../../assets/images/hall_img.webp'),
+        buttonText: 'אולמות וגני אירועים',
+        action: 'HallsProviders'
+      }
+      
   ];
 
-  // Add Rabbi to slotsData if event type is wedding
   if (eventData && eventData.eventType === 'חתונה') {
     slotsData.push({
       title: 'רב לאירוע',
@@ -133,6 +140,9 @@ const MainScreen = ({ navigation }) => {
       }
       if (action === 'RavProviders' && eventData) {
         navigation.navigate('RavProviders', { });
+      }
+      if (action === 'HallsProviders' && eventData) {
+        navigation.navigate('HallsProviders', { selectedRegions: eventData.selectedRegions });
       }
     }
   };
@@ -190,9 +200,9 @@ const MainScreen = ({ navigation }) => {
         <CameraButton eventId={eventId} style={styles.cameraButton} />
       </View>
       {showBarServices ? (
-        <MainSlots slotsData={slotsData.filter(item => item.action === 'AlcoholMain' || item.action === 'ChatBot' || item.action === 'RavProviders')} handleSlotPress={handleSlotPress} showBackButton={true} handleBackPress={handleBackPress} />
+        <MainSlots slotsData={slotsData.filter(item => item.action === 'AlcoholMain' || item.action === 'ChatBot' || item.action === 'RavProviders' ||item.action === 'HallsProviders' )} handleSlotPress={handleSlotPress} showBackButton={true} handleBackPress={handleBackPress} />
       ) : (
-        <MainSlots slotsData={slotsData.filter(item => item.action !== 'AlcoholMain' && item.action !== 'RavProviders')} handleSlotPress={handleSlotPress} showBackButton={false} />
+        <MainSlots slotsData={slotsData.filter(item => item.action !== 'AlcoholMain' && item.action !== 'RavProviders' && item.action !== 'HallsProviders')} handleSlotPress={handleSlotPress} showBackButton={false} />
       )}
     </View>
   );

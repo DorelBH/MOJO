@@ -169,14 +169,13 @@ const SlotStyles = StyleSheet.create({
     color: 'black',
   },
   backButton: {
-    position: 'absolute',
-    top: 5,
-    left: 5,
-    padding: 10,
+    top: 10,
+    left: 10,
+    padding: 8,
     borderWidth: 1,
     backgroundColor: '#7B481C',
-    marginTop: 10,
     borderRadius: 30,
+    marginBottom:20
 
   },
   backButtonText: {

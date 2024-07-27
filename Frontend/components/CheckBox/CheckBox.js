@@ -21,11 +21,12 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         borderWidth: 1,
-        borderColor: 'black',
+        borderColor: '#7B481C',
         marginRight: 10,
+        borderRadius:10
     },
     checkedBox: {
-        backgroundColor: 'black', // Add background color when checked
+        backgroundColor: '#7B481C', // Add background color when checked
         
     },
     label: {
