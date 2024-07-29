@@ -27,6 +27,7 @@ import GuestCheckScreen from "../screens/GuestCheckScreen/GuestCheckScreen";
 import ProviderDetails from "../screens/ProviderDetails";;
 import RavProviders from "../Providers/RavProviders";
 import HallsProviders from "../Providers/HallsProviders";
+import PhotographerProviders from "../Providers/PhotographerProviders";
 
 
 const Stack = createNativeStackNavigator();
@@ -58,6 +59,7 @@ const Navigation = () => {
             <Stack.Screen name="ProviderDetails" component={ProviderDetails}/>
             <Stack.Screen name="RavProviders" component={RavProviders}/>
             <Stack.Screen name="HallsProviders" component={HallsProviders}/>
+            <Stack.Screen name="PhotographerProviders" component={PhotographerProviders}/>
 
             </Stack.Navigator>
             
