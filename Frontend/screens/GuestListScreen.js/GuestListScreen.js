@@ -93,7 +93,9 @@ const GuestListScreen = ({ navigation, route }) => {
        <View style={styles.header}>
         <Text style={styles.title}>רשימת מוזמנים</Text>
         <TouchableOpacity style={styles.sendButton} onPress={sendNotificationToGuests}>
-          <Text style={styles.sendButtonText}>שלח הודעה</Text>
+          
+          <Icon name="message-text-outline" size={20} color="#fff" style={styles.sendButtonIcon} />
+          <Text style={styles.sendButtonText}>שלח הודעות לכולם</Text>
         </TouchableOpacity>
       </View>
       <FlatList
@@ -181,6 +183,27 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     tintColor: 'red',
+  },
+  sendButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 25,
+    flexDirection: 'row-reverse', // מסדר את האייקון מימין ואת הטקסט משמאל
+    alignItems: 'center', // מיישר את האייקון והטקסט באמצע
+    maxWidth: 200, // הגדרת רוחב מקסימלי
+    marginLeft: 200,
+  },
+  sendButtonIcon: {
+    marginLeft: 10,
+    color: 'green',
+  },
+  sendButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'AcademyEngravedLetPlain',
+    color: 'green',
+   
   },
 });
 

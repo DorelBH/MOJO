@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken";
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon
 
 const GuestCheckScreen = ({ route }) => {
   const eventId = route.params.eventId;
@@ -58,7 +59,8 @@ const GuestCheckScreen = ({ route }) => {
       <Text style={styles.title}>סטטוס מוזמנים</Text>
 
       <View style={styles.section}>
-        <TouchableOpacity onPress={() => setShowArriving(!showArriving)}>
+        <TouchableOpacity onPress={() => setShowArriving(!showArriving)} style={styles.touchable}>
+          <Icon name={showArriving ? 'expand-less' : 'expand-more'} size={24} />
           <Text style={styles.sectionTitle}>מגיעים ({totalArriving} סה״כ)</Text>
         </TouchableOpacity>
         {showArriving && (
@@ -71,7 +73,8 @@ const GuestCheckScreen = ({ route }) => {
       </View>
 
       <View style={styles.section}>
-        <TouchableOpacity onPress={() => setShowNotAttending(!showNotAttending)}>
+        <TouchableOpacity onPress={() => setShowNotAttending(!showNotAttending)} style={styles.touchable}>
+          <Icon name={showNotAttending ? 'expand-less' : 'expand-more'} size={24} />
           <Text style={styles.sectionTitle}>לא מגיעים</Text>
         </TouchableOpacity>
         {showNotAttending && (
@@ -84,7 +87,8 @@ const GuestCheckScreen = ({ route }) => {
       </View>
 
       <View style={styles.section}>
-        <TouchableOpacity onPress={() => setShowNotResponded(!showNotResponded)}>
+        <TouchableOpacity onPress={() => setShowNotResponded(!showNotResponded)} style={styles.touchable}>
+        <Icon name={showNotResponded ? 'expand-less' : 'expand-more'} size={24} />
           <Text style={styles.sectionTitle}>לא הגיבו</Text>
         </TouchableOpacity>
         {showNotResponded && (
@@ -131,6 +135,9 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 16,
     textAlign: 'right', // Align item texts to the right
+  },
+  touchable: {
+    flexDirection: 'row-reverse', // Reverse row direction
   },
 });
 
