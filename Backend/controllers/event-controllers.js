@@ -392,7 +392,70 @@ const removeGuestFromEvent = async (req, res) => {
 };
 
 
+const addPaymentDeadlinesToEvent = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { paymentDeadlines } = req.body;
 
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "האירוע לא נמצא" });
+        }
+
+        for (const newDeadline of paymentDeadlines) {
+            if (!newDeadline.supplierName || !newDeadline.date) {
+                return res.status(400).json({ message: "שם הספק ותאריך לא יכולים להיות ריקים" });
+            }
+
+            const existingDeadline = event.paymentDeadlines.find(
+                deadline => deadline.supplierName === newDeadline.supplierName && new Date(deadline.date).getTime() === new Date(newDeadline.date).getTime()
+            );
+
+            if (existingDeadline) {
+                return res.status(400).json({
+                    message: `מועד התשלום לספק "${newDeadline.supplierName}" בתאריך "${newDeadline.date}" כבר קיים`
+                });
+            }
+
+            event.paymentDeadlines.push(newDeadline);
+        }
+
+        await event.save();
+        res.status(200).json({ message: "כל מועדי התשלום החדשים נוספו בהצלחה", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "הוספת מועדי התשלום נכשלה" });
+    }
+};
+
+const updatePaymentDeadlineCompletion = async (req, res) => {
+    const eventId = req.params.eventId;
+    const { supplierName, date, completed } = req.body;
+
+    try {
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: "האירוע לא נמצא" });
+        }
+
+        const deadline = event.paymentDeadlines.find(
+            deadline => deadline.supplierName === supplierName && new Date(deadline.date).getTime() === new Date(date).getTime()
+        );
+
+        if (!deadline) {
+            return res.status(404).json({ message: "מועד התשלום לא נמצא" });
+        }
+
+        deadline.completed = completed;
+
+        await event.save();
+        res.status(200).json({ message: "מועד התשלום עודכן בהצלחה", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "עדכון סטטוס מועד התשלום נכשל" });
+    }
+};
+
+exports.addPaymentDeadlinesToEvent=addPaymentDeadlinesToEvent;
+exports.updatePaymentDeadlineCompletion=updatePaymentDeadlineCompletion;
 exports.removeGuestFromEvent = removeGuestFromEvent;
 exports.addGuestToEvent = addGuestToEvent;
 exports.getEventGuests = getEventGuests;

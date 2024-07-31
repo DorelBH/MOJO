@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import AlcoholCalculatorScreen from '../AlcoholCalculatorScreen';
-import BarProviders from '../../Providers/BarProviders';
+import RecommendedSongsScreen from '../RecommendedSongsScreen';
+import DJProviders from '../../Providers/DJProviders';
 import CustomButton from '../../components/CustomButton';
 
 const AlcoholMain = () => {
-    const [currentScreen, setCurrentScreen] = useState('AlcoholCalc');
+    const [currentScreen, setCurrentScreen] = useState('RecommendedSongs');
 
-    const handlePressAlcohol = () => setCurrentScreen('AlcoholCalc');
-    const handlePressProvide = () => setCurrentScreen('provide');
+    const handlePressDJ = () => setCurrentScreen('RecommendedSongs');
+    const handlePressSongs = () => setCurrentScreen('provide');
 
     return (
         <View style={styles.container}>
@@ -16,19 +16,19 @@ const AlcoholMain = () => {
 
                 <CustomButton 
                     text="בחירת ספק" 
-                    onPress={handlePressProvide}
+                    onPress={handlePressSongs}
                     type={currentScreen === 'provide' ? 'PROVIDER' : 'PROVIDER_NOTACTIVE'}
                 />
                 
                 <CustomButton
-                    text="מחשבון אלכהול" 
-                    onPress={handlePressAlcohol} 
-                    type={currentScreen === 'AlcoholCalc' ? 'PROVIDER' : 'PROVIDER_NOTACTIVE'}
+                    text="המלצות לשירים" 
+                    onPress={handlePressDJ} 
+                    type={currentScreen === 'RecommendedSongs' ? 'PROVIDER' : 'PROVIDER_NOTACTIVE'}
                 />
             </View>
             <View style={styles.showComponent}>
-                {currentScreen === 'AlcoholCalc' && <AlcoholCalculatorScreen />}
-                {currentScreen === 'provide' && <BarProviders />}
+                {currentScreen === 'RecommendedSongs' && <RecommendedSongsScreen />}
+                {currentScreen === 'provide' && <DJProviders />}
             </View>
         </View>
     );

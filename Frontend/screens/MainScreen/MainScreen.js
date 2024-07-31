@@ -75,6 +75,13 @@ const MainScreen = ({ navigation }) => {
       action: 'checkList'
     },
     {
+      title: 'תשלום לספקים',
+      description: 'עם המערכת שלנו תוכלו להוסיף שמות ספקים ותאריכי תשלום לספקים, לנהל את מועדי התשלום ולשמור על סדר ובקרה.',
+      image: require('../../assets/images/payment.webp'),
+      buttonText: 'מועדי תשלום לספקים',
+      action: 'PaymentDeadlines'
+    },
+    {
       title: 'תמיד תהיו בבקרה על ההוצאות',
       description: 'עם מחשבון ההוצאות שלנו תוכלו לאגד ולנהל את כל ההוצאות לחתונה במקום אחד. המחשבון מאפשר לכם לשמור על התקציב ולהישאר בבקרה תמיד.',
       image: require('../../assets/images/calc.png'),
@@ -94,6 +101,13 @@ const MainScreen = ({ navigation }) => {
       image: require('../../assets/images/bar.webp'),
       buttonText: 'אלכוהול',
       action: 'AlcoholMain'
+    },
+    {
+      title: 'שירותי מוזיקה',
+      description: 'הליך התכנון שלנו כולל רשימת שירים מומלצים לכל סוגי האירועים, וכן רשימת ספקים מובחרים של DJ שיעניקו לכם את השירות המוזיקלי ברמה הגבוהה ביותר.',
+      image: require('../../assets/images/music.webp'),
+      buttonText: 'מוזיקה',
+      action: 'SongsMain'
     },
     {
         title: 'אולמות',
@@ -133,10 +147,12 @@ const MainScreen = ({ navigation }) => {
       if (action === 'AlcoholMain' && eventData) {
         navigation.navigate('AlcoholMain', { amountInvited: eventData.amountInvited });
       }
+      if (action === 'SongsMain' && eventData) {
+        navigation.navigate('SongsMain', { amountInvited: eventData.amountInvited });
+      }
       if (action === 'checkList' && eventData) {
         navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
       }
-      
       if (action === 'ChatBot') {
         navigation.navigate('ChatBot');
       }
@@ -154,6 +170,9 @@ const MainScreen = ({ navigation }) => {
       }
       if (action === 'PhotographerProviders' && eventData) {
         navigation.navigate('PhotographerProviders', { selectedRegions: eventData.selectedRegions });
+      }
+      if(action === 'PaymentDeadlines' && eventData) {
+        navigation.navigate('PaymentDeadlines',{eventId});
       }
     }
   };
@@ -211,9 +230,9 @@ const MainScreen = ({ navigation }) => {
         <CameraButton eventId={eventId} style={styles.cameraButton} />
       </View>
       {showBarServices ? (
-        <MainSlots slotsData={slotsData.filter(item => item.action === 'AlcoholMain' || item.action === 'ChatBot' || item.action === 'RavProviders' ||item.action === 'HallsProviders' ||item.action === 'PhotographerProviders' )} handleSlotPress={handleSlotPress} showBackButton={true} handleBackPress={handleBackPress} />
+        <MainSlots slotsData={slotsData.filter(item => item.action === 'AlcoholMain' || item.action === 'ChatBot' || item.action === 'RavProviders' ||item.action === 'HallsProviders' ||item.action === 'PhotographerProviders' ||item.action ==='SongsMain' )} handleSlotPress={handleSlotPress} showBackButton={true} handleBackPress={handleBackPress} />
       ) : (
-        <MainSlots slotsData={slotsData.filter(item => item.action !== 'AlcoholMain' && item.action !== 'RavProviders' && item.action !== 'HallsProviders' && item.action !=='PhotographerProviders')} handleSlotPress={handleSlotPress} showBackButton={false} />
+        <MainSlots slotsData={slotsData.filter(item => item.action !== 'AlcoholMain' && item.action !== 'RavProviders' && item.action !== 'HallsProviders' && item.action !=='PhotographerProviders' && item.action !=='SongsMain')} handleSlotPress={handleSlotPress} showBackButton={false} />
       )}
     </View>
   );

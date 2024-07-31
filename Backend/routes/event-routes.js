@@ -1,7 +1,6 @@
 const express = require('express');
 const eventsController = require('../controllers/event-controllers');
 const authenticateToken = require('../middleware/authMiddleware');
-const sendingSMS = require('../controllers/sendSMS');
 const router = express.Router();
 
 router.get('/newEvent', authenticateToken, eventsController.getUserName);
@@ -16,13 +15,16 @@ router.post('/addPhoto/:eventId', authenticateToken, eventsController.addPhoto);
 router.post('/addCosts/:eventId', authenticateToken, eventsController.addCostsToEvent);
 router.patch('/updateCosts/:eventId', authenticateToken, eventsController.updateCostsInEvent);
 router.delete('/deleteCost/:eventId', authenticateToken, eventsController.deleteCostInEvent);
+
 router.post('/addTasks/:eventId', authenticateToken, eventsController.addTasksToEvent);
 router.patch('/updateTaskCompletion/:eventId', authenticateToken, eventsController.updateTaskCompletion);
+
+router.post('/addDeadlines/:eventId', authenticateToken, eventsController.addPaymentDeadlinesToEvent);
+router.patch('/updateDeadlines/:eventId', authenticateToken, eventsController.updatePaymentDeadlineCompletion);
+
 router.patch('/updateEvent/:eventId', authenticateToken, eventsController.updateEvent);
 router.post('/addGuest/:eventId', authenticateToken, eventsController.addGuestToEvent);
 router.get('/getGuests/:eventId', authenticateToken, eventsController.getEventGuests);
 router.delete('/removeGuest/:eventId', authenticateToken, eventsController.removeGuestFromEvent);
-router.post('/notifyGuests/:eventId', authenticateToken, sendingSMS.notifyGuests);
-
 
 module.exports = router;
