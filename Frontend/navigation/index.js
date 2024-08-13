@@ -82,7 +82,7 @@ const Navigation = () => {
         <Stack.Screen name="SongsMain" component={withLogoutButton(SongsMain)} />
         <Stack.Screen name="RecommendedSongs" component={withLogoutButton(RecommendedSongsScreen)} />
         <Stack.Screen name="PaymentDeadlines" component={withLogoutButton(PaymentDeadlines)} />
-            <Stack.Screen name="HupaSongs" component={HupaSongsScreen}/>
+            <Stack.Screen name="HupaSongs" component={withLogoutButton(HupaSongsScreen)}/>
             <Stack.Screen name="HebrewHupaSongs" component={HebrewHupaSongsScreen}/>
             <Stack.Screen name="LoazitHupaSongs" component={LoazitHupaSongsScreen}/>
             <Stack.Screen name="SlowSongs" component={SlowSongsScreen}/>
