@@ -26,5 +26,8 @@ router.patch('/updateEvent/:eventId', authenticateToken, eventsController.update
 router.post('/addGuest/:eventId', authenticateToken, eventsController.addGuestToEvent);
 router.get('/getGuests/:eventId', authenticateToken, eventsController.getEventGuests);
 router.delete('/removeGuest/:eventId', authenticateToken, eventsController.removeGuestFromEvent);
+router.post('/notifyGuests/:eventId', authenticateToken, eventsController.notifyGuests);
+router.patch('/updateGuestResponse/:eventId', authenticateToken, eventsController.updateGuestResponse);
+
 
 module.exports = router;

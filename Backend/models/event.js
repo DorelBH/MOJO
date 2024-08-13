@@ -26,7 +26,8 @@ const eventSchema = new Schema({
     guests: [{
         name: { type: String, required: true },
         phone: { type: String, required: true },
-        invited: { type: Boolean, default: false }
+        invited: { type: Boolean, default: false },
+        response: { type: Number, enum: ['1', '2', '0'], default: null } 
     }],
     paymentDeadlines: [{
         supplierName: { type: String, required: false },

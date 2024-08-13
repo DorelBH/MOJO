@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken";
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Import the icon
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const GuestCheckScreen = ({ route }) => {
   const eventId = route.params.eventId;
@@ -20,6 +20,7 @@ const GuestCheckScreen = ({ route }) => {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json; charset=utf-8', // Ensure UTF-8 encoding is accepted
           },
         });
         const data = await response.json();
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     fontFamily: 'AcademyEngravedLetPlain',
-    textAlign: 'right', // Align section titles to the right
+    textAlign: 'right',
   },
   itemContainer: {
     padding: 12,
@@ -134,10 +135,10 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 16,
-    textAlign: 'right', // Align item texts to the right
+    textAlign: 'right',
   },
   touchable: {
-    flexDirection: 'row-reverse', // Reverse row direction
+    flexDirection: 'row-reverse',
   },
 });
 
