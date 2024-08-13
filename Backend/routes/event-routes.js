@@ -27,4 +27,6 @@ router.post('/addGuest/:eventId', authenticateToken, eventsController.addGuestTo
 router.get('/getGuests/:eventId', authenticateToken, eventsController.getEventGuests);
 router.delete('/removeGuest/:eventId', authenticateToken, eventsController.removeGuestFromEvent);
 
+router.get('/providers/:providerType', authenticateToken, eventsController.getProviders);
+
 module.exports = router;

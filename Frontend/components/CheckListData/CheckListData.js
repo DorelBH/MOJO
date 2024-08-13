@@ -13,7 +13,7 @@ const additionalTasks = {
             ]
         },
         {
-            timeframe: 'שישה חודשים לאירוע',
+            timeframe: 'חצי שנה לאירוע',
             tasks: [
                 { label: 'בחירת ספקים עיקריים (קייטרינג, צלם, DJ וכו)', completed: false },
                 { label: 'קבלת הצעות מחיר והשוואה', completed: false },

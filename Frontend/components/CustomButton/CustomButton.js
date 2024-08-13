@@ -148,6 +148,15 @@ const buttonStyles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 15,
     },
+    container_LOGOUT: {
+        backgroundColor: '#FF6347', 
+        borderRadius: 15,
+        padding: 5,
+        width: 80, 
+        height: 30, 
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     
     text:{
         fontWeight:'bold',
@@ -205,7 +214,10 @@ const buttonStyles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         lineHeight: 20,
-    }
+    },
+    text_LOGOUT: {
+        fontSize: 12, 
+    },
 })
 
 export default CustomButton

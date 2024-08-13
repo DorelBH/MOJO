@@ -1,10 +1,19 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
+const path = require('path');
 
-const baseUrl = 'https://www.mit4mit.co.il';
-const categoryUrl = `${baseUrl}/top/54719c753be563f2f3059220?onlyPhone&&page=`;
+// תיקייה לשמירת הקבצים
+const outputDir = path.join(__dirname, 'PhotographerScrape'); 
 
+// פונקציה לשמירת הנתונים ל- providers.json בתוך התיקייה PhotographerScrape
+function saveProviders(providers) {
+  const outputPath = path.join(outputDir, 'providers.json');
+  fs.writeFileSync(outputPath, JSON.stringify(providers, null, 2));
+  console.log('Data successfully written to providers.json');
+}
+
+// פונקציה לשאיבת פרטי ספקים מהדף של הספק
 async function scrapeProviderDetails(providerUrl) {
   const response = await axios.get(providerUrl);
   const html = response.data;
@@ -12,7 +21,7 @@ async function scrapeProviderDetails(providerUrl) {
 
   const description = $('div.prettyParagraph .bizDescriptionText').text().trim();
   
-  // Scrape gallery images
+  // סריקת תמונות גלריה
   const gallery = [];
   $('div.tabcontent.styledBorder a.galleryPicWrapper img').each((index, element) => {
     const imageUrl = $(element).attr('src');
@@ -23,8 +32,11 @@ async function scrapeProviderDetails(providerUrl) {
   return { description, gallery };
 }
 
+// פונקציה לסריקת ספקים
 async function scrapeProviders() {
   const providers = [];
+  const baseUrl = 'https://www.mit4mit.co.il';
+  const categoryUrl = `${baseUrl}/top/54719c753be563f2f3059220?onlyPhone&&page=`;
 
   for (let page = 1; page <= 15; page++) {
     const response = await axios.get(`${categoryUrl}${page}`);
@@ -44,8 +56,8 @@ async function scrapeProviders() {
 
       if (!phone) continue; // דלג על ספקים ללא מספר טלפון
 
-      // Remove ", ישראל" from the address if it exists
-      if (address.includes(', ישראל')) {
+      // הסרת ", ישראל" מהכתובת אם קיים
+      if (address && address.includes(', ישראל')) {
         address = address.replace(', ישראל', '');
       }
 
@@ -61,13 +73,31 @@ async function scrapeProviders() {
         description: detailedDescription,
         address,
         phone,
-        gallery // Added gallery images
+        gallery
       });
     }
   }
 
-  fs.writeFileSync('providers.json', JSON.stringify(providers, null, 2));
-  console.log('Data successfully written to providers.json');
+  saveProviders(providers);
 }
 
+// תזמון הרצת הסקריפט כל 24 שעות
+const runInterval = 24 * 60 * 60 * 1000; // 24 שעות במילישניות
+setInterval(async () => {
+  try {
+    console.log('Starting provider scraping...');
+    await scrapeProviders();
+  } catch (error) {
+    console.error(error);
+  }
+}, runInterval);
+
+// בדיקה אם התיקייה קיימת ואם לא, יצירתה
+if (!fs.existsSync(outputDir)) {
+  fs.mkdirSync(outputDir, { recursive: true });
+}
+
+// קריאה ראשונית לפונקציה לסריקת ספקים
 scrapeProviders().catch(console.error);
+
+console.log('Scraping scheduled to run every 24 hours');

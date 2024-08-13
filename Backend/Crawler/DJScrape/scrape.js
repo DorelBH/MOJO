@@ -1,9 +1,11 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
+const path = require('path'); // Import path module
 
 const baseUrl = 'https://www.mit4mit.co.il';
 const categoryUrl = `${baseUrl}/category/3?onlyPhone&&page=`;
+const outputDir = path.join(__dirname, 'DJScrape'); // Set output directory
 
 async function scrapeProviderDetails(providerUrl) {
   const response = await axios.get(providerUrl);
@@ -66,8 +68,21 @@ async function scrapeProviders() {
     }
   }
 
-  fs.writeFileSync('providers.json', JSON.stringify(providers, null, 2));
-  console.log('Data successfully written to providers.json');
+  // Create directory if it doesn't exist
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  // Save providers to JSON file inside DJScrape directory
+  fs.writeFileSync(path.join(outputDir, 'providers.json'), JSON.stringify(providers, null, 2));
+  console.log('Data successfully written to DJScrape/providers.json');
 }
 
+// Run the scrapeProviders function every 24 hours
+setInterval(() => {
+  console.log('Starting provider scraping...');
+  scrapeProviders().catch(console.error);
+}, 86400000); // 24 hours in milliseconds
+
+// Run the scrape once immediately upon starting the script
 scrapeProviders().catch(console.error);

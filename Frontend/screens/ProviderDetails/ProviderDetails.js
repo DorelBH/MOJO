@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
   mainImage: {
     width: '100%',
     height: 200,
+    marginTop:50,
     marginBottom: 20,
   },
   name: {
