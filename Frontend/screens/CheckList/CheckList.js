@@ -5,6 +5,7 @@ import CustomInput from '../../components/CustomInput';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import { useRoute } from "@react-navigation/native";
 import useTaskServerConnect from './useTaskServerConnect';
+import { Ionicons } from '@expo/vector-icons'; // ייבוא אייקונים
 
 const CheckListScreen = () => {
     useAuthCheck();
@@ -54,12 +55,16 @@ const CheckListScreen = () => {
                     <View key={index} style={styles.section}>
                         <Text style={styles.header}>{section.timeframe}</Text>
                         {section.tasks.map((task, idx) => (
-                            <TouchableOpacity key={idx} style={styles.taskContainer} onPress={() => handleToggleTask(section.timeframe, task)}>
-                                <View
-                                    style={[
-                                        styles.circle,
-                                        task.completed && styles.completedCircle
-                                    ]}
+                            <TouchableOpacity 
+                                key={idx} 
+                                style={styles.taskContainer} 
+                                onPress={() => handleToggleTask(section.timeframe, task)}
+                            >
+                                <Ionicons 
+                                    name={task.completed ? "checkmark-circle" : "checkmark-circle-outline"} 
+                                    size={24} 
+                                    color={task.completed ? "green" : "gray"} 
+                                    style={styles.icon} 
                                 />
                                 <Text style={[
                                     styles.taskText,
@@ -167,16 +172,8 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         flex: 1,
     },
-    circle: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: '#7B481C',
+    icon: {
         marginRight: 10,
-    },
-    completedCircle: {
-        backgroundColor: '#7B481C',
     },
     addModal: {
         flex: 1,

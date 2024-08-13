@@ -1,9 +1,25 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
+const path = require('path');
+const cron = require('node-cron');
 
-const baseUrl = 'https://www.mit4mit.co.il';
-const categoryUrl = `${baseUrl}/category/131/?sort=reviewsDown&&page=`;
+// תיקייה לשמירת הקבצים
+const outputDir = path.join(__dirname, 'RavScrape');
+
+// פונקציה לשמירת הנתונים ל- providers.json בתוך התיקייה RavScrape
+function saveProviders(providers) {
+  // בדיקה אם התיקייה קיימת ואם לא, יצירתה
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
+  const outputPath = path.join(outputDir, 'providers.json');
+  fs.writeFileSync(outputPath, JSON.stringify(providers, null, 2));
+  console.log('Data successfully written to providers.json');
+}
+
+// פונקציה לשאיבת פרטי ספקים מהדף של הספק
 async function scrapeProviderDetails(providerUrl) {
   const response = await axios(providerUrl);
   const html = response.data;
@@ -11,7 +27,7 @@ async function scrapeProviderDetails(providerUrl) {
 
   const description = $('div.prettyParagraph .bizDescriptionText').text().trim();
   
-  // Scrape gallery images
+  // סריקת תמונות גלריה
   const gallery = [];
   $('div.tabcontent.styledBorder a.galleryPicWrapper img').each((index, element) => {
     const imageUrl = $(element).attr('src');
@@ -22,8 +38,11 @@ async function scrapeProviderDetails(providerUrl) {
   return { description, gallery };
 }
 
+// פונקציה לסריקת ספקים
 async function scrapeProviders() {
   const providers = [];
+  const baseUrl = 'https://www.mit4mit.co.il';
+  const categoryUrl = `${baseUrl}/category/131/?sort=reviewsDown&&page=`;
 
   for (let page = 1; page <= 6; page++) {
     const response = await axios(`${categoryUrl}${page}`);
@@ -57,13 +76,18 @@ async function scrapeProviders() {
         address,
         price,
         phone,
-        gallery // Added gallery images
+        gallery // הוספת תמונות גלריה
       });
     }
   }
 
-  fs.writeFileSync('providers.json', JSON.stringify(providers, null, 2));
-  console.log('Data successfully written to providers.json');
+  saveProviders(providers);
 }
 
-scrapeProviders().catch(console.error);
+// תזמון הרצת הסקריפט כל 24 שעות
+cron.schedule('0 0 * * *', () => {
+  console.log('Starting provider scraping...');
+  scrapeProviders().catch(console.error);
+});
+
+console.log('Scraping scheduled to run every 24 hours');

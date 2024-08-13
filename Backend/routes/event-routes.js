@@ -30,4 +30,6 @@ router.post('/notifyGuests/:eventId', authenticateToken, eventsController.notify
 router.patch('/updateGuestResponse/:eventId', authenticateToken, eventsController.updateGuestResponse);
 
 
+router.get('/providers/:providerType', authenticateToken, eventsController.getProviders);
+
 module.exports = router;

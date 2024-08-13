@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import ProviderCard from '../../components/ProviderCard';
-import providersData from './providers.json';
+import useProviderServerConnect from '../useProviderServerConnect';
 
 const PAGE_SIZE = 10;
 
 const DJProviders = () => {
-  const [providers, setProviders] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    setProviders(providersData);
-  }, []);
+  const { providers, currentPage, setCurrentPage } = useProviderServerConnect('DJScrape');
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;

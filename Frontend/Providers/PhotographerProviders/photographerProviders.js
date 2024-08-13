@@ -1,35 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import ProviderCard from '../../components/ProviderCard';
-import providersData from './providers.json';
-import settlements from '../../data/ListLocalities';
+import useProviderServerConnect from '../useProviderServerConnect';
+import settlements from '../../data/ListLocalities'; 
 
 const PAGE_SIZE = 10;
 
-const HallsProviders = () => {
+const PhotographersProviders = () => {
   const route = useRoute();
-  const { selectedRegions } = route.params;
-
-  const [providers, setProviders] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    const filteredProviders = providersData.filter(provider => {
-      let address = provider.address.trim();
-      if (address.includes(',')) {
-        address = address.split(',').pop().trim(); // אם יש פסיק, לקחת את העיר שאחריו
-      }
-      const included = selectedRegions.some(region => {
-        const isIncluded = settlements[region]?.some(settlement => {
-          return settlement.trim() === address;
-        });
-        return isIncluded;
-      });
-      return included;
-    });
-    setProviders(filteredProviders);
-  }, [selectedRegions]);
+  const { selectedRegions } = route.params || {}; // Handle optional selectedRegions
+  const { providers, currentPage, setCurrentPage } = useProviderServerConnect('photographerScrape', selectedRegions, settlements);
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
@@ -37,7 +18,7 @@ const HallsProviders = () => {
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>צלמים ב{selectedRegions.join(' ')}</Text>
+      <Text style={styles.title}>צלמים ב{selectedRegions ? selectedRegions.join(', ') : 'כל הארץ'}</Text>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View style={styles.container}>
           {currentProviders.map((provider, index) => (
@@ -111,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HallsProviders;
+export default PhotographersProviders;

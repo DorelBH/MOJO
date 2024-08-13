@@ -1,5 +1,8 @@
 const Event = require('../models/event');
 const User = require('../models/user');
+const path = require('path');
+const fs = require('fs');
+
 const { sendSMS } = require('./sendSMS');
 const { validateEventType, validateAmountInvited } = require('./validationController.js');
 
@@ -454,6 +457,26 @@ const updatePaymentDeadlineCompletion = async (req, res) => {
         res.status(500).json({ message: error.message || "עדכון סטטוס מועד התשלום נכשל" });
     }
 };
+const getProviders = async (req, res) => {
+    try {
+        const { providerType } = req.params; 
+        const filePath = path.join(__dirname, `../Crawler/${providerType}/providers.json`);
+
+        if (!fs.existsSync(filePath)) {
+            return res.status(404).json({ message: 'Providers file not found' });
+        }
+
+        const data = fs.readFileSync(filePath, 'utf8');
+        const providers = JSON.parse(data);
+        res.json(providers);
+    } catch (err) {
+        console.error('Error reading providers:', err.message); 
+        res.status(500).json({ message: 'Failed to retrieve providers', error: err.message });
+    }
+};
+
+
+exports.getProviders=getProviders;
 
 const notifyGuests = async (req, res) => {
     const eventId = req.params.eventId;

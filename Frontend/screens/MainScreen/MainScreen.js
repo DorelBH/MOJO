@@ -46,7 +46,7 @@ const MainScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       fetchEventData();
-    }, [eventId,eventData])
+    }, [eventId])
   );
 
   useEffect(() => {

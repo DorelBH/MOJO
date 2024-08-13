@@ -1,12 +1,16 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('fs');
+const path = require('path');
 
-// פונקציה לשמירת נתונים ל- providers.json
+const outputDir = path.join(__dirname, 'HallsScrape'); // תיקייה עבור הקבצים
+
+// פונקציה לשמירת נתונים ל- providers.json בתוך התיקייה HallsScrape
 function saveProviders(providers) {
-  const currentData = JSON.parse(fs.readFileSync('providers.json', 'utf8') || '[]');
+  const outputPath = path.join(outputDir, 'providers.json');
+  const currentData = JSON.parse(fs.readFileSync(outputPath, 'utf8') || '[]');
   const newData = [...currentData, ...providers];
-  fs.writeFileSync('providers.json', JSON.stringify(newData, null, 2));
+  fs.writeFileSync(outputPath, JSON.stringify(newData, null, 2));
   console.log('Data successfully written to providers.json');
 }
 
@@ -148,7 +152,8 @@ async function scrapeProviders2() {
 
 // פונקציה להסרת ספקים כפולים
 function removeDuplicateProviders() {
-  const providers = JSON.parse(fs.readFileSync('providers.json', 'utf8') || '[]');
+  const outputPath = path.join(outputDir, 'providers.json');
+  const providers = JSON.parse(fs.readFileSync(outputPath, 'utf8') || '[]');
   const uniqueProviders = new Map();
 
   for (const provider of providers) {
@@ -159,17 +164,26 @@ function removeDuplicateProviders() {
     uniqueProviders.set(provider.name, provider);
   }
 
-  fs.writeFileSync('providers.json', JSON.stringify(Array.from(uniqueProviders.values()), null, 2));
+  fs.writeFileSync(outputPath, JSON.stringify(Array.from(uniqueProviders.values()), null, 2));
   console.log('Duplicate providers removed and data successfully written to providers.json');
 }
 
-// קריאה לשתי הפונקציות הראשיות לשאיבת הנתונים ולאחר מכן להסרת ספקים כפולים
-(async () => {
+// תזמון הרצת הסקריפט כל 24 שעות
+const runInterval = 24 * 60 * 60 * 1000; // 24 שעות במילישניות
+setInterval(async () => {
   try {
+    console.log('Starting provider scraping...');
     await scrapeProviders1();
     await scrapeProviders2();
     removeDuplicateProviders();
   } catch (error) {
     console.error(error);
   }
-})();
+}, runInterval);
+
+// בדיקה אם התיקייה קיימת ואם לא, יצירתה
+if (!fs.existsSync(outputDir)) {
+  fs.mkdirSync(outputDir, { recursive: true });
+}
+
+console.log('Scraping scheduled to run every 24 hours');
