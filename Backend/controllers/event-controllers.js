@@ -324,7 +324,7 @@ const updateTaskCompletion = async (req, res) => {
 
 const addGuestToEvent = async (req, res) => {
     const eventId = req.params.eventId;
-    const { name, phone } = req.body;
+    let { name, phone } = req.body;
 
     try {
         const event = await Event.findById(eventId);
@@ -332,13 +332,24 @@ const addGuestToEvent = async (req, res) => {
             return res.status(404).json({ message: "Event not found" });
         }
 
-        // Check if the phone number already exists in the guest list
+        // עיצוב מספר הטלפון לפורמט הנכון
+        phone = phone.replace(/[\s-]/g, ''); // הסרת רווחים ומקפים
+
+        if (phone.startsWith('0')) {
+            phone = '972' + phone.slice(1); // אם המספר מתחיל באפס, הוסף את קידומת 972
+        } else if (phone.startsWith('+972')) {
+            phone = phone.slice(1); // אם המספר מתחיל ב-+972, הסר את הפלוס
+        } else if (!phone.startsWith('972')) {
+            phone = '972' + phone; // אם המספר אינו כולל את קידומת 972, הוסף אותה
+        }
+
+        // בדיקה אם מספר הטלפון כבר קיים ברשימת האורחים
         const guestExists = event.guests.some(guest => guest.phone === phone);
         if (guestExists) {
             return res.status(400).json({ message: "Phone number already exists in the guest list" });
         }
 
-        // Add the new guest with invited set to true
+        // הוספת אורח חדש עם invited true
         event.guests.push({ name, phone, invited: true });
         await event.save();
 
@@ -347,6 +358,7 @@ const addGuestToEvent = async (req, res) => {
         res.status(500).json({ message: error.message || "Failed to add guest" });
     }
 };
+
 
 
 const getEventGuests = async (req, res) => {
@@ -512,40 +524,6 @@ const notifyGuests = async (req, res) => {
     }
 };
 
-/* const updateGuestResponse = async (req, res) => {
-    const eventId = req.params.eventId;
-    const { phone, response } = req.body;
-
-    try {
-        const event = await Event.findById(eventId);
-        if (!event) {
-            // אם האירוע לא נמצא, שלח תשובה עם קוד 200 ועדכן את התגובה
-            return res.status(200).json({ message: "Event not found" });
-        }
-
-        const guest = event.guests.find(guest => guest.phone === phone);
-        if (!guest) {
-            // אם האורח לא נמצא, שלח תשובה עם קוד 200 ועדכן את התגובה
-            return res.status(200).json({ message: "Guest not found in the list" });
-        }
-
-        if (typeof response !== 'number' || response < 0) {
-            return res.status(400).json({ message: "Invalid response. It must be a non-negative integer." });
-        }
-
-        guest.response = response; // עדכון התגובה של האורח
-
-        // שמירה על שינויים במודל ה-Event
-        await event.save();
-
-        // שלח תשובה עם קוד 200 גם במקרה של הצלחה
-        res.status(200).json({ message: "Guest response updated successfully", event });
-    } catch (error) {
-        // במקרה של שגיאה, שלח תשובה עם קוד 200 ועדכן את התגובה
-        res.status(200).json({ message: error.message || "Failed to update guest response" });
-    }
-}; */
-
 const updateGuestResponseFromSMS = async (req, res) => {
     console.log("Webhook received:", req.body); 
     
@@ -598,9 +576,6 @@ const updateGuestResponseFromSMS = async (req, res) => {
 
 exports.updateGuestResponseFromSMS = updateGuestResponseFromSMS;
 
-
-/* exports.updateGuestResponse = updateGuestResponse;
- */
 exports.notifyGuests = notifyGuests;
 exports.addPaymentDeadlinesToEvent=addPaymentDeadlinesToEvent;
 exports.updatePaymentDeadlineCompletion=updatePaymentDeadlineCompletion;

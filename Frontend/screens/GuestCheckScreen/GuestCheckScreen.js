@@ -20,7 +20,7 @@ const GuestCheckScreen = ({ route }) => {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
-            'Accept': 'application/json; charset=utf-8', // Ensure UTF-8 encoding is accepted
+            'Accept': 'application/json; charset=utf-8',
           },
         });
         const data = await response.json();
@@ -39,15 +39,15 @@ const GuestCheckScreen = ({ route }) => {
     fetchGuests();
   }, [eventId]);
 
-  const arrivingGuests = guests.filter(guest => guest.response === '1' || guest.response === '2');
-  const notAttendingGuests = guests.filter(guest => guest.response === '0');
+  const arrivingGuests = guests.filter(guest => guest.response !== null && guest.response > 0);
+  const notAttendingGuests = guests.filter(guest => guest.response === 0);
   const notRespondedGuests = guests.filter(guest => guest.response === null || guest.response === undefined);
 
-  const totalArriving = arrivingGuests.reduce((total, guest) => total + (parseInt(guest.response) || 0) + 1, 0);
+  const totalArriving = arrivingGuests.reduce((total, guest) => total + (parseInt(guest.response) || 0), 0);
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item.name}  {item.response === '1' ? '1 person' : item.response === '2' ? '2 people' : ''}</Text>
+      <Text style={styles.itemText}>{item.name} מגיעים {item.response} אנשים</Text>
     </View>
   );
 
@@ -89,7 +89,7 @@ const GuestCheckScreen = ({ route }) => {
 
       <View style={styles.section}>
         <TouchableOpacity onPress={() => setShowNotResponded(!showNotResponded)} style={styles.touchable}>
-        <Icon name={showNotResponded ? 'expand-less' : 'expand-more'} size={24} />
+          <Icon name={showNotResponded ? 'expand-less' : 'expand-more'} size={24} />
           <Text style={styles.sectionTitle}>לא הגיבו</Text>
         </TouchableOpacity>
         {showNotResponded && (
