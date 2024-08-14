@@ -6,6 +6,7 @@ const moment = require('moment');
 require('moment/locale/he'); 
 
 const { sendSMS } = require('./sendSMS');
+const { formatPhoneNumber } = require('./sendSMS'); // ייבוא הפונקציה לעיצוב מספר הטלפון
 const { validateEventType, validateAmountInvited } = require('./validationController.js');
 
 const getUserName = async (req, res, next) => {
@@ -551,19 +552,24 @@ const updateGuestResponseFromSMS = async (req, res) => {
     try {
         const formattedPhone = formatPhoneNumber(msisdn); // עיצוב המספר כמו שצריך
 
+        console.log(`Received SMS from ${formattedPhone}: ${text}`);
+
         // חיפוש האירוע שבו נמצא האורח עם המספר הזה
         const event = await Event.findOne({ 'guests.phone': formattedPhone });
         if (!event) {
+            console.log("Event not found");
             return res.status(404).json({ message: "Event not found" });
         }
 
         const guest = event.guests.find(guest => guest.phone === formattedPhone);
         if (!guest) {
+            console.log("Guest not found");
             return res.status(404).json({ message: "Guest not found in the list" });
         }
 
         const response = parseInt(text, 10); // המרת התשובה למספר שלם
         if (isNaN(response) || response < 0) {
+            console.log("Invalid response received");
             return res.status(400).json({ message: "Invalid response. It must be a non-negative integer." });
         }
 
@@ -572,9 +578,11 @@ const updateGuestResponseFromSMS = async (req, res) => {
         // שמירה על שינויים במודל ה-Event
         await event.save();
 
+        console.log("Guest response updated successfully");
         res.status(200).json({ message: "Guest response updated successfully", event });
     } catch (error) {
-        res.status(500).json({ message: error.message || "Failed to update guest response" });
+        console.error("Error processing SMS:", error.message);
+        res.status(500).json({ message: error.message || "Failed to process SMS" });
     }
 };
 
