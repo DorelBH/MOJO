@@ -6,7 +6,6 @@ const moment = require('moment');
 require('moment/locale/he'); 
 
 const { sendSMS } = require('./sendSMS');
-const { formatPhoneNumber } = require('./sendSMS'); // ייבוא הפונקציה לעיצוב מספר הטלפון
 const { validateEventType, validateAmountInvited } = require('./validationController.js');
 
 const getUserName = async (req, res, next) => {
@@ -513,7 +512,7 @@ const notifyGuests = async (req, res) => {
     }
 };
 
-const updateGuestResponse = async (req, res) => {
+/* const updateGuestResponse = async (req, res) => {
     const eventId = req.params.eventId;
     const { phone, response } = req.body;
 
@@ -545,16 +544,25 @@ const updateGuestResponse = async (req, res) => {
         // במקרה של שגיאה, שלח תשובה עם קוד 200 ועדכן את התגובה
         res.status(200).json({ message: error.message || "Failed to update guest response" });
     }
-};
+}; */
+
 const updateGuestResponseFromSMS = async (req, res) => {
-    const { msisdn, text } = req.body; // msisdn הוא המספר שממנו נשלחה ההודעה, text היא התשובה שהתקבלה
+    console.log("Webhook received:", req.body); 
+    
+    const { msisdn, text } = req.body; 
 
     try {
-        const formattedPhone = formatPhoneNumber(msisdn); // עיצוב המספר כמו שצריך
+        let formattedPhone = msisdn.replace(/[\s-]/g, ''); 
+        
+        if (formattedPhone.startsWith('0')) {
+            formattedPhone = '972' + formattedPhone.slice(1); 
+        } else if (!formattedPhone.startsWith('972')) {
+            formattedPhone = '972' + formattedPhone;
+        }
 
-        console.log(`Received SMS from ${formattedPhone}: ${text}`);
+        console.log(`Formatted phone: ${formattedPhone}`);
+        console.log(`Response text: ${text}`);
 
-        // חיפוש האירוע שבו נמצא האורח עם המספר הזה
         const event = await Event.findOne({ 'guests.phone': formattedPhone });
         if (!event) {
             console.log("Event not found");
@@ -567,15 +575,14 @@ const updateGuestResponseFromSMS = async (req, res) => {
             return res.status(404).json({ message: "Guest not found in the list" });
         }
 
-        const response = parseInt(text, 10); // המרת התשובה למספר שלם
+        const response = parseInt(text, 10); 
         if (isNaN(response) || response < 0) {
             console.log("Invalid response received");
             return res.status(400).json({ message: "Invalid response. It must be a non-negative integer." });
         }
 
-        guest.response = response; // עדכון התגובה של האורח
+        guest.response = response;
 
-        // שמירה על שינויים במודל ה-Event
         await event.save();
 
         console.log("Guest response updated successfully");
@@ -586,10 +593,14 @@ const updateGuestResponseFromSMS = async (req, res) => {
     }
 };
 
+
+
+
 exports.updateGuestResponseFromSMS = updateGuestResponseFromSMS;
 
 
-exports.updateGuestResponse = updateGuestResponse;
+/* exports.updateGuestResponse = updateGuestResponse;
+ */
 exports.notifyGuests = notifyGuests;
 exports.addPaymentDeadlinesToEvent=addPaymentDeadlinesToEvent;
 exports.updatePaymentDeadlineCompletion=updatePaymentDeadlineCompletion;

@@ -45,6 +45,5 @@ const sendSMS = async (to, text) => {
     }
 };
 
-
 exports.sendSMS = sendSMS;
 
