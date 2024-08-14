@@ -5,7 +5,7 @@ const vonage = new Vonage({
   apiKey: "10917f80",
   apiSecret: "hkA75cMagXqsvCZN"
 });
-
+ // לסדר את זה עם הקידומות
 const formatPhoneNumber = (phone) => {
     // הסרת רווחים, מקפים ותווים אחרים שאינם מספרים
     let formatted = phone.replace(/[\s-]/g, '');

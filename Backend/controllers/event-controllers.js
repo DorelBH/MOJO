@@ -2,6 +2,8 @@ const Event = require('../models/event');
 const User = require('../models/user');
 const path = require('path');
 const fs = require('fs');
+const moment = require('moment');
+require('moment/locale/he'); 
 
 const { sendSMS } = require('./sendSMS');
 const { validateEventType, validateAmountInvited } = require('./validationController.js');
@@ -476,7 +478,6 @@ const getProviders = async (req, res) => {
 };
 
 
-exports.getProviders=getProviders;
 
 const notifyGuests = async (req, res) => {
     const eventId = req.params.eventId;
@@ -486,12 +487,13 @@ const notifyGuests = async (req, res) => {
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
+        const formattedDate = moment(event.eventDate).format('LL');
 
         const guests = event.guests;
         const smsPromises = guests.map(async (guest) => {
             if (guest.phone) {
                 const phone = guest.phone;
-                const text = `שלום ${guest.name}, אתם מוזמנים לחתונה של ${event.groomName} ו-${event.brideName} ב-${event.eventDate}. אנא השיבו עם מספר האנשים שמגיעים לאירוע. אם אינכם יכולים להגיע, השיבו 0.`;
+                const text = `שלום ${guest.name}, אתם מוזמנים לחתונה של ${event.groomName} ו-${event.brideName} ב-${formattedDate}. אנא השיבו עם מספר האנשים שמגיעים לאירוע. אם אינכם יכולים להגיע, השיבו 0.`;
                 try {
                     await sendSMS(phone, text);
                 } catch (err) {
@@ -527,6 +529,10 @@ const updateGuestResponse = async (req, res) => {
             return res.status(200).json({ message: "Guest not found in the list" });
         }
 
+        if (typeof response !== 'number' || response < 0) {
+            return res.status(400).json({ message: "Invalid response. It must be a non-negative integer." });
+        }
+
         guest.response = response; // עדכון התגובה של האורח
 
         // שמירה על שינויים במודל ה-Event
@@ -539,7 +545,40 @@ const updateGuestResponse = async (req, res) => {
         res.status(200).json({ message: error.message || "Failed to update guest response" });
     }
 };
+const updateGuestResponseFromSMS = async (req, res) => {
+    const { msisdn, text } = req.body; // msisdn הוא המספר שממנו נשלחה ההודעה, text היא התשובה שהתקבלה
 
+    try {
+        const formattedPhone = formatPhoneNumber(msisdn); // עיצוב המספר כמו שצריך
+
+        // חיפוש האירוע שבו נמצא האורח עם המספר הזה
+        const event = await Event.findOne({ 'guests.phone': formattedPhone });
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        const guest = event.guests.find(guest => guest.phone === formattedPhone);
+        if (!guest) {
+            return res.status(404).json({ message: "Guest not found in the list" });
+        }
+
+        const response = parseInt(text, 10); // המרת התשובה למספר שלם
+        if (isNaN(response) || response < 0) {
+            return res.status(400).json({ message: "Invalid response. It must be a non-negative integer." });
+        }
+
+        guest.response = response; // עדכון התגובה של האורח
+
+        // שמירה על שינויים במודל ה-Event
+        await event.save();
+
+        res.status(200).json({ message: "Guest response updated successfully", event });
+    } catch (error) {
+        res.status(500).json({ message: error.message || "Failed to update guest response" });
+    }
+};
+
+exports.updateGuestResponseFromSMS = updateGuestResponseFromSMS;
 
 
 exports.updateGuestResponse = updateGuestResponse;
@@ -549,6 +588,7 @@ exports.updatePaymentDeadlineCompletion=updatePaymentDeadlineCompletion;
 exports.removeGuestFromEvent = removeGuestFromEvent;
 exports.addGuestToEvent = addGuestToEvent;
 exports.getEventGuests = getEventGuests;
+exports.getProviders=getProviders;
 
 exports.addPhoto = addPhoto;
 exports.addTasksToEvent = addTasksToEvent;
