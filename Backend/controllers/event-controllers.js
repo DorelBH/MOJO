@@ -534,6 +534,7 @@ const updateGuestResponseFromSMS = async (req, res) => {
         } else if (!formattedPhone.startsWith('972')) {
             formattedPhone = '972' + formattedPhone;
         } */
+         console.log(`Received SMS from: ${msisdn}`);
         let formattedPhone = msisdn.replace(/[\s+-]/g, ''); 
         console.log(`Formatted phone: ${formattedPhone}`);
         console.log(`Response text: ${text}`);
