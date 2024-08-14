@@ -527,21 +527,24 @@ const updateGuestResponseFromSMS = async (req, res) => {
     const { msisdn, text } = req.body; 
 
     try {
-        // קח את 9 הספרות האחרונות מהמספר שהתקבל
-        let lastNineDigits = msisdn.replace(/[\s+-]/g, '').slice(-9); 
+       /*  let formattedPhone = msisdn.replace(/[\s+-]/g, ''); 
         
-        console.log(`Last 9 digits of phone: ${lastNineDigits}`);
+        if (formattedPhone.startsWith('0')) {
+            formattedPhone = '972' + formattedPhone.slice(1); 
+        } else if (!formattedPhone.startsWith('972')) {
+            formattedPhone = '972' + formattedPhone;
+        } */
+        let formattedPhone = msisdn.replace(/[\s+-]/g, ''); 
+        console.log(`Formatted phone: ${formattedPhone}`);
         console.log(`Response text: ${text}`);
 
-        // חפש את האירוע שבו מספר האורח מסתיים ב-9 הספרות האלה
-        const event = await Event.findOne({ 'guests.phone': { $regex: lastNineDigits + '$' } });
+        const event = await Event.findOne({ 'guests.phone': formattedPhone });
         if (!event) {
             console.log("Event not found");
             return res.status(404).json({ message: "Event not found" });
         }
 
-        // מצא את האורח עם מספר שמסתיים באותן 9 ספרות
-        const guest = event.guests.find(guest => guest.phone.slice(-9) === lastNineDigits);
+        const guest = event.guests.find(guest => guest.phone === formattedPhone);
         if (!guest) {
             console.log("Guest not found");
             return res.status(404).json({ message: "Guest not found in the list" });
@@ -564,7 +567,6 @@ const updateGuestResponseFromSMS = async (req, res) => {
         res.status(500).json({ message: error.message || "Failed to process SMS" });
     }
 };
-
 
 
 
