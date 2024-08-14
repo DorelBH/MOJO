@@ -8,16 +8,15 @@ const vonage = new Vonage({
  // לסדר את זה עם הקידומות
 const formatPhoneNumber = (phone) => {
     // הסרת רווחים, מקפים ותווים אחרים שאינם מספרים
-    let formatted = phone.replace(/[\s-]/g, '');
+    let formatted = phone.replace(/[\s+-]/g, '');
     
     // אם המספר מתחיל באפס, הסר אותו והוסף את הקידומת 972
     if (formatted.startsWith('0')) {
       formatted = '972' + formatted.slice(1);
-    } else if (!formatted.startsWith('+972')) {
+    } else if (!formatted.startsWith('972')) {
       // אם המספר אינו כולל את קידומת 972, הוסף אותה
       formatted = '972' + formatted;
     }
-
     return formatted;
 };
 

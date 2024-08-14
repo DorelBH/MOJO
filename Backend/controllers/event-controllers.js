@@ -333,12 +333,10 @@ const addGuestToEvent = async (req, res) => {
         }
 
         // עיצוב מספר הטלפון לפורמט הנכון
-        phone = phone.replace(/[\s-]/g, ''); // הסרת רווחים ומקפים
+        phone = phone.replace(/[\s+-]/g, '');
 
         if (phone.startsWith('0')) {
             phone = '972' + phone.slice(1); // אם המספר מתחיל באפס, הוסף את קידומת 972
-        } else if (phone.startsWith('+972')) {
-            phone = phone.slice(1); // אם המספר מתחיל ב-+972, הסר את הפלוס
         } else if (!phone.startsWith('972')) {
             phone = '972' + phone; // אם המספר אינו כולל את קידומת 972, הוסף אותה
         }
@@ -530,7 +528,7 @@ const updateGuestResponseFromSMS = async (req, res) => {
     const { msisdn, text } = req.body; 
 
     try {
-        let formattedPhone = msisdn.replace(/[\s-]/g, ''); 
+        let formattedPhone = msisdn.replace(/[\s+-]/g, ''); 
         
         if (formattedPhone.startsWith('0')) {
             formattedPhone = '972' + formattedPhone.slice(1); 
