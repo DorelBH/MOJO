@@ -5,6 +5,8 @@ const fs = require('fs');
 const moment = require('moment');
 require('moment/locale/he'); 
 
+const { processIncomingSMS } = require('./responseSMS'); // חיבור הפונקציה
+
 const { sendSMS } = require('./sendSMS');
 const { validateEventType, validateAmountInvited } = require('./validationController.js');
 
@@ -526,49 +528,10 @@ const updateGuestResponseFromSMS = async (req, res) => {
     console.log("Webhook received:", req.body); 
     const { msisdn, text } = req.body; 
 
-    try {
-       /*  let formattedPhone = msisdn.replace(/[\s+-]/g, ''); 
-        
-        if (formattedPhone.startsWith('0')) {
-            formattedPhone = '972' + formattedPhone.slice(1); 
-        } else if (!formattedPhone.startsWith('972')) {
-            formattedPhone = '972' + formattedPhone;
-        } */
-         console.log(`Received SMS from: ${msisdn}`);
-        let formattedPhone = msisdn.replace(/[\s+-]/g, ''); 
-        console.log(`Formatted phone: ${formattedPhone}`);
-        console.log(`Response text: ${text}`);
-
-        const event = await Event.findOne({ 'guests.phone': formattedPhone });
-        if (!event) {
-            console.log("Event not found");
-            return res.status(404).json({ message: "Event not found" });
-        }
-
-        const guest = event.guests.find(guest => guest.phone === formattedPhone);
-        if (!guest) {
-            console.log("Guest not found");
-            return res.status(404).json({ message: "Guest not found in the list" });
-        }
-
-        const response = parseInt(text, 10); 
-        if (isNaN(response) || response < 0) {
-            console.log("Invalid response received");
-            return res.status(400).json({ message: "Invalid response. It must be a non-negative integer." });
-        }
-
-        guest.response = response;
-
-        await event.save();
-
-        console.log("Guest response updated successfully");
-        res.status(200).json({ message: "Guest response updated successfully", event });
-    } catch (error) {
-        console.error("Error processing SMS:", error.message);
-        res.status(500).json({ message: error.message || "Failed to process SMS" });
-    }
+    const result = await processIncomingSMS(msisdn, text); // קריאה לפונקציה עם הפרמטרים המתאימים
+    
+    res.status(result.status).json({ message: result.message, event: result.event });
 };
-
 
 
 
