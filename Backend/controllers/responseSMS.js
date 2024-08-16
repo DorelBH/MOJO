@@ -1,14 +1,16 @@
 const { Vonage } = require('@vonage/server-sdk');
 const Event = require('../models/event');
 
+// התחברות ל-Vonage API
 const vonage = new Vonage({
   apiKey: "10917f80",
   apiSecret: "hkA75cMagXqsvCZN"
 });
 
-// פונקציה זו מעבדת הודעות SMS נכנסות
+// פונקציה זו מעבדת הודעות SMS נכנסות ומעדכנת את תגובת האורחים
 const processIncomingSMS = async (msisdn, text) => {
     try {
+        // המרת מספר הטלפון לפורמט הרצוי (למשל 972526933301)
         let formattedPhone = msisdn.replace(/[\s+-]/g, ''); 
         
         if (formattedPhone.startsWith('0')) {
@@ -21,26 +23,31 @@ const processIncomingSMS = async (msisdn, text) => {
         console.log(`Formatted phone: ${formattedPhone}`);
         console.log(`Response text: ${text}`);
 
+        // מציאת האירוע על פי מספר הטלפון של האורח
         const event = await Event.findOne({ 'guests.phone': formattedPhone });
         if (!event) {
             console.log("Event not found");
             return { status: 404, message: "Event not found" };
         }
 
+        // מציאת האורח על פי מספר הטלפון
         const guest = event.guests.find(guest => guest.phone === formattedPhone);
         if (!guest) {
             console.log("Guest not found");
             return { status: 404, message: "Guest not found in the list" };
         }
 
+        // המרת הטקסט למספר שלם
         const response = parseInt(text, 10); 
         if (isNaN(response) || response < 0) {
             console.log("Invalid response received");
             return { status: 400, message: "Invalid response. It must be a non-negative integer." };
         }
 
+        // עדכון תגובת האורח
         guest.response = response;
 
+        // שמירת השינויים בבסיס הנתונים
         await event.save();
 
         console.log("Guest response updated successfully");
@@ -51,4 +58,6 @@ const processIncomingSMS = async (msisdn, text) => {
     }
 };
 
-exports.processIncomingSMS = processIncomingSMS;
+module.exports = {
+    processIncomingSMS
+};

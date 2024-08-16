@@ -5,7 +5,6 @@ const fs = require('fs');
 const moment = require('moment');
 require('moment/locale/he'); 
 
-const { processIncomingSMS } = require('./responseSMS'); // חיבור הפונקציה
 
 const { sendSMS } = require('./sendSMS');
 const { validateEventType, validateAmountInvited } = require('./validationController.js');
@@ -524,14 +523,81 @@ const notifyGuests = async (req, res) => {
     }
 };
 
-const updateGuestResponseFromSMS = async (req, res) => {
-    console.log("Webhook received:", req.body); 
-    const { msisdn, text } = req.body; 
 
-    const result = await processIncomingSMS(msisdn, text); // קריאה לפונקציה עם הפרמטרים המתאימים
-    
-    res.status(result.status).json({ message: result.message, event: result.event });
+const formatPhoneNumber = (phone) => {
+    // הסרת רווחים, מקפים, סימני + ותווים אחרים שאינם מספרים
+    let formatted = phone.replace(/[\s-]/g, '');
+
+    // אם המספר מתחיל בסימן +, הסר אותו
+    if (formatted.startsWith('+')) {
+        formatted = formatted.slice(1);
+    }
+
+    // אם המספר מתחיל ב-0, החלף את האפס בקידומת 972
+    if (formatted.startsWith('0')) {
+        formatted = '972' + formatted.slice(1);
+    } else if (!formatted.startsWith('972')) {
+        // אם המספר לא כולל את הקידומת 972, הוסף אותה
+        formatted = '972' + formatted;
+    }
+
+    return formatted;
 };
+
+const updateGuestResponseFromSMS = async (req, res) => {
+    try {
+        console.log('Received SMS:', req.body);  // לוג לבדיקת הגעת הבקשה
+
+        const { msisdn, text } = req.body;
+
+        if (!msisdn || !text) {
+            console.error('Missing msisdn or text in the request body');
+            return res.status(400).json({ message: "msisdn and text are required" });
+        }
+
+        // עיצוב מספר הטלפון לפורמט הנכון
+        const formattedPhone = formatPhoneNumber(msisdn);
+        console.log('Formatted Phone:', formattedPhone);  // לוג לבדיקת עיבוד המספר
+
+        // חיפוש האורח בבסיס הנתונים לפי מספר הטלפון
+        const event = await Event.findOne({ "guests.phone": formattedPhone });
+
+        if (!event) {
+            console.error(`No event found for phone number ${formattedPhone}`);
+            return res.status(404).json({ message: "Guest not found for this phone number" });
+        }
+
+        // מציאת האורח בעזרת המספר טלפון
+        const guest = event.guests.find(g => g.phone === formattedPhone);
+
+        if (!guest) {
+            console.error(`Guest not found for phone number ${formattedPhone}`);
+            return res.status(404).json({ message: "Guest not found" });
+        }
+
+        // המרת התוכן למספר
+        const responseNumber = parseInt(text);
+
+        if (isNaN(responseNumber)) {
+            console.error(`Invalid response received: ${text}`);
+            return res.status(400).json({ message: "Invalid response. Please send a number." });
+        }
+
+        // עדכון תגובת האורח בבסיס הנתונים
+        guest.response = responseNumber;
+
+        await event.save();
+
+        console.log(`Guest response updated successfully for phone number ${formattedPhone}`);
+        res.status(204).end();  // מחזיר 204 No Content כדי לסיים את הבקשה בהצלחה
+    } catch (error) {
+        console.error("Error updating guest response:", error);
+        res.status(500).json({ message: "Failed to update guest response" });
+    }
+};
+
+
+
 
 
 

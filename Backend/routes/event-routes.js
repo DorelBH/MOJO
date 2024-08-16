@@ -27,9 +27,8 @@ router.post('/addGuest/:eventId', authenticateToken, eventsController.addGuestTo
 router.get('/getGuests/:eventId', authenticateToken, eventsController.getEventGuests);
 router.delete('/removeGuest/:eventId', authenticateToken, eventsController.removeGuestFromEvent);
 router.post('/notifyGuests/:eventId', authenticateToken, eventsController.notifyGuests);
-//router.patch('/updateGuestResponse/:eventId', authenticateToken, eventsController.updateGuestResponse);
 
-router.post('/smsWebhook', eventsController.updateGuestResponseFromSMS);
+router.post('/updateGuestResponseFromSMS', authenticateToken, eventsController.updateGuestResponseFromSMS);
 
 router.get('/providers/:providerType', authenticateToken, eventsController.getProviders);
 
