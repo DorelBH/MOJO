@@ -27,7 +27,7 @@ const AlcoholCalculatorScreen = () => {
             <View style={AlcoholCalculatorStyles.slotButton}>
 
             <Text style={AlcoholCalculatorStyles.guestNumberText}>
-                כמות אורחים: {amountInvited}
+               כמות האורחים - {amountInvited}
             </Text>
             
                 <CustomInput
@@ -48,7 +48,7 @@ const AlcoholCalculatorScreen = () => {
 
                  {result !== null && (
                     <Text style={AlcoholCalculatorStyles.resultText}>
-                        כמות האלכוהול הנדרשת היא: {result.toFixed(2)} ליטר
+                        כמות האלכוהול הנדרשת היא - {result.toFixed(2)} ליטר
                     </Text>
                 )}
             </View>
@@ -90,13 +90,13 @@ const AlcoholCalculatorStyles = StyleSheet.create({
         alignItems: 'center',
       },
       slotButtonText: {
-        color: '#2f2f2f',
+        color: 'red',
         fontSize: 16,
         textAlign: 'center',
         marginTop: 10,
       },
       resultText: {
-        color: '#2f2f2f',
+        color: 'green',
         fontSize: 15,
         marginTop: 20, // Adjust as necessary
         textAlign: 'center',

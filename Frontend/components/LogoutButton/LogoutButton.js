@@ -1,7 +1,6 @@
-// LogoutButton.js
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import CustomButton from '../CustomButton';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // או ספריית אייקונים אחרת
 import { useNavigation } from '@react-navigation/native';
 import { removeToken } from '../../util/authToken'; 
 
@@ -14,22 +13,15 @@ const LogoutButton = () => {
     };
 
     return (
-        <View style={styles.logoutButtonContainer}>
-            <CustomButton
-                onPress={handleLogout}
-                text="Logout"
-                type="LOGOUT"
-            />
-        </View>
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Icon name="logout" size={35} color="red" />
+        </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
-    logoutButtonContainer: {
-        position: 'absolute',
-        top: 50, 
-        right: 15, 
-        zIndex: 1, 
+    logoutButton: {
+        // הגדר סגנונות לפי הצורך שלך
     },
 });
 

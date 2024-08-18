@@ -21,7 +21,7 @@ const CostList = ({ eventCosts, onUpdateCost, isEditing,onDeleteCost }) => {
                         onChangeText={(text) => onUpdateCost(key, { ...eventCosts[key], cost: text })}
                         value={cost ? cost.toString() : ''}
                         keyboardType="numeric"
-                        placeholder="הכנס סכום"
+                        placeholder="סכום"
                         />
                         <CustomInput
                         value={label}
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     input: {
         borderWidth: 1,
         borderColor: '#cccccc',
+        backgroundColor: 'white',
         padding: 10,
         width: 80,
         marginLeft: 10,

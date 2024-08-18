@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, TextInput, Alert, Image } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Ionicons } from '@expo/vector-icons';
 import usePaymentServerConnect from './usePaymentServerConnect'; // ייבוא הקומפוננטה החדשה
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken";
+
 
 const PaymentDeadlines = ({ route }) => {
     const { eventId } = route.params;
@@ -81,11 +82,9 @@ const PaymentDeadlines = ({ route }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.pageTitle}>מועדי תשלום לספקים</Text>
-            <CustomButton
-                onPress={() => setModalVisible(true)}
-                text="+"
-                type="CIRCLE"
-            />
+            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+                <Image source={require('../../assets/images/plus.png')} style={styles.addIcon} />
+            </TouchableOpacity>
             <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
                 {deadlines.map((deadline, index) => (
                     <View key={index} style={styles.section}>
@@ -126,16 +125,17 @@ const PaymentDeadlines = ({ route }) => {
                             onCancel={handleCancel}
                             locale="he"
                         />
-                        <CustomButton
-                            text="הוסף"
-                            onPress={handleAddDeadline}
-                            type="CALCULATE"
-                        />
-                        <CustomButton
-                            text="בטל"
-                            onPress={() => setModalVisible(false)}
-                            type="CALCULATE"
-                        />
+
+                        <View style={styles.buttonRow}>
+                            <TouchableOpacity style={styles.addButton} onPress={handleAddDeadline}>
+                                <Image source={require('../../assets/images/plus.png')} style={styles.addIcon} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+                                <Image source={require('../../assets/images/Cancel_Button.png')} style={styles.cancelIcon} />
+                            </TouchableOpacity>
+                        </View>
+
+                       
                     </View>
                 </View>
             </Modal>
@@ -224,6 +224,29 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         color: '#a9a9a9',
     },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 5, // מוסיף רווח בין השדה לכפתורים
+        width: '100%',
+    },
+    addButton: { 
+        borderRadius: 50,
+        padding: 16,
+    },
+    cancelButton: {
+        borderRadius: 50,
+        padding: 16,
+    },
+    addIcon: {
+        width: 30,
+        height: 30,
+        tintColor: '#cd853f',
+    },
+    cancelIcon: {
+        width: 30,
+        height: 30,
+    }
 });
 
 export default PaymentDeadlines;

@@ -210,14 +210,14 @@ const EditEventScreen = ({ route }) => {
                     text="לא סגרנו"
                     onPress={onNotCloseHall}
                     type={!closeHall ? 'MAINBROWN' : 'MAINGRAY'}
-                    width="40%"
+                    width="30%"
                     height='10'
                 />
                 <CustomButton
                     text="סגרנו  "
                     onPress={onCloseHall}
                     type={closeHall ? 'MAINBROWN' : 'MAINGRAY'}
-                    width="40%"
+                    width="30%"
                     height='10'
                 />
             </View>
@@ -292,7 +292,7 @@ const EditEventStyle = StyleSheet.create({
         flexDirection: 'row',
     },
     button: {
-        fontSize: 20,
+        fontSize: 18,
         color: 'black',
         backgroundColor: '#f0f0f0',
         paddingHorizontal: 20,
@@ -301,6 +301,7 @@ const EditEventStyle = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#ccc', 
         textAlign: 'center', 
+        marginTop: 20
     }
 });
 

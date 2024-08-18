@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Modal, StyleSheet } from 'react-native';
+import { View, Text, Modal, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import { useRoute } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import CustomInput from '../../components/CustomInput';
 import CostList from '../../components/CostList/CostList';
 import useCostServerConnect from './useCostServerConnect';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CostCalculator = () => {
     useAuthCheck();
@@ -51,16 +52,27 @@ const CostCalculator = () => {
         <View style={styles.container}>
             <Text style={styles.title}>מחשבון הוצאות ל{eventType}</Text>
             <View style={styles.buttonsContainer}>
-                <CustomButton
-                    text={isEditing ? "סיים עריכה" : "ערוך שדות קיימים"}
-                    onPress={toggleEditMode}
-                    type="CALCULATE"
-                />
-                <CustomButton
-                    text="הוסף שדה חדש"
-                    onPress={() => setModalVisible(true)}
-                    type="CALCULATE"
-                />
+                <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={toggleEditMode}
+                    >
+                        <Icon
+                             name={isEditing ? "check" : "pencil"}
+                             size={30}
+                             color={isEditing ? "green" : "blue"}
+                        />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                        style={styles.addButton}
+                        onPress={() => setModalVisible(true)}
+                    >
+                        <Image
+                            source={require('../../assets/images/plus.png')}
+                            style={styles.addIcon}
+                        />
+                </TouchableOpacity>
+
             </View>
             <CostList
                 eventCosts={isEditing ? editCosts : eventCosts}
@@ -155,6 +167,20 @@ const styles = StyleSheet.create({
         width: '90%',
         alignItems: 'center',
     },
+    addButton: { 
+        borderRadius: 50,
+        padding: 16,
+    },
+    addIcon: {
+        width: 30,
+        height: 30,
+        tintColor: '#cd853f',
+    },
+    editButton: {
+        marginHorizontal: 15,
+        marginTop: 16
+    },
+    
 });
 
 export default CostCalculator;

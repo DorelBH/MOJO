@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import CustomButton from "../../components/CustomButton";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import EventsList from '../../components/EventList';
@@ -82,13 +82,11 @@ const HomeScreen = () => {
                 </Text>
             </View>
             {/* כאן מציגים את רשימת האירועים */}
+            
             <EventsList events={events} onPress={goToMain} onDeletePress={deleteEvent} onEditPress={editEvent} />
-            <CustomButton
-                    text="יצירת אירוע חדש"
-                    onPress={createNewEvent}
-                    type="HALL"
-                    style={HomeScreenStyle.addButton}
-            />
+            <TouchableOpacity style={HomeScreenStyle.addButton} onPress={createNewEvent}>
+                <Image source={require('../../assets/images/plus.png')} style={HomeScreenStyle.addIcon} />
+            </TouchableOpacity>
         </View>
     );
 };
@@ -110,7 +108,16 @@ const HomeScreenStyle = StyleSheet.create({
         marginTop: '20%',
     },
     addButton: { 
-        marginBottom: 500,
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+        borderRadius: 50,
+        padding: 16,
+    },
+    addIcon: {
+        width: 50,
+        height: 50,
+        tintColor: '#cd853f',
     },
 });
 

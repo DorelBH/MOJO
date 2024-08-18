@@ -37,6 +37,18 @@ const HallsProviders = () => {
         </View>
       </ScrollView>
       <View style={styles.paginationContainer}>
+
+      <TouchableOpacity
+          onPress={() => setCurrentPage(currentPage + 1)}
+          disabled={endIndex >= providers.length}
+          style={styles.paginationButton}
+        >
+          <Text style={styles.paginationText}>עמוד הבא</Text>
+        </TouchableOpacity>
+
+        
+        <Text style={styles.paginationText}>{currentPage}</Text>
+       
         <TouchableOpacity
           onPress={() => setCurrentPage(currentPage - 1)}
           disabled={currentPage === 1}
@@ -44,14 +56,7 @@ const HallsProviders = () => {
         >
           <Text style={styles.paginationText}>עמוד קודם</Text>
         </TouchableOpacity>
-        <Text style={styles.paginationText}>{currentPage}</Text>
-        <TouchableOpacity
-          onPress={() => setCurrentPage(currentPage + 1)}
-          disabled={endIndex >= providers.length}
-          style={styles.paginationButton}
-        >
-          <Text style={styles.paginationText}>עמוד הבא</Text>
-        </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -79,16 +84,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 5,
+    borderTopWidth: 3,
+    borderTopColor: '#7B481C',
   },
   paginationButton: {
     padding: 10,
   },
   paginationText: {
     fontSize: 16,
+    fontWeight: 'bold'
   },
   scrollViewContainer: {
     paddingTop: 20,
+    
   },
 });
 
