@@ -28,7 +28,7 @@ router.get('/getGuests/:eventId', authenticateToken, eventsController.getEventGu
 router.delete('/removeGuest/:eventId/:phone', authenticateToken, eventsController.removeGuestFromEvent);
 router.post('/notifyGuests/:eventId', authenticateToken, eventsController.notifyGuests);
 
-router.post('/inbound', authenticateToken, eventsController.updateGuestResponseFromSMS);
+router.post('/rsvp',eventsController.rsvpResponse);
 
 router.get('/providers/:providerType', authenticateToken, eventsController.getProviders);
 

@@ -484,11 +484,9 @@ const getProviders = async (req, res) => {
     }
 };
 
-
-
 const notifyGuests = async (req, res) => {
     const eventId = req.params.eventId;
-  
+
     try {
         const event = await Event.findById(eventId);
         if (!event) {
@@ -499,8 +497,17 @@ const notifyGuests = async (req, res) => {
         const guests = event.guests;
         const smsPromises = guests.map(async (guest) => {
             if (guest.phone) {
-                const phone = guest.phone;// להתחיל לתקן מפה 
-                const text = `שלום ${guest.name}, אתם מוזמנים לחתונה של ${event.groomName} ו-${event.brideName} ב-${formattedDate}. אנא השיבו עם מספר האנשים שמגיעים לאירוע. אם אינכם יכולים להגיע, השיבו 0.`;
+                const phone = guest.phone;
+                const guestId = guest._id; // מזהה ייחודי של האורח ממאגר הנתונים
+                const link = `https://1d84-46-116-152-149.ngrok-free.app/rsvp?eventId=${eventId}&guestId=${guestId}`;
+                let text = `שלום ${guest.name}, אתם מוזמנים ל${event.eventType} של ${event.name} ב-${formattedDate}. אנא אשרו הגעתכם בלינק הבא: ${link}`;
+ 
+                //let text = `אנא אשרו הגעתכם בלינק הבא: ${link}`;
+
+                if (event.eventType === 'חתונה' || event.eventType === 'חינה') {
+                    text = `שלום ${guest.name}, אתם מוזמנים ל${event.eventType} של ${event.groomName} ו-${event.brideName} ב-${formattedDate}. אנא אשרו הגעתכם בלינק הבא: ${link}`;
+                }
+
                 try {
                     await sendSMS(phone, text);
                 } catch (err) {
@@ -519,70 +526,35 @@ const notifyGuests = async (req, res) => {
     }
 };
 
+const rsvpResponse = async (req, res) => {
+    const { eventId, guestId, attendance, numAttendees } = req.body;
 
-const formatPhoneNumber = (phone) => {
-    // הסרת רווחים, מקפים, סימני + ותווים אחרים שאינם מספרים
-    let formatted = phone.replace(/[\s-]/g, '');
+    console.log('Received RSVP:', { eventId, guestId, attendance, numAttendees });
 
-    // אם המספר מתחיל בסימן +, הסר אותו
-    if (formatted.startsWith('+')) {
-        formatted = formatted.slice(1);
-    }
-
-    // אם המספר מתחיל ב-0, החלף את האפס בקידומת 972
-    if (formatted.startsWith('0')) {
-        formatted = '972' + formatted.slice(1);
-    } else if (!formatted.startsWith('972')) {
-        // אם המספר לא כולל את הקידומת 972, הוסף אותה
-        formatted = '972' + formatted;
-    }
-
-    return formatted;
-};
-
-const updateGuestResponseFromSMS = async (req, res) => {
     try {
-        // הגדרת פרמטרים לבדיקה
-        const msisdn = req.body.msisdn || '972526933301';  // מספר טלפון לדוגמה
-        const text = req.body.text || '2';  // טקסט לדוגמה
-
-        console.log('Received SMS:', { msisdn, text });  // לוג לבדיקת הגעת הבקשה
-
-        // עיצוב מספר הטלפון לפורמט הנכון (הסרה של רווחים, מקפים וכדומה)
-        const formattedPhone = formatPhoneNumber(msisdn);
-        console.log('Formatted Phone:', formattedPhone);  // לוג לבדיקת עיבוד המספר
-
-        // חיפוש האירוע לפי מספר הטלפון של האורח
-        const event = await Event.findOne({ "guests.phone": formattedPhone });
-
+        const event = await Event.findById(eventId);
         if (!event) {
-            console.error(`No event found for phone number ${formattedPhone}`);
-            return res.status(404).json({ message: "Guest not found for this phone number" });
+            console.error(`Event not found for ID: ${eventId}`);
+            return res.status(404).json({ message: 'Event not found' });
         }
 
-        const guest = event.guests.find(g => g.phone === formattedPhone);
-
+        const guest = event.guests.id(guestId);
         if (!guest) {
-            console.error(`Guest not found for phone number ${formattedPhone}`);
-            return res.status(404).json({ message: "Guest not found" });
+            console.error(`Guest not found for ID: ${guestId} in Event ID: ${eventId}`);
+            return res.status(404).json({ message: 'Guest not found' });
         }
 
-        const responseNumber = parseInt(text);
+        // שמירת מספר האורחים או 0 אם לא מגיעים
+        const attendeesCount = attendance === 'yes' ? parseInt(numAttendees, 10) || 0 : 0;
+        guest.response = attendeesCount;
 
-        if (isNaN(responseNumber)) {
-            console.error(`Invalid response received: ${text}`);
-            return res.status(400).json({ message: "Invalid response. Please send a number." });
-        }
-
-        guest.response = responseNumber;
         await event.save();
 
-        console.log(`Guest response updated successfully for phone number ${formattedPhone}`);
-
-        res.status(200).json({ message: "Guest response updated successfully" });
+        console.log(`RSVP updated successfully for guest: ${guestId}`);
+        res.status(200).json({ message: 'RSVP updated successfully' });
     } catch (error) {
-        console.error("Error updating guest response:", error);
-        res.status(500).json({ message: "Failed to update guest response" });
+        console.error('Error updating RSVP:', error);
+        res.status(500).json({ message: 'Failed to update RSVP' });
     }
 };
 
@@ -591,7 +563,10 @@ const updateGuestResponseFromSMS = async (req, res) => {
 
 
 
-exports.updateGuestResponseFromSMS = updateGuestResponseFromSMS;
+
+
+
+exports.rsvpResponse = rsvpResponse;
 
 exports.notifyGuests = notifyGuests;
 exports.addPaymentDeadlinesToEvent=addPaymentDeadlinesToEvent;
