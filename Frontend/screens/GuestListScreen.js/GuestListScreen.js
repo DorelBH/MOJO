@@ -1,66 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useFocusEffect } from '@react-navigation/native';
-import { apiUrl } from "../../api";
-import { getToken } from "../../util/authToken"; 
+import useGuestServerConnect from './useGuestServerConnect'; // ייבוא ה-Hook
 
 const GuestListScreen = ({ navigation, route }) => {
   const eventId = route && route.params && route.params.eventId ? route.params.eventId : null;
   const [guests, setGuests] = useState([]);
   const [selectedGuests, setSelectedGuests] = useState([]);
 
+  const { fetchGuests, sendNotificationToGuests, removeSelectedGuests } = useGuestServerConnect(eventId, setGuests, setSelectedGuests);
+
   useFocusEffect(
     React.useCallback(() => {
       if (eventId) {
-        fetchGuests(eventId);
+        fetchGuests();
       }
     }, [eventId])
   );
-
-  const fetchGuests = async (eventId) => {
-    if (!eventId) return;
-    const token = await getToken();
-    try {
-      const response = await fetch(`${apiUrl}/api/events/getGuests/${eventId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setGuests(data.guests);
-      } else {
-        throw new Error(data.message || 'Failed to fetch guests');
-      }
-    } catch (error) {
-      console.error('Error fetching guests:', error);
-    }
-  };
-
-  const sendNotificationToGuests = async () => {
-    const token = await getToken();
-    try {
-      const response = await fetch(`${apiUrl}/api/events/notifyGuests/${eventId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert('Notifications sent successfully');
-      } else {
-        throw new Error(data.message || 'Failed to send notifications');
-      }
-    } catch (error) {
-      console.error('Error sending notifications:', error);
-      alert('Error sending notifications');
-    }
-  };
-  
 
   const toggleSelectGuest = (guest) => {
     setSelectedGuests((prevSelected) => {
@@ -70,11 +27,6 @@ const GuestListScreen = ({ navigation, route }) => {
         return [...prevSelected, guest];
       }
     });
-  };
-
-  const removeSelectedGuests = () => {
-    setGuests((prevGuests) => prevGuests.filter((guest) => !selectedGuests.includes(guest)));
-    setSelectedGuests([]);
   };
 
   const renderItem = ({ item }) => (
@@ -107,7 +59,7 @@ const GuestListScreen = ({ navigation, route }) => {
         <Image source={require('../../assets/images/plus.png')} style={styles.addIcon} />
       </TouchableOpacity>
       {selectedGuests.length > 0 && (
-        <TouchableOpacity style={styles.deleteButton} onPress={removeSelectedGuests}>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => removeSelectedGuests(selectedGuests)}>
           <Icon name="trash-can-outline" size={30} color="red" />
         </TouchableOpacity>
       )}
@@ -188,9 +140,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 25,
-    flexDirection: 'row-reverse', // מסדר את האייקון מימין ואת הטקסט משמאל
-    alignItems: 'center', // מיישר את האייקון והטקסט באמצע
-    maxWidth: 200, // הגדרת רוחב מקסימלי
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    maxWidth: 200,
     marginLeft: 200,
   },
   sendButtonIcon: {
@@ -203,7 +155,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: 'AcademyEngravedLetPlain',
     color: 'green',
-   
   },
 });
 

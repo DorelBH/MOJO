@@ -377,7 +377,7 @@ const getEventGuests = async (req, res) => {
 
 const removeGuestFromEvent = async (req, res) => {
     const eventId = req.params.eventId;
-    const { phone } = req.body;
+    const phone = req.params.phone;
 
     if (!phone) {
         return res.status(400).json({ message: "Phone number is required" });
@@ -394,10 +394,6 @@ const removeGuestFromEvent = async (req, res) => {
             return res.status(404).json({ message: "Guest not found in the list" });
         }
 
-        if (guestIndex < 0 || guestIndex >= event.guests.length) {
-            return res.status(404).json({ message: "Guest not found in the list" });
-        }
-        
         event.guests.splice(guestIndex, 1);
         await event.save();
 
@@ -503,7 +499,7 @@ const notifyGuests = async (req, res) => {
         const guests = event.guests;
         const smsPromises = guests.map(async (guest) => {
             if (guest.phone) {
-                const phone = guest.phone;
+                const phone = guest.phone;// להתחיל לתקן מפה 
                 const text = `שלום ${guest.name}, אתם מוזמנים לחתונה של ${event.groomName} ו-${event.brideName} ב-${formattedDate}. אנא השיבו עם מספר האנשים שמגיעים לאירוע. אם אינכם יכולים להגיע, השיבו 0.`;
                 try {
                     await sendSMS(phone, text);
@@ -546,20 +542,17 @@ const formatPhoneNumber = (phone) => {
 
 const updateGuestResponseFromSMS = async (req, res) => {
     try {
-        console.log('Received SMS:', req.body);  // לוג לבדיקת הגעת הבקשה
+        // הגדרת פרמטרים לבדיקה
+        const msisdn = req.body.msisdn || '972526933301';  // מספר טלפון לדוגמה
+        const text = req.body.text || '2';  // טקסט לדוגמה
 
-        const { msisdn, text } = req.body;
+        console.log('Received SMS:', { msisdn, text });  // לוג לבדיקת הגעת הבקשה
 
-        if (!msisdn || !text) {
-            console.error('Missing msisdn or text in the request body');
-            return res.status(400).json({ message: "msisdn and text are required" });
-        }
-
-        // עיצוב מספר הטלפון לפורמט הנכון
+        // עיצוב מספר הטלפון לפורמט הנכון (הסרה של רווחים, מקפים וכדומה)
         const formattedPhone = formatPhoneNumber(msisdn);
         console.log('Formatted Phone:', formattedPhone);  // לוג לבדיקת עיבוד המספר
 
-        // חיפוש האורח בבסיס הנתונים לפי מספר הטלפון
+        // חיפוש האירוע לפי מספר הטלפון של האורח
         const event = await Event.findOne({ "guests.phone": formattedPhone });
 
         if (!event) {
@@ -567,7 +560,6 @@ const updateGuestResponseFromSMS = async (req, res) => {
             return res.status(404).json({ message: "Guest not found for this phone number" });
         }
 
-        // מציאת האורח בעזרת המספר טלפון
         const guest = event.guests.find(g => g.phone === formattedPhone);
 
         if (!guest) {
@@ -575,7 +567,6 @@ const updateGuestResponseFromSMS = async (req, res) => {
             return res.status(404).json({ message: "Guest not found" });
         }
 
-        // המרת התוכן למספר
         const responseNumber = parseInt(text);
 
         if (isNaN(responseNumber)) {
@@ -583,13 +574,12 @@ const updateGuestResponseFromSMS = async (req, res) => {
             return res.status(400).json({ message: "Invalid response. Please send a number." });
         }
 
-        // עדכון תגובת האורח בבסיס הנתונים
         guest.response = responseNumber;
-
         await event.save();
 
         console.log(`Guest response updated successfully for phone number ${formattedPhone}`);
-        res.status(204).end();  // מחזיר 204 No Content כדי לסיים את הבקשה בהצלחה
+
+        res.status(200).json({ message: "Guest response updated successfully" });
     } catch (error) {
         console.error("Error updating guest response:", error);
         res.status(500).json({ message: "Failed to update guest response" });

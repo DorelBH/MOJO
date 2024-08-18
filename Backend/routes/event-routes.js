@@ -25,10 +25,10 @@ router.patch('/updateDeadlines/:eventId', authenticateToken, eventsController.up
 router.patch('/updateEvent/:eventId', authenticateToken, eventsController.updateEvent);
 router.post('/addGuest/:eventId', authenticateToken, eventsController.addGuestToEvent);
 router.get('/getGuests/:eventId', authenticateToken, eventsController.getEventGuests);
-router.delete('/removeGuest/:eventId', authenticateToken, eventsController.removeGuestFromEvent);
+router.delete('/removeGuest/:eventId/:phone', authenticateToken, eventsController.removeGuestFromEvent);
 router.post('/notifyGuests/:eventId', authenticateToken, eventsController.notifyGuests);
 
-router.post('/updateGuestResponseFromSMS', authenticateToken, eventsController.updateGuestResponseFromSMS);
+router.post('/inbound', authenticateToken, eventsController.updateGuestResponseFromSMS);
 
 router.get('/providers/:providerType', authenticateToken, eventsController.getProviders);
 
