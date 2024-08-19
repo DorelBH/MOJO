@@ -84,7 +84,7 @@ const login = async (req, res, next) => {
         const token = jwt.sign(
             { userId: existingUser._id, username: existingUser.username, email: existingUser.email },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' } 
+            { expiresIn: '7d' }  //3 hours token (fix after )
         );
 
         res.json({ message: 'Logged in!', user: existingUser.toObject({ getters: true }), token: token });
@@ -118,7 +118,7 @@ const confirmEmail = async (req, res, next) => {
         const token = jwt.sign(
             { userId: existingUser._id,username: existingUser.username, email: existingUser.email },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' } 
+            { expiresIn: '7d' }
         );
 
         await existingUser.save();

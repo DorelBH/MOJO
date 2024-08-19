@@ -3,28 +3,26 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+const path = require('path');  // ייבוא מודול path
 const usersRoutes = require('./routes/user-routes');
 const eventsRoutes = require('./routes/event-routes');
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/users', usersRoutes); // => api/users/....
-app.use('/api/events', eventsRoutes); // => api/events/....
+app.use('/api/users', usersRoutes);
+app.use('/api/events', eventsRoutes);
 
-const PORT = process.env.PORT || 3500; // השתמש במשתנה הסביבה PORT או ב-3500 כברירת מחדל
+app.use(express.static(path.join(__dirname, 'public')));
 
-// נתיב לבדיקה אם רץ על Render או מקומית
-app.get('/check-host', (req, res) => {
-    const host = req.get('host');
-    
-    if (host.includes('onrender.com')) {
-        res.json({ message: `App is running on Render at ${host}` });
-    } else {
-        res.json({ message: `App is running locally at ${host}` });
-    }
+// הוספת נתיב להגשת דף ה-RSVP
+app.get('/rsvp', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'rsvp.html'));
 });
+
+const PORT = process.env.PORT || 3500;
 
 mongoose.connect(process.env.MONGODB_URL)
   .then(() => {
@@ -35,3 +33,6 @@ mongoose.connect(process.env.MONGODB_URL)
   .catch(err => {
     console.log(err);
   });
+
+
+  
