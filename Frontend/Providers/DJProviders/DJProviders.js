@@ -66,8 +66,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    marginTop: 20,
     textAlign: 'center',
+    padding: 3,
+    
   },
+
   paginationContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

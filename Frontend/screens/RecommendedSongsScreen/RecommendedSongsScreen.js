@@ -25,7 +25,7 @@ const RecommendedSongsScreen = () => {
         <Animated.View>
           <TouchableOpacity
             style={{ ...styles.box, ...styles.chupaBox, opacity: fadeAnim1 }}
-            onPress={() => navigation.navigate('HupaSongs')}
+            onPress={() => navigation.navigate('HupaSongs', {eventType: 'חופה'})}
           >
             <Image source={mojoLogo} style={styles.logo} />
             <Text style={styles.boxText}>חופה</Text>
@@ -37,7 +37,7 @@ const RecommendedSongsScreen = () => {
         <Animated.View>
           <TouchableOpacity
             style={{ ...styles.box, ...styles.slowBox, opacity: fadeAnim2 }}
-            onPress={() => navigation.navigate('SlowSongs')}
+            onPress={() => navigation.navigate('HupaSongs', {eventType: 'סלואו'})}
           >
             <Image source={mojoLogo} style={styles.logo} />
             <Text style={styles.boxText}>סלואו</Text>

@@ -148,7 +148,7 @@ const MainScreen = ({ navigation }) => {
         navigation.navigate('AlcoholMain', { amountInvited: eventData.amountInvited });
       }
       if (action === 'SongsMain' && eventData) {
-        navigation.navigate('SongsMain', { amountInvited: eventData.amountInvited });
+        navigation.navigate('SongsMain', { amountInvited: eventData.amountInvited, eventType: eventData.eventType});
       }
       if (action === 'checkList' && eventData) {
         navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
@@ -173,6 +173,9 @@ const MainScreen = ({ navigation }) => {
       }
       if(action === 'PaymentDeadlines' && eventData) {
         navigation.navigate('PaymentDeadlines',{eventId});
+      }
+      if(action === 'HebrewHupaSongs' && eventData) {
+        navigation.navigate('HebrewHupaSongs',{eventType: eventData.eventType});
       }
     }
   };

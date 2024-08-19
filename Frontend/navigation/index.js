@@ -30,11 +30,7 @@ import SongsMain from "../screens/SongsMain";
 import RecommendedSongsScreen from "../screens/RecommendedSongsScreen";
 import PaymentDeadlines from "../screens/PaymentDeadlines";
 import HupaSongsScreen from "../screens/HupaSongsScreen/HupaSongsScreen";
-import HebrewHupaSongsScreen from "../screens/HebrewHupaSongsScreen/HebrewHupaSongsScreen";
-import LoazitHupaSongsScreen from "../screens/LoazitHupaSongsScreen/LoazitHupaSongsScreen";
-import SlowSongsScreen from "../screens/SlowSongsScreen/SlowSongsScreen";
-import HebrewSlowSongsScreen from "../screens/HebrewSlowSongsScreen/HebrewSlowSongsScreen";
-import LoazitSlowSongsScreen from "../screens/LoazitSlowSongsScreen/LoazitSlowSongsScreen";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -78,11 +74,6 @@ const Navigation = () => {
                 <Stack.Screen name="RecommendedSongs" component={withBottomNavbar(RecommendedSongsScreen)} />
                 <Stack.Screen name="PaymentDeadlines" component={withBottomNavbar(PaymentDeadlines)} />
                 <Stack.Screen name="HupaSongs" component={withBottomNavbar(HupaSongsScreen)}/>
-                <Stack.Screen name="HebrewHupaSongs" component={withBottomNavbar(HebrewHupaSongsScreen)}/>
-                <Stack.Screen name="LoazitHupaSongs" component={withBottomNavbar(LoazitHupaSongsScreen)}/>
-                <Stack.Screen name="SlowSongs" component={withBottomNavbar(SlowSongsScreen)}/>
-                <Stack.Screen name="HebrewSlowSongs" component={withBottomNavbar(HebrewSlowSongsScreen)}/>
-                <Stack.Screen name="LoazitSlowSongs" component={withBottomNavbar(LoazitSlowSongsScreen)}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
