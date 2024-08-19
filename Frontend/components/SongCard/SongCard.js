@@ -42,7 +42,7 @@ const SongCard = ({ song }) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: 190,
+    width: 180,
     height: 140,
     margin: 5,
     padding: 5,

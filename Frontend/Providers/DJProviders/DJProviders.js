@@ -25,7 +25,7 @@ const DJProviders = () => {
             price={provider.price}
             phone={provider.phone}
             whatsapp={provider.whatsapp}
-            gallery={provider.gallery} // Ensure gallery is passed
+            gallery={provider.gallery} 
           />
         ))}
       </ScrollView>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    marginTop: 20,
+    marginTop: 10,
     textAlign: 'center',
     padding: 3,
     

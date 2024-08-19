@@ -1,9 +1,8 @@
 const { Vonage } = require('@vonage/server-sdk');
-const Event = require('../models/event');
 
 const vonage = new Vonage({
-  apiKey: "10917f80",
-  apiSecret: "hkA75cMagXqsvCZN"
+  apiKey: process.env.VONAGE_API_KEY,
+  apiSecret: process.env.VONAGE_API_SECRET
 });
  // לסדר את זה עם הקידומות
 const formatPhoneNumber = (phone) => {

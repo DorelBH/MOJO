@@ -83,8 +83,6 @@ const newEvent = async (req, res, next) => {
 
             return res.status(400).json({ message: validationErrors.join(' ') });
         }
-
-        console.error('שגיאה ביצירת האירוע:', error.message);
         res.status(500).json({ message: "אירעה שגיאה פנימית בעת יצירת האירוע", error: error.message });
     }
 };
@@ -533,11 +531,9 @@ const notifyGuests = async (req, res) => {
             if (guest.phone) {
                 const phone = guest.phone;
                 const guestId = guest._id; // מזהה ייחודי של האורח ממאגר הנתונים
-                const link = `https://a5e4-46-116-152-149.ngrok-free.app/rsvp?eventId=${eventId}&guestId=${guestId}`;
+                const link = `https://mojo-wdh6.onrender.com/rsvp?eventId=${eventId}&guestId=${guestId}`;
                 let text = `שלום ${guest.name}, אתם מוזמנים ל${event.eventType} של ${event.name} ב-${formattedDate}. אנא אשרו הגעתכם בלינק הבא: ${link}`;
  
-                //let text = `אנא אשרו הגעתכם בלינק הבא: ${link}`;
-
                 if (event.eventType === 'חתונה' || event.eventType === 'חינה') {
                     text = `שלום ${guest.name}, אתם מוזמנים ל${event.eventType} של ${event.groomName} ו-${event.brideName} ב-${formattedDate}. אנא אשרו הגעתכם בלינק הבא: ${link}`;
                 }

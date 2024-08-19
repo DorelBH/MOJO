@@ -46,7 +46,9 @@ const HupaSongsScreen = ({ route }) => {
                 keyExtractor={item => item.id}
                 contentContainerStyle={styles.listContainer}
                 numColumns={2}
-                showsVerticalScrollIndicator={true}
+                showsVerticalScrollIndicator={false}
+                scrollEnabled={true} 
+                showsHorizontalScrollIndicator={false}  
             />
         </View>
     );
@@ -58,6 +60,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start', 
         alignItems: 'center',
         marginTop: '10%',
+        width: '100%',  
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -65,8 +68,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     listContainer: {
-        paddingHorizontal: 10,
-        paddingVertical: 10,
+        alignItems: 'center',  // מרכז את הפריטים ברשימה
+        justifyContent: 'center',
+        paddingVertical: 5,
+        width: '100%',  // מונע גלילה אופקית
     },
 });
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Image } from 'react-native';
-import CustomButton from '../../components/CustomButton';
 import CustomInput from '../../components/CustomInput';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import { useRoute } from "@react-navigation/native";
 import useTaskServerConnect from './useTaskServerConnect';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const CheckListScreen = () => {
     useAuthCheck();
@@ -32,6 +32,10 @@ const CheckListScreen = () => {
     };
 
     const handleAddNewField = () => {
+        if (!newFieldTitle || !newTimeframe) {
+            // אם השדות ריקים, ה-Modal לא ייסגר
+            return;
+        }    
         const formattedTimeframe = `${newTimeframe} לאירוע`;
         addNewTask(formattedTimeframe, newFieldTitle)
             .then(updatedCheckLists => {
@@ -104,8 +108,12 @@ const CheckListScreen = () => {
                             style={styles.halfWidthContainer2}
                         />
                         <View style={styles.buttonRow}>
-                            <TouchableOpacity style={styles.addButton} onPress={handleAddNewField}>
-                                <Image source={require('../../assets/images/plus.png')} style={styles.addIcon} />
+                        <TouchableOpacity style={styles.addButton} onPress={handleAddNewField}>
+                            <Icon
+                                name="check"
+                                size={30}
+                                color="green"
+                            />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
                                 <Image source={require('../../assets/images/Cancel_Button.png')} style={styles.cancelIcon} />
