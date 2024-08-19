@@ -103,7 +103,6 @@ const EditEventScreen = ({ route }) => {
                 if (!response.ok) {
                     throw new Error(responseData.message || 'Failed to save event.');
                 }
-                console.warn('אירוע נשמר');
                 navigation.navigate('HomeScreen');
             } catch (error) {
                 console.error('Error:', error.message || 'Something went wrong during the event saving process.');

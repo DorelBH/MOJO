@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import usePaymentServerConnect from './usePaymentServerConnect'; // ייבוא הקומפוננטה החדשה
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken";
+import CustomInput from '../../components/CustomInput';
 
 
 const PaymentDeadlines = ({ route }) => {
@@ -106,12 +107,14 @@ const PaymentDeadlines = ({ route }) => {
             >
                 <View style={styles.addModal}>
                     <View style={styles.modalContent}>
-                        <TextInput
+                        <CustomInput
                             style={styles.input}
                             placeholder="הכנס את שם הספק"
                             value={supplierName}
-                            onChangeText={setSupplierName}
-                        />
+                            setValue={setSupplierName}
+                            validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
+                            errorMessage="שם הספק חייב להיות בעל 3 תווים לפחות"
+                            />
                         <TouchableOpacity onPress={() => setIsVisible(true)}>
                             <Text style={styles.datePicker}>
                                 {selectedDate ? selectedDate.toLocaleDateString('he-IL') : 'בחר תאריך'}

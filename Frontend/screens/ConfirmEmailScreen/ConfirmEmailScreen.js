@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView,ImageBackground,useWindowDimensions} from "react-native";
+import { View, Text, StyleSheet, ScrollView,ImageBackground,Platform,KeyboardAvoidingView,useWindowDimensions} from "react-native";
 import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import { apiUrl } from "../../api";
@@ -75,6 +75,10 @@ const ConfirmEmailScreen = () => {
         style={confirmStyles.backgroundImage}
         resizeMode="cover"
     >
+                    <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={{ flex: 1 }}
+            >
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={[confirmStyles.container, { marginTop: height * 0.6 }]}>
 
@@ -109,6 +113,8 @@ const ConfirmEmailScreen = () => {
                 />
             </View>
         </ScrollView>
+        </KeyboardAvoidingView>
+
         </ImageBackground>
 
     );

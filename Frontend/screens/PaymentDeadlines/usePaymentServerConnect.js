@@ -16,7 +16,6 @@ const usePaymentServerConnect = (eventId, setDeadlines) => {
             });
             const responseData = await response.json();
             if (!response.ok) {
-                console.error('Server response:', responseData);
                 throw new Error(responseData.message || 'Failed to update payment deadline completion status');
             }
             return responseData.event.paymentDeadlines;
@@ -47,7 +46,6 @@ const usePaymentServerConnect = (eventId, setDeadlines) => {
             });
             const responseData = await response.json();
             if (!response.ok) {
-                console.error('Server response:', responseData);
                 throw new Error(responseData.message || 'Failed to add new payment deadline');
             }
             return responseData.event.paymentDeadlines;

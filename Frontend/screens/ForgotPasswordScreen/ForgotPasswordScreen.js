@@ -26,7 +26,6 @@ const ForgotPasswordScreen = () => {
             const responseData = await response.json();
 
             if (response.ok) {
-                console.warn(responseData.message);
                 navigation.navigate("NewPassword", { username });
             } else {
                 throw new Error(responseData.message || 'אימות שם משתמש נכשל.');
