@@ -30,14 +30,7 @@ const DJProviders = () => {
         ))}
       </ScrollView>
       <View style={styles.paginationContainer}>
-        <TouchableOpacity
-          onPress={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          style={styles.paginationButton}
-        >
-          <Text style={styles.paginationText}>עמוד קודם</Text>
-        </TouchableOpacity>
-        <Text style={styles.paginationText}>{currentPage}</Text>
+
         <TouchableOpacity
           onPress={() => setCurrentPage(currentPage + 1)}
           disabled={endIndex >= providers.length}
@@ -45,6 +38,17 @@ const DJProviders = () => {
         >
           <Text style={styles.paginationText}>עמוד הבא</Text>
         </TouchableOpacity>
+
+        <Text style={styles.paginationText}>{currentPage}</Text>
+
+        <TouchableOpacity
+          onPress={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          style={styles.paginationButton}
+        >
+          <Text style={styles.paginationText}>עמוד קודם</Text>
+        </TouchableOpacity>
+        
       </View>
     </View>
   );
@@ -62,19 +66,26 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    marginTop: 20,
     textAlign: 'center',
+    padding: 3,
+    
   },
+
   paginationContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 5,
+    borderTopWidth: 3,
+    borderTopColor: '#7B481C',
   },
   paginationButton: {
     padding: 10,
   },
   paginationText: {
     fontSize: 16,
+    fontWeight: 'bold'
   },
 });
 

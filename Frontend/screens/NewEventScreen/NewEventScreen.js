@@ -58,6 +58,7 @@ const NewEventScreen = () => {
       <Text style={NewEventStyle.title}>Hello {username || "...."}</Text>
       <Text style={NewEventStyle.description}> כדי להתחיל לייעל את תהליך התכנון, נשמח לדעת איזה סוג של אירוע אתם מתכננים. הנה תפריט עם האפשרויות שלנו:</Text>
       <InputChooser
+        style={NewEventStyle.InputChooser}
         options={options}
         onSelect={handleEventTypeChange}
         chooserText={eventType || 'בחר סוג אירוע'}
@@ -90,6 +91,12 @@ const NewEventStyle = StyleSheet.create({
     fontFamily: 'AcademyEngravedLetPlain',
     textAlign: 'center',
   },
+  InputChooser: {
+    alignItems: 'center', // מרכז את הפריטים במאונך
+    justifyContent: 'center', // מרכז את הפריטים במאוזן
+    textAlign: 'center', // ממרכז את הטקסט
+    width: '100%', // להבטיח שהרוחב מתאים לכל שורת האפשרויות
+  }
 });
 
 export default NewEventScreen;

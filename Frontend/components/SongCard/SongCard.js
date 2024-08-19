@@ -3,10 +3,14 @@ import { View, StyleSheet, Text, TouchableOpacity, Linking } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'; // או Ionicons אם זה מה שאתה מעדיף
 
 const SongCard = ({ song }) => {
+  if (!song) {
+    return null; // החזר null אם song לא מוגדר
+  }
+
   return (
     <View style={styles.card}>
-      <Text style={styles.ArtName} numberOfLines={2}>{song.ArtName}</Text>
-      <Text style={styles.SongName}>{song.SongName}</Text>
+      <Text style={styles.ArtName} numberOfLines={2}>{song.ArtName || 'לא מוגדר'}</Text>
+      <Text style={styles.SongName}>{song.SongName || 'לא מוגדר'}</Text>
       <View style={styles.linksContainer}>
         {song.youtube && (
           <TouchableOpacity onPress={() => Linking.openURL(song.youtube)} style={styles.iconButton}>

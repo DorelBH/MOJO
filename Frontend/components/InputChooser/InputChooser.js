@@ -29,7 +29,7 @@ const InputChooser = ({ options, onSelect , chooserText}) => {
               style={styles.option}
               onPress={() => handleSelect(option)}
             >
-              <Text>{option}</Text>
+              <Text style={styles.optionText}>{option}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -59,12 +59,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'gray',
     borderRadius: 5,
-    backgroundColor: '#FFF',
+    alignItems: 'center',
+    
   },
   option: {
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: 'gray',
+    width: '100%',
+    alignItems: 'center',
+  },
+  optionText: {
+    textAlign: 'center', // מרכז את הטקסט בתוך כל אופציה
+    fontSize: 16,
   },
 });
 

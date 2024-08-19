@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import ChatBotImage from '../../assets/images/chatbot.webp';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const MainSlots = ({ slotsData, handleSlotPress, showBackButton, handleBackPress }) => {
   return (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={SlotStyles.scrollViewContent}>
       {showBackButton && (
         <TouchableOpacity onPress={handleBackPress} style={SlotStyles.backButton}>
-          <Text style={SlotStyles.backButtonText}>חזרה</Text>
+          <Icon name="arrow-back" size={24} color="gray" />
         </TouchableOpacity>
       )}
       <TouchableOpacity activeOpacity={1} style={SlotStyles.slotContainer}>
@@ -47,7 +48,7 @@ const MainSlots = ({ slotsData, handleSlotPress, showBackButton, handleBackPress
         ))}
       </TouchableOpacity>
 
-      <Text style={SlotStyles.slotTitle}>MOJO BOT</Text>
+      <Text style={SlotStyles.slotTitle}>מוג'ו בוט</Text>
       <View style={SlotStyles.adContainer}>
         <TouchableOpacity style={SlotStyles.avatarButton} onPress={() => handleSlotPress('ChatBot')}>
           <Image source={ChatBotImage} style={SlotStyles.avatarImage} />
@@ -77,7 +78,7 @@ const SlotStyles = StyleSheet.create({
     marginBottom: '2%',
   },
   barTitle: {
-    marginTop: 5, // מרווח קטן יותר מעל הכותרת שירותי בר
+    marginTop: '10%', // מרווח קטן יותר מעל הכותרת שירותי בר
   },
   slotContent: {
     flexDirection: 'row',
@@ -110,6 +111,7 @@ const SlotStyles = StyleSheet.create({
     textAlign: 'right',
     color: 'gray',
     marginRight: '9%',
+    paddingHorizontal: 10,
   },
   adContainer: {
     flexDirection: 'row',
@@ -169,18 +171,13 @@ const SlotStyles = StyleSheet.create({
     color: 'black',
   },
   backButton: {
+    position: 'absolute', // להשתמש ב-position absolute
     top: 10,
     left: 10,
     padding: 8,
-    borderWidth: 1,
-    backgroundColor: '#7B481C',
+    
     borderRadius: 30,
-    marginBottom:20
-
-  },
-  backButtonText: {
-    color: 'white',
-    fontSize: 15,
+    zIndex: 1, // לוודא שהכפתור יהיה מעל אלמנטים אחרים
   },
 });
 

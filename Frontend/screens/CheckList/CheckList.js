@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Image } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import CustomInput from '../../components/CustomInput';
 import useAuthCheck from '../../hooks/useAuthCheck';
 import { useRoute } from "@react-navigation/native";
 import useTaskServerConnect from './useTaskServerConnect';
-import { Ionicons } from '@expo/vector-icons'; // ייבוא אייקונים
+import { Ionicons } from '@expo/vector-icons';
 
 const CheckListScreen = () => {
     useAuthCheck();
@@ -45,11 +45,10 @@ const CheckListScreen = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.pageTitle}>רשימת משימות ל{eventType}</Text>
-            <CustomButton
-                onPress={() => setModalVisible(true)}
-                text="+"
-                type="CIRCLE"
-            />
+            <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+                <Image source={require('../../assets/images/plus.png')} style={styles.addIcon} />
+            </TouchableOpacity>
+           
             <ScrollView contentContainerStyle={styles.scrollContent} style={styles.scrollView}>
                 {tasks.map((section, index) => (
                     <View key={index} style={styles.section}>
@@ -102,17 +101,16 @@ const CheckListScreen = () => {
                             setValue={setNewFieldTitle}
                             validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
                             errorMessage="הכנס שדה חוקי"
+                            style={styles.halfWidthContainer2}
                         />
-                        <CustomButton
-                            text="הוסף שדה חדש"
-                            onPress={handleAddNewField}
-                            type="CALCULATE"
-                        />
-                        <CustomButton
-                            text="בטל"
-                            onPress={() => setModalVisible(false)}
-                            type="CALCULATE"
-                        />
+                        <View style={styles.buttonRow}>
+                            <TouchableOpacity style={styles.addButton} onPress={handleAddNewField}>
+                                <Image source={require('../../assets/images/plus.png')} style={styles.addIcon} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+                                <Image source={require('../../assets/images/Cancel_Button.png')} style={styles.cancelIcon} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Modal>
@@ -204,8 +202,36 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         marginRight: 10,
-        color: "#a9a9a9"
+        color: "black",
+        fontWeight: 'bold'
     },
+    halfWidthContainer2: {
+        marginLeft: 30,
+        
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 5, // מוסיף רווח בין השדה לכפתורים
+        width: '100%',
+    },
+    addButton: { 
+        borderRadius: 50,
+        padding: 16,
+    },
+    cancelButton: {
+        borderRadius: 50,
+        padding: 16,
+    },
+    addIcon: {
+        width: 30,
+        height: 30,
+        tintColor: '#cd853f',
+    },
+    cancelIcon: {
+        width: 30,
+        height: 30,
+    }
 });
 
 export default CheckListScreen;
