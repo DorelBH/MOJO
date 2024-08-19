@@ -21,7 +21,7 @@ const AlcoholMain = () => {
                 />
                 
                 <CustomButton
-                    text="מחשבון אלכהול" 
+                    text="מחשבון אלכוהול" 
                     onPress={handlePressAlcohol} 
                     type={currentScreen === 'AlcoholCalc' ? 'PROVIDER' : 'PROVIDER_NOTACTIVE'}
                 />

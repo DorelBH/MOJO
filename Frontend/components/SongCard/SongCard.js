@@ -1,34 +1,42 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Linking } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // או Ionicons אם זה מה שאתה מעדיף
+import { View, StyleSheet, Text, TouchableWithoutFeedback, Linking } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SongCard = ({ song }) => {
   if (!song) {
-    return null; // החזר null אם song לא מוגדר
+    return null;
   }
 
   return (
-    <View style={styles.card}>
-      <Text style={styles.ArtName} numberOfLines={2}>{song.ArtName || 'לא מוגדר'}</Text>
-      <Text style={styles.SongName}>{song.SongName || 'לא מוגדר'}</Text>
-      <View style={styles.linksContainer}>
-        {song.youtube && (
-          <TouchableOpacity onPress={() => Linking.openURL(song.youtube)} style={styles.iconButton}>
-            <Icon name="youtube-play" size={30} color="#FF0000" />
-          </TouchableOpacity>
-        )}
-        {song.spotify && (
-          <TouchableOpacity onPress={() => Linking.openURL(song.spotify)} style={styles.iconButton}>
-            <Icon name="spotify" size={30} color="#1DB954" />
-          </TouchableOpacity>
-        )}
-        {song.appleMusic && (
-          <TouchableOpacity onPress={() => Linking.openURL(song.appleMusic)} style={styles.iconButton}>
-            <Icon name="apple" size={30} color="#000000" />
-          </TouchableOpacity>
-        )}
+    <TouchableWithoutFeedback>
+      <View style={styles.card}>
+        <Text style={styles.ArtName} numberOfLines={2}>{song.ArtName || 'לא מוגדר'}</Text>
+        <Text style={styles.SongName}>{song.SongName || 'לא מוגדר'}</Text>
+        <View style={styles.linksContainer}>
+          {song.youtube && (
+            <TouchableWithoutFeedback onPress={() => Linking.openURL(song.youtube)}>
+              <View style={styles.iconButton}>
+                <Icon name="youtube-play" size={30} color="#FF0000" />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+          {song.spotify && (
+            <TouchableWithoutFeedback onPress={() => Linking.openURL(song.spotify)}>
+              <View style={styles.iconButton}>
+                <Icon name="spotify" size={30} color="#1DB954" />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+          {song.appleMusic && (
+            <TouchableWithoutFeedback onPress={() => Linking.openURL(song.appleMusic)}>
+              <View style={styles.iconButton}>
+                <Icon name="apple" size={30} color="#000000" />
+              </View>
+            </TouchableWithoutFeedback>
+          )}
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -73,8 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   iconButton: {
-    alignItems: 'center',
-    marginHorizontal: 15,
+    
   },
 });
 

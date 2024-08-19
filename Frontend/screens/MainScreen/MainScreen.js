@@ -142,19 +142,19 @@ const MainScreen = ({ navigation }) => {
       setShowBarServices(true);
     } else {
       if (action === 'CostCalculator' && eventData) {
-        navigation.navigate('CostCalculator', { eventType: eventData.eventType, costs: eventData.costs, eventId });
+        navigation.navigate('CostCalculator', { amountInvited: eventData.amountInvited, guests:eventData.guests, eventType: eventData.eventType, costs: eventData.costs, eventId });
       }
       if (action === 'AlcoholMain' && eventData) {
-        navigation.navigate('AlcoholMain', { amountInvited: eventData.amountInvited });
+        navigation.navigate('AlcoholMain', { amountInvited: eventData.amountInvited, guests:eventData.guests, eventType: eventData.eventType, eventId});
       }
       if (action === 'SongsMain' && eventData) {
-        navigation.navigate('SongsMain', { amountInvited: eventData.amountInvited, eventType: eventData.eventType});
+        navigation.navigate('SongsMain', { amountInvited: eventData.amountInvited, guests:eventData.guests, eventType: eventData.eventType});
       }
       if (action === 'checkList' && eventData) {
-        navigation.navigate('CheckList', { eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
+        navigation.navigate('CheckList', { amountInvited: eventData.amountInvited, guests:eventData.guests, eventType: eventData.eventType, checkLists: eventData.checkLists, eventId });
       }
       if (action === 'ChatBot') {
-        navigation.navigate('ChatBot');
+        navigation.navigate('ChatBot', { amountInvited: eventData.amountInvited, guests:eventData.guests, eventId});
       }
       if (action === 'GuestList' && eventData) {
         navigation.navigate('GuestList',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
@@ -163,19 +163,22 @@ const MainScreen = ({ navigation }) => {
         navigation.navigate('GuestCheck',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
       }
       if (action === 'RavProviders' && eventData) {
-        navigation.navigate('RavProviders', { });
+        navigation.navigate('RavProviders', { amountInvited: eventData.amountInvited, guests:eventData.guests, eventId });
       }
       if (action === 'HallsProviders' && eventData) {
-        navigation.navigate('HallsProviders', { selectedRegions: eventData.selectedRegions });
+        navigation.navigate('HallsProviders', { amountInvited: eventData.amountInvited, guests:eventData.guests, selectedRegions: eventData.selectedRegions, eventId });
       }
       if (action === 'PhotographerProviders' && eventData) {
-        navigation.navigate('PhotographerProviders', { selectedRegions: eventData.selectedRegions });
+        navigation.navigate('PhotographerProviders', { amountInvited: eventData.amountInvited, guests:eventData.guests, selectedRegions: eventData.selectedRegions, eventId });
       }
       if(action === 'PaymentDeadlines' && eventData) {
-        navigation.navigate('PaymentDeadlines',{eventId});
+        navigation.navigate('PaymentDeadlines',{ amountInvited: eventData.amountInvited, guests:eventData.guests, eventId});
       }
-      if(action === 'HebrewHupaSongs' && eventData) {
-        navigation.navigate('HebrewHupaSongs',{eventType: eventData.eventType});
+      if(action === 'HupaSongs' && eventData) {
+        navigation.navigate('HupaSongs',{eventType: eventData.eventType, amountInvited: eventData.amountInvited, guests:eventData.guests, eventId});
+      }
+      if(action === 'SongsMain' && eventData) {
+        navigation.navigate('SongsMain',{eventType: eventData.eventType, amountInvited: eventData.amountInvited, guests:eventData.guests, eventId});
       }
     }
   };

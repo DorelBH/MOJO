@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, Text } from 'react-native';
+import { View, StyleSheet, FlatList, Text, TouchableWithoutFeedback } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import SongsData from '../../components/SongsData';
 import SongCard from "../../components/SongCard";
 
 const HupaSongsScreen = ({ route }) => {
-    const { eventType } = route.params; // קבלת סוג האירוע
-    const [language, setLanguage] = useState('עברית'); // ברירת מחדל היא עברית
+    const { eventType } = route.params;
+    const [language, setLanguage] = useState('עברית');
 
-    // פונקציות לטיפול בלחיצות
     const handlePressHebrew = () => setLanguage('עברית');
     const handlePressLoazit = () => setLanguage('לועזית');
 
-    // קבלת השירים לפי סוג האירוע והשפה הנבחרת
     const songs = SongsData(eventType, language);
 
-    // טיפול במקרה שבו songs לא מוגדר
     if (!songs || songs.length === 0) {
         return <View style={styles.container}><Text>אין שירים להציג</Text></View>;
     }
@@ -42,19 +39,15 @@ const HupaSongsScreen = ({ route }) => {
                     onPress={handlePressHebrew}
                     type={language === 'עברית' ? 'PROVIDER' : 'PROVIDER_NOTACTIVE'}
                 />
-                
-                
             </View>
-            <View style={styles.container}>
-                <FlatList
-                    data={songs}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                    contentContainerStyle={styles.listContainer}
-                    numColumns={2}
-                    showsVerticalScrollIndicator={true}
-                />
-            </View>
+            <FlatList
+                data={songs}
+                renderItem={renderItem}
+                keyExtractor={item => item.id}
+                contentContainerStyle={styles.listContainer}
+                numColumns={2}
+                showsVerticalScrollIndicator={true}
+            />
         </View>
     );
 };

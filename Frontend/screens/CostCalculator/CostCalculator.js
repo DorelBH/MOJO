@@ -59,7 +59,7 @@ const CostCalculator = () => {
                         <Icon
                              name={isEditing ? "check" : "pencil"}
                              size={30}
-                             color={isEditing ? "green" : "blue"}
+                             color={isEditing ? "green" : "#00308F"}
                         />
                 </TouchableOpacity>
 
@@ -109,16 +109,19 @@ const CostCalculator = () => {
                             validators={[{ type: 'MINLENGTH', val: 3 }, { type: 'REQUIRE' }]}
                             errorMessage="הכנס שדה חוקי"
                         />
-                        <CustomButton
-                            text="הוסף שדה חדש"
-                            onPress={handleAddNewField}
-                            type="CALCULATE"
-                        />
-                        <CustomButton
-                            text="בטל"
-                            onPress={() => setModalVisible(false)}
-                            type="CALCULATE"
-                        />
+                        <View style={styles.buttonRow}>
+                            <TouchableOpacity style={styles.addButton} onPress={handleAddNewField}>
+                                <Icon
+                                    name="check"
+                                    size={30}
+                                    color="green"
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
+                                <Image source={require('../../assets/images/Cancel_Button.png')} style={styles.cancelIcon} />
+                            </TouchableOpacity>
+                        </View>
+                        
                     </View>
                 </View>
             </Modal>
@@ -167,7 +170,18 @@ const styles = StyleSheet.create({
         width: '90%',
         alignItems: 'center',
     },
+    
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 5, // מוסיף רווח בין השדה לכפתורים
+        width: '100%',
+    },
     addButton: { 
+        borderRadius: 50,
+        padding: 16,
+    },
+    cancelButton: {
         borderRadius: 50,
         padding: 16,
     },
@@ -175,6 +189,10 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         tintColor: '#cd853f',
+    },
+    cancelIcon: {
+        width: 30,
+        height: 30,
     },
     editButton: {
         marginHorizontal: 15,

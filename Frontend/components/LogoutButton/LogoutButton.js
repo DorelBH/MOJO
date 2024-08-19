@@ -14,7 +14,7 @@ const LogoutButton = () => {
 
     return (
         <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-            <Icon name="logout" size={35} color="red" />
+            <Icon name="logout" size={35} color="black" />
         </TouchableOpacity>
     );
 };

@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import usePaymentServerConnect from './usePaymentServerConnect'; // ייבוא הקומפוננטה החדשה
 import { apiUrl } from "../../api";
 import { getToken } from "../../util/authToken";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 const PaymentDeadlines = ({ route }) => {
@@ -128,7 +129,11 @@ const PaymentDeadlines = ({ route }) => {
 
                         <View style={styles.buttonRow}>
                             <TouchableOpacity style={styles.addButton} onPress={handleAddDeadline}>
-                                <Image source={require('../../assets/images/plus.png')} style={styles.addIcon} />
+                                <Icon
+                                    name="check"
+                                    size={30}
+                                    color="green"
+                                />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
                                 <Image source={require('../../assets/images/Cancel_Button.png')} style={styles.cancelIcon} />
