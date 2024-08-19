@@ -22,13 +22,19 @@ const newEvent = async (req, res, next) => {
     try {
         const { eventType, groomName, brideName, name, amountInvited, selectedDate, selectedRegions, costs, checkLists } = req.body;
 
+        // Validations
         validateEventType(eventType);
         validateAmountInvited(amountInvited);
 
-        if (selectedDate && new Date(selectedDate) < new Date()) {
-            return res.status(400).json({ message: "The event date cannot be in the past." });
+        // Date validation
+        if (selectedDate) {
+            const eventDate = new Date(selectedDate);
+            if (eventDate < new Date()) {
+                return res.status(400).json({ message: "The event date cannot be in the past." });
+            }
         }
 
+        // Prepare event data
         const eventData = {
             eventType,
             amountInvited,
@@ -44,23 +50,32 @@ const newEvent = async (req, res, next) => {
         } else {
             eventData.name = name;
         }
-        
+
         if (selectedDate) {
             eventData.eventDate = selectedDate;
         }
 
+        // Create and save event
         const createdEvent = new Event(eventData);
         await createdEvent.save();
 
+        // Update user with new event
         const user = await User.findById(req.user.userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found." });
+        }
         user.events.push(createdEvent);
         await user.save();
 
+        // Respond with success
         res.status(201).json({ message: "Event created successfully", event: createdEvent });
     } catch (error) {
+        // Handle errors
+        console.error('Error creating event:', error.message);
         res.status(500).json({ message: "Failed to create event", error: error.message });
     }
 };
+
 
 const getEvent = async (req, res, next) => {
     try {
@@ -499,7 +514,7 @@ const notifyGuests = async (req, res) => {
             if (guest.phone) {
                 const phone = guest.phone;
                 const guestId = guest._id; // מזהה ייחודי של האורח ממאגר הנתונים
-                const link = `https://1d84-46-116-152-149.ngrok-free.app/rsvp?eventId=${eventId}&guestId=${guestId}`;
+                const link = `https://a5e4-46-116-152-149.ngrok-free.app/rsvp?eventId=${eventId}&guestId=${guestId}`;
                 let text = `שלום ${guest.name}, אתם מוזמנים ל${event.eventType} של ${event.name} ב-${formattedDate}. אנא אשרו הגעתכם בלינק הבא: ${link}`;
  
                 //let text = `אנא אשרו הגעתכם בלינק הבא: ${link}`;
