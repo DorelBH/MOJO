@@ -25,15 +25,15 @@ const SongsMain = ({ route }) => {
         <View style={styles.container}>
             {eventType === 'חתונה' && (
                 <View style={styles.buttonContainer}>
+                     <CustomButton 
+                        text="בחירת ספק" 
+                        onPress={handlePressSongs}
+                        type={currentScreen === 'provide' ? 'PROVIDER' : 'PROVIDER_NOTACTIVE'}
+                    />
                     <CustomButton
                         text="המלצות לשירים" 
                         onPress={handlePressDJ} 
                         type={currentScreen === 'RecommendedSongs' ? 'PROVIDER' : 'PROVIDER_NOTACTIVE'}
-                    />
-                    <CustomButton 
-                        text="בחירת ספק" 
-                        onPress={handlePressSongs}
-                        type={currentScreen === 'provide' ? 'PROVIDER' : 'PROVIDER_NOTACTIVE'}
                     />
                 </View>
             )}

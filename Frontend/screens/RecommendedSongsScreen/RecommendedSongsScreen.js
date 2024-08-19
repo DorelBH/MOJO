@@ -1,43 +1,41 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Image, TouchableOpacity } from 'react-native';
 import mojoLogo from '../../assets/images/mojo_logo.png';
-import { useNavigation } from '@react-navigation/native';
-
+import { useRoute, useNavigation } from '@react-navigation/native';
 
 const RecommendedSongsScreen = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const eventId = route.params?.eventId;
 
   const fadeAnim1 = useRef(new Animated.Value(0)).current;
   const fadeAnim2 = useRef(new Animated.Value(0)).current;
- 
 
   useEffect(() => {
     Animated.sequence([
       Animated.timing(fadeAnim1, { toValue: 1, duration: 350, useNativeDriver: true }),
       Animated.timing(fadeAnim2, { toValue: 1, duration: 350, useNativeDriver: true }),
-      
     ]).start();
   }, [fadeAnim1, fadeAnim2]);
 
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Animated.View>
+        <Animated.View style={{ opacity: fadeAnim1 }}>
           <TouchableOpacity
-            style={{ ...styles.box, ...styles.chupaBox, opacity: fadeAnim1 }}
-            onPress={() => navigation.navigate('HupaSongs', {eventType: 'חופה'})}
+            style={{ ...styles.box, ...styles.chupaBox }}
+            onPress={() => navigation.navigate('HupaSongs', { eventType: 'חופה', eventId })}
           >
             <Image source={mojoLogo} style={styles.logo} />
             <Text style={styles.boxText}>חופה</Text>
           </TouchableOpacity>
         </Animated.View>
-      
       </View>
       <View style={styles.row}>
-        <Animated.View>
+        <Animated.View style={{ opacity: fadeAnim2 }}>
           <TouchableOpacity
-            style={{ ...styles.box, ...styles.slowBox, opacity: fadeAnim2 }}
-            onPress={() => navigation.navigate('HupaSongs', {eventType: 'סלואו'})}
+            style={{ ...styles.box, ...styles.slowBox }}
+            onPress={() => navigation.navigate('HupaSongs', { eventType: 'סלואו', eventId })}
           >
             <Image source={mojoLogo} style={styles.logo} />
             <Text style={styles.boxText}>סלואו</Text>
@@ -71,13 +69,7 @@ const styles = StyleSheet.create({
   chupaBox: {
     backgroundColor: '#a9a9a9',
   },
-  glassBreakBox: {
-    backgroundColor: '#a9a9a9',
-  },
   slowBox: {
-    backgroundColor: '#a9a9a9',
-  },
-  endBox: {
     backgroundColor: '#a9a9a9',
   },
   boxText: {
